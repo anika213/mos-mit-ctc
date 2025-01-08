@@ -1,0 +1,68 @@
+services:
+    base:
+        image: mos-mit-ctc-dev-base
+        build:
+            context: .
+            dockerfile: base.dockerfile
+        volumes:
+            - node_modules:/srv/mos-mit-ctc/node_modules
+            - ./yarn.lock:/srv/hyperschedule/yarn.lock:ro
+            - ./package.json:/srv/mos-mit-ctc/package.json:ro
+            - ./frontend/package.json:/srv/mos-mit-ctc/frontend/package.json:ro
+            - ./backend/package.json:/srv/mos-mit-ctc/backend/package.json:ro
+        command: yarn install --immutable
+
+
+    db:
+        image: mongo:7
+        networks:
+            - backend
+        expose:
+            - 27017
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: mos-mit-ctc
+            MONGO_INITDB_ROOT_PASSWORD:
+                local_dev
+
+    frontend:
+        image: mos-mit-ctc-dev-base
+        depends_on: &base
+            base:
+                condition: service_completed_successfully
+        ports:
+            - 3000:3000
+        volumes:
+            - ./node_modules:/srv/mos-mit-ctc/node_modules
+            - ./frontend/node_modules:/srv/mos-mit-ctc/frontend/node_modules
+            - ./frontend:/srv/mos-mit-ctc/frontend:ro
+        working_dir: /srv/mos-mit-ctc/frontend
+        command: npm run start
+
+
+    backend:
+        image: mos-mit-ctc-dev-base
+        depends_on:
+            <<: *base
+            db:
+                condition:
+                    service_started
+        ports:
+            - 8080:8080
+        networks:
+            - backend
+        volumes:
+            - node_modules:/srv/mos-mit-ctc/node_modules
+            - ./backend/node_modules:/srv/mos-mit-ctc/backend/node_modules
+            - ./backend:/srv/mos-mit-ctc/backend:ro
+
+        working_dir: /srv/mos-mit-ctc/backend
+        command: npm run start
+        environment:
+            DB_URL: mongodb://mos-mit-ctc:local_dev@db
+
+networks:
+    backend:
+
+volumes:
+    node_modules:
+    db-data:
