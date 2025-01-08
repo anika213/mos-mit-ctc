@@ -1,0 +1,15 @@
+{
+  "name": "mos-mit-ctc",
+  "version": "1.0.0",
+  "scripts": {
+    "docker": "docker compose up --always-recreate-deps --wait",
+    "docker:build": "docker compose build"
+  },
+  "private": true,
+  "description": "",
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "dependencies": {}
+}
