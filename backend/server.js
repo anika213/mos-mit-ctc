@@ -3,6 +3,7 @@ const express = require('express');
 const session = require('express-session');
 const cors = require('cors');
 const routes = require ("./routes"); 
+const passport = require('./utils/passportConfig');
 
 const { PORT=8080, SESSION_SECRET} = process.env; 
 
@@ -12,18 +13,23 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use(cors()); 
-app.timeout = 120000; // Set the timeout to 2 minutes
 
 app.use(
     session({
       resave: false,
       secret: SESSION_SECRET,
       saveUninitialized: false,
-      cookie: { httpOnly: true, secure: true }
+      cookie: { 
+        httpOnly: true, 
+        secure: false, // HTTP requests using Postman
+        maxAge: 60000 *60 }
     })
-  );
+);
 
-app.use (routes); 
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(routes); 
 
 app.listen(PORT, () => 
 {
