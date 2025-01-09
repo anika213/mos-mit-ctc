@@ -4,10 +4,15 @@ const session = require('express-session');
 const cors = require('cors');
 const routes = require ("./routes"); 
 const passport = require('./utils/passportConfig');
+const mongoose = require("mongoose");
 
 const { PORT=8080, SESSION_SECRET} = process.env; 
 
 const app = express();
+
+mongoose.connect("mongodb://mos-mit-ctc:local_dev@db:27017")
+    .then(() => console.log("Connected to database."))
+    .catch((err) => console.log(`Error: ${err}`));
 
 app.use(express.urlencoded({ extended: true })); 
 app.use(express.json());

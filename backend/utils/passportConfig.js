@@ -1,8 +1,7 @@
 const passport = require('passport'); // Authentication handling
 const LocalStrategy = require('passport-local').Strategy; // Local hosting of passwords with Passport
 const bcrypt = require('bcryptjs'); // Encryption of passwords with salting
-
-const { users } = require("../data/mockDB.js"); // Temporary since we don't have mongoDB connected yet.
+const User = require('../models/user.js')
 
 // Set up Passport local strategy for authentication
 // Do we require username, email, or password to sign in? Or any of the above?

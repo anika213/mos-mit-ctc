@@ -1,26 +1,21 @@
-const userModel = require("../models/user");
-
 const bcrypt = require('bcryptjs'); // Encryption of passwords with salting
 const passport = require('../utils/passportConfig');
 
-const { users } = require("../data/mockDB.js"); // Temporary since we don't have mongoDB connected yet.
+const User = require('../models/user.js');
 
 // Register user
+// Should probably run a schema validator before continuing the registration process
 exports.registerUser = async (req, res) => {
-    const { username, password } = req.body;
-    const existingUser = users.find(u => u.username === username);
-    // We also need to check if email (or maybe even phone numbers) are already taken.
-    // We also need to check if the inputted pw is valid (x letters, y special char, etc.)
+    const { body } = req;
+    const newUser = new User(body);
 
-    if (existingUser) {
-        return res.status(400).json({ message: 'Username already taken' });
+    try {
+        const savedUser = await newUser.save();
+        res.status(201).json({ message: 'User registered successfully!' });
+    } catch (err) {
+        console.log(err);
+        return res.status(400).json({ message: 'Error registering user' });
     }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = { id: users.length + 1, username, password: hashedPassword }; // Might want to use a differenct ID scheme but this works for now.
-    users.push(user); // Save user
-
-    res.status(201).json({ message: 'User registered successfully!' });
 };
 
 // Login user

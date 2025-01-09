@@ -17,12 +17,11 @@ services:
         image: mongo:7
         networks:
             - backend
-        expose:
-            - 27017
+        ports:
+            - 27017:27017
         environment:
             MONGO_INITDB_ROOT_USERNAME: mos-mit-ctc
-            MONGO_INITDB_ROOT_PASSWORD:
-                local_dev
+            MONGO_INITDB_ROOT_PASSWORD: local_dev
 
     frontend:
         image: mos-mit-ctc-dev-base
