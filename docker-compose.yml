@@ -35,7 +35,7 @@ services:
             - ./frontend/node_modules:/srv/mos-mit-ctc/frontend/node_modules
             - ./frontend:/srv/mos-mit-ctc/frontend:ro
         working_dir: /srv/mos-mit-ctc/frontend
-        command: npm run start
+        command: yarn start
 
 
     backend:
@@ -55,7 +55,7 @@ services:
             - ./backend:/srv/mos-mit-ctc/backend:ro
 
         working_dir: /srv/mos-mit-ctc/backend
-        command: npm run start
+        command: yarn start
         environment:
             DB_URL: mongodb://mos-mit-ctc:local_dev@db
 
