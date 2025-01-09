@@ -1,10 +1,12 @@
 
+import { Outlet } from 'react-router-dom';
 import './Challenge.module.css';
 
 function Challenge() {
   return (
     <div>
-        <p1>Challenge</p1>
+        <p>Challenge</p>
+        <Outlet />
     </div>
   );
 }
