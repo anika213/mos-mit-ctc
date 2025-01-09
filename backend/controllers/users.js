@@ -1,5 +1,5 @@
-const bcrypt = require('bcryptjs'); // Encryption of passwords with salting
 const passport = require('../utils/passportConfig');
+const hashPassword = require('../utils/bcryptHash.js');
 
 const User = require('../models/user.js');
 
@@ -7,6 +7,7 @@ const User = require('../models/user.js');
 // Should probably run a schema validator before continuing the registration process
 exports.registerUser = async (req, res) => {
     const { body } = req;
+    body.password = hashPassword(body.password);
     const newUser = new User(body);
 
     try {
