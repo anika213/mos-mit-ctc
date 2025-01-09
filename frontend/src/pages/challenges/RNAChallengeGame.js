@@ -106,7 +106,7 @@ function RNAChallengeGame({className=""}) {
     createStage();
 
     return destroyStage;
-  }, []);
+  }, [createStage, destroyStage]);
 
   return (
     <div className={className}>
