@@ -5,7 +5,7 @@ function RNAChallenge() {
   return (
     <div>
       <p>Instructions go here probably</p>
-      <RNAChallengeGame className={"w-96 h-96"}/>
+      <RNAChallengeGame className={"w-full"}/>
     </div>
   );
 }
