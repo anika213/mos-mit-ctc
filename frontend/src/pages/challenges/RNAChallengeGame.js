@@ -44,13 +44,18 @@ class NucleotideSequences {
     group.on("mouseleave", () => {
       group.getStage().container().style.cursor = "default";
     });
-
+    
+    group.on("dragmove", (e) => {
+      this.dragMove();
+    });
     group.add(
       new Konva.Rect({
         x: 0,
         y: 0,
         ...size,
         fill: color,
+        stroke: "black",
+        strokeWidth: 3
       })
     );
 
@@ -72,6 +77,8 @@ class NucleotideSequences {
   dragStart() {}
 
   dragEnd() {}
+
+  dragMove() {}
 }
 
 class SequencePrimary extends NucleotideSequences {
@@ -95,6 +102,29 @@ class SequenceChild extends NucleotideSequences {
     if (isColliding(this.sprite, this.game.primaryLayer)) {
       this.game.removeChild(this);
     }
+  }
+
+  dragMove() {
+    this.checkCollision();
+  }
+
+  checkCollision() {
+    this.sprite.getLayer().children.forEach((group) => {
+      if (group === this.sprite || group.isPrimary)  {
+        return;
+      }
+
+      if (isColliding(group, this.sprite)) {
+        this.highlight(group, this.sprite);  // Highlight in red
+      } else {
+        group.findOne("Rect").stroke("black");
+      }
+    });
+  }
+
+  highlight(group1, group2) {
+    group1.findOne("Rect").stroke("red"); 
+    group2.findOne("Rect").stroke("red");
   }
 };
 
