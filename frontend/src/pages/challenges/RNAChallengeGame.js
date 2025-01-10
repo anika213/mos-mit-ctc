@@ -1,56 +1,61 @@
 import { useCallback, useEffect, useRef } from "react";
 import Konva from "konva";
-import { shuffleArray } from "../../utils/utils";
+import { shuffleArray, isColliding } from "../../utils/utils";
 
 class NucleotideSequences {
+  game;
+
   identifier;
   i;
-  isPrimary;
+  isExon;
   sprite;
   spriteParams;
 
-  constructor(identifier, i, isPrimary, spriteParams) {
+  constructor(game, identifier, i, isExon, spriteParams) {
+    this.game = game;
     this.identifier = identifier;
-    this.i = i; 
-    this.isPrimary = isPrimary;
-    this.sprite = this.makeSprite(spriteParams)
+    this.i = i;
+    this.isExon = isExon;
+    this.sprite = this.makeRect({
+      color: isExon ? "green" : "blue",
+      ...spriteParams
+    });
     this.spriteParams = spriteParams;
   }
 
-  makeChild() {
-    return new this.constructor(this.identifier, this.i, false, {
-      ...this.spriteParams,
-      dragStart: (element, elementSprite) => {}
-    });
-  }
-
-  makeSprite(spriteParams) {
-    throw new Error("Not implemented");
-  }
-
-  makeRect(color, { size, position, stage, dragStart }) {
+  makeRect(
+    { color, size, position }
+  ) {
     const group = new Konva.Group({
       draggable: true,
       ...position,
-      ...size
+      ...size,
     });
 
     group.on("dragstart", () => {
-      dragStart(this, group);
+      this.dragStart();
+    });
+    group.on("dragend", () => {
+      this.dragEnd();
     });
     group.on("mouseenter", () => {
-      stage.container().style.cursor = "move";
+      group.getStage().container().style.cursor = "move";
     });
     group.on("mouseleave", () => {
-      stage.container().style.cursor = "default";
+      group.getStage().container().style.cursor = "default";
     });
-
+    
+    group.on("dragmove", (e) => {
+      this.dragMove();
+    });
     group.add(
       new Konva.Rect({
         x: 0,
         y: 0,
         ...size,
-        fill: color
+        fill: color,
+        stroke: "black",
+        strokeWidth: 3
       })
     );
 
@@ -68,32 +73,72 @@ class NucleotideSequences {
 
     return group;
   }
+
+  dragStart() {}
+
+  dragEnd() {}
+
+  dragMove() {}
 }
 
-class Exon extends NucleotideSequences {
-  constructor(name, i, isPrimary, spriteParams) {
-    super(name, i, isPrimary, spriteParams);
+class SequencePrimary extends NucleotideSequences {
+  makeChild() {
+    return new SequenceChild(this.game, this.identifier, this.i, this.isExon, {
+      ...this.spriteParams,
+    });
   }
 
-  makeSprite(params) {
-    return super.makeRect("green", params);
-  }
-}
+  dragStart() {
+    this.sprite.stopDrag();
 
-class Intron extends NucleotideSequences {
-  constructor(name, i, isPrimary, spriteParams) {
-    super(name, i, isPrimary, spriteParams);
+    const child = this.makeChild();
+    this.game.addChild(child);
+    child.sprite.startDrag();
+  }
+};
+
+class SequenceChild extends NucleotideSequences {
+  dragEnd() {
+    if (isColliding(this.sprite, this.game.primaryLayer)) {
+      this.game.removeChild(this);
+    }
   }
 
-  makeSprite(params) {
-    return super.makeRect("blue", params);
+  dragMove() {
+    this.checkCollision();
   }
-}
+
+  checkCollision() {
+    this.sprite.getLayer().children.forEach((group) => {
+      if (group === this.sprite || group.isPrimary)  {
+        return;
+      }
+
+      if (isColliding(group, this.sprite)) {
+        this.highlight(group, this.sprite);  // Highlight in red
+      } else {
+        group.findOne("Rect").stroke("black");
+      }
+    });
+  }
+
+  highlight(group1, group2) {
+    group1.findOne("Rect").stroke("red"); 
+    group2.findOne("Rect").stroke("red");
+  }
+};
+
 
 class RNAGame {
   sceneWidth = 1000;
   sceneHeight = 1000;
   stage;
+
+  primaryLayer;
+  childLayer;
+  uiLayer;
+
+  children = [];
 
   static identifierFromI(i) {
     let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -108,10 +153,16 @@ class RNAGame {
   static generateRNA(length) {
     // somewhere from 40-60% of the sequence is exons
     let exonCount = Math.floor(length * (0.4 + Math.random() * 0.3));
-    let isExonArray = shuffleArray(Array(exonCount).fill(true).concat(Array(length - exonCount).fill(false)));
+    let isExonArray = shuffleArray(
+      Array(exonCount)
+        .fill(true)
+        .concat(Array(length - exonCount).fill(false))
+    );
     let exonI = 0;
     let sequence = isExonArray.map((isExon, i) => {
-      return isExon ? { isExon, identifier: this.identifierFromI(exonI++), i } : { isExon, identifier: "-", i };
+      return isExon
+        ? { isExon, identifier: this.identifierFromI(exonI++), i }
+        : { isExon, identifier: "-", i };
     });
     return sequence;
   }
@@ -125,14 +176,15 @@ class RNAGame {
     });
     this.stage.getContainer().style.border = "1px solid black";
 
-    const layer = new Konva.Layer();
-    const parentDragStart = (element, elementSprite) => {
-      elementSprite.stopDrag();
+    this.uiLayer = new Konva.Layer();
+    this.stage.add(this.uiLayer);
 
-      const child = element.makeChild();
-      layer.add(child.sprite);
-      child.sprite.startDrag()
-    };
+    this.primaryLayer = new Konva.Layer();
+    this.stage.add(this.primaryLayer);
+
+    this.childLayer = new Konva.Layer();
+    this.stage.add(this.childLayer);
+
     const rnaLength = 10;
     let x = 0;
     let y = 0;
@@ -140,24 +192,41 @@ class RNAGame {
     const spriteHeight = spriteWidth;
 
     const rnaBlueprint = RNAGame.generateRNA(rnaLength);
-    const sequence = []
+    const sequence = [];
     for (let i = 0; i < rnaBlueprint.length; i++) {
       const spriteParams = {
-        size: { width: spriteWidth, height: spriteHeight }, 
+        size: { width: spriteWidth, height: spriteHeight },
         position: { x, y },
         stage: this.stage,
-        dragStart: parentDragStart
-      }
+      };
 
       const blueprint = rnaBlueprint[i];
-      const element = blueprint.isExon ? new Exon(blueprint.identifier, blueprint.i, true, spriteParams) : new Intron(blueprint.identifier, blueprint.i, true, spriteParams);
+      const element = new SequencePrimary(
+        this,
+        blueprint.identifier,
+        i,
+        blueprint.isExon,
+        spriteParams
+      );
 
       sequence.push(element);
-      layer.add(element.sprite);
+      this.primaryLayer.add(element.sprite);
       x += spriteWidth;
     }
 
-    this.stage.add(layer);
+    const resetButton = new Konva.Rect({
+      x: 0,
+      y: 100,
+      width: 100,
+      height: 50,
+      fill: "red",
+    });
+    resetButton.on("click", () => {
+      this.children.forEach((element) => element.sprite.destroy());
+      this.children = [];
+    });
+
+    this.uiLayer.add(resetButton);
 
     this.resize(size.width);
   }
@@ -171,34 +240,20 @@ class RNAGame {
     this.stage.scale({ x: scale, y: scale });
   }
 
+  addChild(child) {
+    this.children.push(child);
+    this.childLayer.add(child.sprite);
+  }
+
+  removeChild(child) {
+    this.children = this.children.filter((c) => c !== child);
+    child.sprite.destroy();
+  }
+
   destroy() {
     this.stage.destroy();
   }
 }
-
-// function makeSequenceParent(isExon, x, y, onDragStart, name) {
-//   const rect = makeSequenceRect(isExon, x, y, name);
-//   rect.draggable(true);
-//   rect.on("dragstart", () => {
-//     rect.stopDrag();
-//     onDragStart(isExon, x, y, name);
-//   });
-
-//   return rect;
-// }
-
-// function makeSequenceChild(isExon, x, y, name) {
-//   const rect = makeSequenceRect(isExon, x, y, name);
-
-//   rect.draggable(true);
-//   rect.on("dragend", () => {
-//     if (rect.y() < 100) {
-//       rect.destroy();
-//     }
-//   });
-
-//   return rect;
-// }
 
 function RNAChallengeGame({ className = "" }) {
   const divRef = useRef(null);

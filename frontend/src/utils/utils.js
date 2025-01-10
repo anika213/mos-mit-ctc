@@ -6,3 +6,16 @@ export function shuffleArray(array) {
 
   return array;
 }
+
+export function isColliding(elm1, elm2) {
+  return !(
+    elm1.getClientRect().x >
+      elm2.getClientRect().x + elm2.getClientRect().width ||
+    elm1.getClientRect().x + elm1.getClientRect().width <
+      elm2.getClientRect().x ||
+    elm1.getClientRect().y >
+      elm2.getClientRect().y + elm2.getClientRect().height ||
+    elm1.getClientRect().y + elm1.getClientRect().height <
+      elm2.getClientRect().y
+  );
+}
