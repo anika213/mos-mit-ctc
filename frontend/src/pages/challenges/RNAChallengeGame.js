@@ -44,13 +44,18 @@ class NucleotideSequences {
     group.on("mouseleave", () => {
       stage.container().style.cursor = "default";
     });
-
+    
+    group.on("dragmove", (e) => {
+      this.checkCollision(e);
+    });
     group.add(
       new Konva.Rect({
         x: 0,
         y: 0,
         ...size,
-        fill: color
+        fill: color,
+        stroke: "black",
+        strokeWidth: 3
       })
     );
 
@@ -68,6 +73,42 @@ class NucleotideSequences {
 
     return group;
   }
+
+  checkCollision(e) {
+    const target = e.target;
+    const targetRect = target.getClientRect();
+
+    target.getLayer().children.forEach((group) => {
+
+      if (group === target || group.isPrimary)  {
+        return;
+      }
+      const groupRect = group.getClientRect();
+
+      if (this.haveIntersection(groupRect, targetRect)) {
+        this.highlight(group, target);  // Highlight in red
+      } else {
+        group.findOne("Rect").stroke("black");
+      }
+    });
+  }
+
+  haveIntersection(r1, r2) {
+    return !(
+      r2.x > r1.x + r1.width ||
+      r2.x + r2.width < r1.x ||
+      r2.y > r1.y + r1.height ||
+      r2.y + r2.height < r1.y
+    );
+  }
+
+  highlight(group1, group2) {
+    group1.findOne("Rect").stroke("red"); 
+    group2.findOne("Rect").stroke("red");
+    group1.getLayer().batchDraw(); // Redraw the layer to apply the changes
+  }
+  
+  
 }
 
 class Exon extends NucleotideSequences {
