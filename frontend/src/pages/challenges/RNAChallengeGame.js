@@ -17,10 +17,11 @@ class NucleotideSequences {
     this.spriteParams = spriteParams;
   }
 
-  makeChild() {
+  makeChild(dragEnd) {
     return new this.constructor(this.identifier, this.i, false, {
       ...this.spriteParams,
-      dragStart: (element, elementSprite) => {}
+      dragStart: (element, elementSprite) => {},
+      dragEnd
     });
   }
 
@@ -28,7 +29,7 @@ class NucleotideSequences {
     throw new Error("Not implemented");
   }
 
-  makeRect(color, { size, position, stage, dragStart }) {
+  makeRect(color, { size, position, stage, dragStart = () => {}, dragEnd = () => {} }) {
     const group = new Konva.Group({
       draggable: true,
       ...position,
@@ -37,6 +38,9 @@ class NucleotideSequences {
 
     group.on("dragstart", () => {
       dragStart(this, group);
+    });
+    group.on("dragend", () => {
+      dragEnd(this, group);
     });
     group.on("mouseenter", () => {
       stage.container().style.cursor = "move";
@@ -71,23 +75,24 @@ class NucleotideSequences {
 }
 
 class Exon extends NucleotideSequences {
-  constructor(name, i, isPrimary, spriteParams) {
-    super(name, i, isPrimary, spriteParams);
-  }
-
   makeSprite(params) {
     return super.makeRect("green", params);
   }
 }
 
 class Intron extends NucleotideSequences {
-  constructor(name, i, isPrimary, spriteParams) {
-    super(name, i, isPrimary, spriteParams);
-  }
-
   makeSprite(params) {
     return super.makeRect("blue", params);
   }
+}
+
+function isColliding(rect1, rect2) {
+  return !(
+    rect1.getClientRect().x > rect2.getClientRect().x + rect2.getClientRect().width ||
+    rect1.getClientRect().x + rect1.getClientRect().width < rect2.getClientRect().x ||
+    rect1.getClientRect().y > rect2.getClientRect().y + rect2.getClientRect().height ||
+    rect1.getClientRect().y + rect1.getClientRect().height < rect2.getClientRect().y
+  );
 }
 
 class RNAGame {
@@ -125,12 +130,21 @@ class RNAGame {
     });
     this.stage.getContainer().style.border = "1px solid black";
 
-    const layer = new Konva.Layer();
+    const parentLayer = new Konva.Layer();
+    this.stage.add(parentLayer);
+
+    const childLayer = new Konva.Layer();
+    this.stage.add(childLayer);
+
     const parentDragStart = (element, elementSprite) => {
       elementSprite.stopDrag();
 
-      const child = element.makeChild();
-      layer.add(child.sprite);
+      const child = element.makeChild((element, elementSprite) => {
+        if (isColliding(elementSprite, parentLayer)) {
+          elementSprite.destroy();
+        }
+      });
+      childLayer.add(child.sprite);
       child.sprite.startDrag()
     };
     const rnaLength = 10;
@@ -153,11 +167,9 @@ class RNAGame {
       const element = blueprint.isExon ? new Exon(blueprint.identifier, blueprint.i, true, spriteParams) : new Intron(blueprint.identifier, blueprint.i, true, spriteParams);
 
       sequence.push(element);
-      layer.add(element.sprite);
+      parentLayer.add(element.sprite);
       x += spriteWidth;
     }
-
-    this.stage.add(layer);
 
     this.resize(size.width);
   }
