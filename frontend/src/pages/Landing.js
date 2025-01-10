@@ -15,7 +15,7 @@ function Landing() {
       <div className={styles.content}>
         <div className={styles.container}>
           <p className={styles.subheading}>An interactive exhibit</p>
-          <p className={styles.heading}>Explore Clinical AI</p>
+          <p className={styles.heading}>Exploring Clinical AI</p>
           <br></br>
           <button className={styles.button}>Let's start</button>
           <br></br>

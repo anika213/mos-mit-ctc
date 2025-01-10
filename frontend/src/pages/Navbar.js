@@ -21,7 +21,7 @@ const Navbar = () => {
   return (
     <nav className="bg-black text-white">
       <div className="container mx-auto flex items-center justify-between p-4">
-        <div className="text-xl font-bold">Project Name</div>
+        <div className="text-xl font-bold">Clinical AI</div>
         <div className="md:hidden" onClick={toggleMobileMenu}>
           <div className="text-2xl">☰</div>
         </div>

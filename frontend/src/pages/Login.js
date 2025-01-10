@@ -3,6 +3,9 @@ import './Landing.module.css';
 import styles from './Login.module.css';
 import dna from '../assets/dna.jpg';
 import Navbar from './Navbar.js'
+
+// TODO: whne the screen size is smaller, the side image shld be above the form, rn its below..
+// TODO: impelement all the functionality.
 function Login() {
   return (
     <div className={styles.mainContainer}>
