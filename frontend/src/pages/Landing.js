@@ -28,7 +28,7 @@ function Landing() {
        
         </div>
         <div className={styles.sideImageContainer}>
-          <img src={dna} alt="Side Image" className={styles.sideImage} />
+          <img src={dna} alt="Side" className={styles.sideImage} />
         </div>
       </div>
     </div>
