@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!isMobileMenuOpen);
@@ -11,6 +13,10 @@ const Navbar = () => {
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
   };
+
+  const goToLogin = () => {
+    navigate('/login');
+  }
 
   return (
     <nav className="bg-black text-white">
@@ -37,7 +43,7 @@ const Navbar = () => {
               </ul>
             )}
           </li>
-          <li><a href="#" className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600">Login</a></li>
+          <li><a href="#" className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600" onClick={goToLogin}>Login</a></li>
         </ul>
       </div>
     </nav>

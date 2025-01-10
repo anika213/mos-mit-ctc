@@ -1,0 +1,120 @@
+/* Main container for the page */
+.mainContainer {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Content section containing text and logos */
+  .content {
+    display: flex;
+    flex-direction: row; /* Default row layout */
+    justify-content: space-between; /* Space between content and side image */
+    align-items: flex-start;
+    padding: 20px;
+    gap: 20px;
+  }
+  
+  /* Main content styling */
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 20px;
+    padding: 20px;
+    flex: 1; /* Take up the remaining space */
+  }
+  
+  /* Subheading styling */
+  .subheading {
+    text-align: left;
+    font-size: 4vw;
+    margin: 0;
+  }
+  
+  /* Heading styling */
+  .heading {
+    text-align: left;
+    font-size: 5.5vw;
+    margin: 0;
+    margin-top: 10px;
+    font-weight: bold;
+  }
+  
+  /* Image container for logos */
+  .imageContainer {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  
+  /* Logo images styling */
+  .logos {
+    height: 8%; /* Maintain aspect ratio */
+    width: 8%;
+    padding: 0.5%;
+  }
+  
+  /* Side image container */
+  .sideImageContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1; /* Take up half the screen width */
+  }
+  
+  /* Side image styling */
+  .sideImage {
+    width: 100%; /* Fill the container width */
+    height: 100vh; /* Full viewport height */
+    object-fit: cover; /* Ensure the image covers the container */
+  }
+  
+  /* Button styling */
+  .button {
+    background-color: #f41010;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1vw;
+    cursor: pointer;
+    width: 20%;
+    padding: 1vw 2vw;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  /* Responsive design for smaller screens */
+  @media (max-width: 768px) {
+    .content {
+      flex-direction: column; /* Stack content vertically */
+      align-items: center; /* Center align for better mobile experience */
+    }
+  
+    .sideImageContainer {
+      margin-left: 0;
+      margin-bottom: 20px; /* Add spacing between image and content */
+      flex: none; /* Disable flex behavior for smaller screens */
+    }
+  
+    .sideImage {
+      width: 100%; /* Full width for mobile screens */
+      height: auto; /* Maintain aspect ratio */
+    }
+  
+    .container {
+      margin-left: 0; /* Remove left margin for better centering */
+      padding: 10px;
+    }
+  
+    .button {
+      width: 50%; /* Adjust button width for mobile */
+      font-size: 4vw;
+      padding: 2vw;
+    }
+  }
+  
