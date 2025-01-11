@@ -28,18 +28,18 @@ exports.loginUser = (req, res, next) => {
         // Successfully authenticated, log the user in
         req.login(user, (err) => {
             if (err) return next(err); // If there's an error while logging in, pass it to the next middleware
-
-            // Redirect to dashboard after successful login
-            return res.redirect('/users/dashboard');
+            
+            // Send a success response to the frontend (rather than redirecting)
+            return res.json({ message: 'Login successful', user: req.user });
         });
     })(req, res, next); // Pass control to passport authenticate
 };
 
 // Dashboard
-exports.dashboard = (req, res) => {
-    if (req.isAuthenticated()) {
-        res.json({ message: `Welcome, ${req.user.username}! You've made it the dashboard.` });
-    } else {
-        res.status(401).json({ message: 'Unauthorized' });
-    }
-};
+// exports.dashboard = (req, res) => {
+//     if (req.isAuthenticated()) {
+//         res.json({ message: `Welcome, ${req.user.username}! You've made it the dashboard.` });
+//     } else {
+//         res.status(401).json({ message: 'Unauthorized' });
+//     }
+// };

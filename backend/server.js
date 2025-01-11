@@ -17,7 +17,12 @@ mongoose.connect("mongodb://mos-mit-ctc:local_dev@db:27017")
 app.use(express.urlencoded({ extended: true })); 
 app.use(express.json());
 
-app.use(cors()); 
+const corsOptions = {
+    origin: 'http://localhost:3000', // Our frontend
+    credentials: true, // cookies yum
+}
+
+app.use(cors(corsOptions)); 
 
 app.use(
     session({
