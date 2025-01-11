@@ -19,3 +19,17 @@ export function isColliding(elm1, elm2) {
       elm2.getClientRect().y
   );
 }
+
+export function isRight(elm1, elm2) {
+  return !(
+    elm1.getClientRect().x >
+    elm2.getClientRect().x - elm1.getClientRect().width + 20
+  );
+}
+
+export function isLeft(elm1, elm2) {
+  return !(
+    elm2.getClientRect().x >
+    elm1.getClientRect().x - elm2.getClientRect().width + 20
+  );
+}

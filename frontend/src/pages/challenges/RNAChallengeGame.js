@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from "react";
 import Konva from "konva";
-import { shuffleArray, isColliding } from "../../utils/utils";
+import { shuffleArray, isColliding, isLeft, isRight } from "../../utils/utils";
 
 class NucleotideSequences {
   game;
@@ -116,8 +116,33 @@ class SequenceChild extends NucleotideSequences {
 
       if (isColliding(group, this.sprite)) {
         this.highlight(group, this.sprite);  // Highlight in red
+        let textContent = null; 
+        group.getChildren().forEach((child) => {
+          if (child instanceof Konva.Text) {
+            textContent = child.text(); // Get the text content
+          }
+        });
+
+        if (isLeft(group, this.sprite)) {
+          if (textContent && !group.alreadyAddedToProtein) {
+            
+            
+            this.addToProteinFront(textContent); // Add textContent to protein
+            group.alreadyAddedToProtein = true; // Mark the group as processed
+            group.curColliding = true
+          }
+        }
+        if (isRight(group, this.sprite)) {
+          if (textContent && !group.alreadyAddedToProtein) {
+            this.addToProteinBack(textContent); // Add textContent to protein
+            group.alreadyAddedToProtein = true; // Mark the group as processed
+            group.curColliding = true
+        }
+      }
       } else {
         group.findOne("Rect").stroke("black");
+        
+        group.alreadyAddedToProtein = false;
       }
     });
   }
@@ -126,6 +151,17 @@ class SequenceChild extends NucleotideSequences {
     group1.findOne("Rect").stroke("red"); 
     group2.findOne("Rect").stroke("red");
   }
+
+  addToProteinBack(child) {
+    this.game.addToProteinBack(child); 
+  }
+  addToProteinFront(child) {
+    this.game.addToProteinFront(child); 
+  }
+  proteinEmpty() {
+    return this.game.getProteinChain.length() 
+  }
+
 };
 
 
@@ -139,6 +175,8 @@ class RNAGame {
   uiLayer;
 
   children = [];
+
+  createdProtein = [];
 
   static identifierFromI(i) {
     let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -214,21 +252,79 @@ class RNAGame {
       x += spriteWidth;
     }
 
-    const resetButton = new Konva.Rect({
+    const reset = new Konva.Group({
+      x:0,
+      y:100,
+    })
+
+    reset.add(new Konva.Rect({
       x: 0,
-      y: 100,
+      y: 0,
       width: 100,
       height: 50,
       fill: "red",
-    });
-    resetButton.on("click", () => {
+    }));
+
+    const resetText = new Konva.Text( {
+        text: "RESET",
+        fill: "white",
+        fontSize: 20,
+        
+      });
+
+    const textX = (100 - resetText.width()) /2 ;
+    const textY = (50 - resetText.height()) / 2;
+  
+    resetText.position({ x: textX, y: textY });
+
+    reset.add(resetText)
+    
+    
+
+    reset.on("click", () => {
       this.children.forEach((element) => element.sprite.destroy());
       this.children = [];
+      
     });
 
-    this.uiLayer.add(resetButton);
+    this.uiLayer.add(reset);
 
     this.resize(size.width);
+
+    const done = new Konva.Group({
+      x:100,
+      y:100,
+    });
+
+    done.add(new Konva.Rect({
+      x: 0,
+      y: 0,
+      width: 100,
+      height: 50,
+      fill: "green",
+    }));
+
+    const doneText = new Konva.Text( {
+        text: "CHECK",
+        fill: "white",
+        fontSize: 20,
+        
+      });
+
+    const textXdone = (100 - doneText.width()) /2 ;
+    const textYdone = (50 - doneText.height()) / 2;
+  
+    doneText.position({ x: textXdone, y: textYdone });
+
+    done.add(doneText)
+    
+    done.on("click", () => {
+      this.checkProtein(); 
+    });
+    
+    this.uiLayer.add(done);
+    
+  
   }
 
   resize(actualWidth) {
@@ -253,6 +349,48 @@ class RNAGame {
   destroy() {
     this.stage.destroy();
   }
+
+  addToProteinBack(child) {
+    this.createdProtein.push(child);
+    console.log(this.createdProtein);
+  }
+  addToProteinFront(child) {
+    this.createdProtein.unshift(child);
+  }
+  getProteinChain() {
+    return this.createdProtein;
+  }
+
+  checkProtein() {
+    const allGroups = this.children.map((element) => element.sprite); // Use `sprite` for Konva.Group
+    allGroups.sort((a, b) => a.getClientRect().x - b.getClientRect().x); // Sort by x-position
+    let curHighestLetter = 0
+    allGroups.forEach((group) => {
+      if (group.curColliding) {
+        let textContent = null; 
+        group.getChildren().forEach((child) => {
+          if (child instanceof Konva.Text) {
+            textContent = child.text(); // Get the text content
+          }
+        });
+
+        if (textContent == "-") {
+          console.log("theres an intron")
+          return;
+        }
+        else if (textContent.charCodeAt(0) < curHighestLetter) {
+          console.log("order wrong")
+          return;
+        }
+        else {
+          console.log(textContent)
+          curHighestLetter = textContent.charCodeAt(0)
+        }
+      }
+    console.log(`Group at x: ${group.getClientRect().x}`);
+  });
+  }
+
 }
 
 function RNAChallengeGame({ className = "" }) {
