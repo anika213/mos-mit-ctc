@@ -223,7 +223,7 @@ class RNAGame {
     const allGroupsByXPos = this.children.map((element) => {
       return {
         sprite: element.sprite,
-        identifier: element.identifier,
+        i: element.i,
         isExon: element.isExon,
       };
     });
@@ -237,27 +237,27 @@ class RNAGame {
     }
 
     let errors = new Set();
-    let lastIdentifier = "";
+    let lastGroupI = -1;
     for (let i = 0; i < allGroupsByXPos.length; i++) {
       if (!allGroupsByXPos[i].isExon) {
         errors.add("There's an intron!");
         continue;
       }
       let currSprite = allGroupsByXPos[i].sprite;
-      let identifier = allGroupsByXPos[i].identifier;
+      let groupI = allGroupsByXPos[i].i;
 
       if (i !== 0) {
         if (isColliding(currSprite, allGroupsByXPos[i - 1].sprite)) {
-          if (identifier === lastIdentifier) {
+          if (groupI === lastGroupI) {
             errors.add("An exon can only appear once!");
-          } else if (identifier < lastIdentifier) {
+          } else if (groupI < lastGroupI) {
             errors.add("The order of your exons are incorrect!");
           }
         } else {
           errors.add("Not all your protein chains are connected!");
         }
       }
-      lastIdentifier = identifier;
+      lastGroupI = groupI;
     } // end checking for errors
 
     if (errors.size > 0) {
@@ -302,7 +302,6 @@ function RNAChallengeGame({ className = "" }) {
 
   // Create stage on mount
   useEffect(() => {
-    console.log("Creating game");
     createGame();
 
     return destroyGame;
