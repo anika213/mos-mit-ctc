@@ -9,7 +9,7 @@ router.post('/register', controller.registerUser);
 // Login route (using Passport for authentication)
 router.post('/login', controller.loginUser);
 
-// Protected dashboard route for testing
-router.get('/dashboard', controller.dashboard);
+// // Protected dashboard route for testing
+// router.get('/dashboard', controller.dashboard);
 
 module.exports = router; 
