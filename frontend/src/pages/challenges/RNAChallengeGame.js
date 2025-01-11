@@ -109,6 +109,7 @@ class SequenceChild extends NucleotideSequences {
   }
 
   checkCollision() {
+    const collidingGroups = new Set();
     this.sprite.getLayer().children.forEach((group) => {
       if (group === this.sprite || group.isPrimary)  {
         return;
@@ -123,28 +124,14 @@ class SequenceChild extends NucleotideSequences {
           }
         });
 
-        if (isLeft(group, this.sprite)) {
-          if (textContent && !group.alreadyAddedToProtein) {
-            
-            
-            this.addToProteinFront(textContent); // Add textContent to protein
-            group.alreadyAddedToProtein = true; // Mark the group as processed
-            group.curColliding = true
-          }
-        }
-        if (isRight(group, this.sprite)) {
-          if (textContent && !group.alreadyAddedToProtein) {
-            this.addToProteinBack(textContent); // Add textContent to protein
-            group.alreadyAddedToProtein = true; // Mark the group as processed
-            group.curColliding = true
-        }
-      }
-      } else {
-        group.findOne("Rect").stroke("black");
-        
-        group.alreadyAddedToProtein = false;
-      }
+        group.curColliding = true
+        this.sprite.curColliding = true;
+        collidingGroups.add(group);
+        return true;
+      } 
     });
+
+    
   }
 
   highlight(group1, group2) {
@@ -223,6 +210,10 @@ class RNAGame {
     this.childLayer = new Konva.Layer();
     this.stage.add(this.childLayer);
 
+    this.alertLayer = new Konva.Layer();
+    this.stage.add(this.alertLayer)
+
+
     const rnaLength = 10;
     let x = 0;
     let y = 0;
@@ -278,8 +269,6 @@ class RNAGame {
     resetText.position({ x: textX, y: textY });
 
     reset.add(resetText)
-    
-    
 
     reset.on("click", () => {
       this.children.forEach((element) => element.sprite.destroy());
@@ -362,33 +351,133 @@ class RNAGame {
   }
 
   checkProtein() {
-    const allGroups = this.children.map((element) => element.sprite); // Use `sprite` for Konva.Group
+    const allGroups = this.children.map((element) => element.sprite); 
     allGroups.sort((a, b) => a.getClientRect().x - b.getClientRect().x); // Sort by x-position
     let curHighestLetter = 0
-    allGroups.forEach((group) => {
-      if (group.curColliding) {
-        let textContent = null; 
+
+    if (allGroups.length === 0) {
+      this.showAlert("No protein created")
+    }
+
+    for (let i = 0; i < allGroups.length; i++) {
+      
+      let group = allGroups[i];
+      let textContent = null; 
+      
+      
         group.getChildren().forEach((child) => {
           if (child instanceof Konva.Text) {
             textContent = child.text(); // Get the text content
           }
         });
 
-        if (textContent == "-") {
-          console.log("theres an intron")
-          return;
-        }
-        else if (textContent.charCodeAt(0) < curHighestLetter) {
-          console.log("order wrong")
-          return;
+      if (i === 0) {
+        if (textContent === "-") {
+          this.showAlert("There's an intron!")
+          
         }
         else {
-          console.log(textContent)
           curHighestLetter = textContent.charCodeAt(0)
         }
+      }else {
+        if(isColliding(group, allGroups[i-1])) {
+
+          if (this.alertLayer.children.length === 0) {
+            if (textContent == "-") {
+              this.showAlert("There's an intron!")
+              return;
+            } else if (textContent.charCodeAt(0) < curHighestLetter) {
+              this.showAlert("The order of your exons are incorrect!")
+              return;
+            } else {
+              curHighestLetter = textContent.charCodeAt(0)
+            }
+          }
+        } else {
+          if (this.alertLayer.children.length === 0) { 
+            this.showAlert("Not all your protein chains are connected!")
+          }
+        }
       }
-    console.log(`Group at x: ${group.getClientRect().x}`);
+    } // end checking for errors
+
+  if (this.alertLayer.children.length === 0) { // protein was valid! do what happens 
+    this.showAlert("Congratulations! The challenge is completed :)")
+  }
+
+  } // end create protien
+
+  showAlert(text) {
+    
+    const alertbox = new Konva.Group({
+      x:300,
+      y:100,
+    })
+
+    alertbox.add(new Konva.Rect({
+      x: 0,
+      y: 0,
+      width: 250,
+      height: 250,
+      fill: "white",
+      stroke: "black",
+      strokeWidth: 3,
+      cornerRadius: 10,
+      shadowBlur: 10,
+      shadowOpacity: 0.2,
+    }));
+
+    const alerText = new Konva.Text( {
+        text: text,
+        fill: "black",
+        fontSize: 20,
+        width:200
+      });
+
+    const textX = (250 - alerText.width()) /2 ;
+    const textY = (250 - alerText.height()) / 2;
+  
+    alerText.position({ x: textX, y: textY });
+
+    alertbox.add(alerText)
+    const closeButtonSize = 30;
+    const closeButton = new Konva.Group({
+    x: 300 - closeButtonSize - 10,
+    y: 10,
+    cursor: "pointer",
   });
+
+  closeButton.add(
+    new Konva.Rect({
+      width: closeButtonSize,
+      height: closeButtonSize,
+      fill: "red",
+      cornerRadius: 4,
+      shadowBlur: 5,
+    })
+  );
+
+  closeButton.add(
+    new Konva.Text({
+      text: "X",
+      fontSize: 18,
+      fill: "white",
+      align: "center",
+      verticalAlign: "middle",
+      width: closeButtonSize,
+      height: closeButtonSize,
+    })
+  );
+
+  // Close button click event
+  closeButton.on("click", () => {
+    alertbox.destroy(); // Remove alert box
+    this.uiLayer.batchDraw(); // Redraw the UI layer
+  });
+
+  alertbox.add(closeButton);
+  this.alertLayer.add(alertbox);
+  this.alertLayer.batchDraw(); // Render the new changes
   }
 
 }
