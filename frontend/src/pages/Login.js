@@ -1,5 +1,3 @@
-
-import './Landing.module.css';
 import styles from './Login.module.css';
 import dna from '../assets/dna.jpg';
 import Navbar from './Navbar.js'
