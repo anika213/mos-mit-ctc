@@ -23,7 +23,7 @@ const Navbar = () => {
           <div className="text-2xl">☰</div>
         </div>
         <ul className={`md:flex md:items-center md:space-x-6 ${isMobileMenuOpen ? 'block' : 'hidden'} md:block`}>
-          <li><Link to="/home" className="hover:text-gray-400">Home</Link></li>
+          <li><Link to="/" className="hover:text-gray-400">Home</Link></li>
           <li><Link to="/leaderboard" className="hover:text-gray-400">Leaderboard</Link></li>
           <li className="relative group">
             <span 
