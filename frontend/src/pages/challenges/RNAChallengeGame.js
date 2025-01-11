@@ -110,7 +110,6 @@ class RNAGame {
 
   primaryLayer;
   childLayer;
-  alertLayer;
 
   children = [];
 
@@ -150,9 +149,6 @@ class RNAGame {
     this.childLayer = new Konva.Layer();
     this.stage.add(this.childLayer);
 
-    this.alertLayer = new Konva.Layer();
-    this.stage.add(this.alertLayer);
-
     const rnaLength = 10;
     let x = 0;
     let y = 0;
@@ -191,9 +187,7 @@ class RNAGame {
   }
 
   checkClicked() {
-    if (this.alertLayer.children.length === 0) {
-      this.checkProtein();
-    }
+    this.checkProtein();
   }
 
   resize(actualWidth) {
