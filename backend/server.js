@@ -5,6 +5,7 @@ const cors = require('cors');
 const routes = require ("./routes"); 
 const passport = require('./utils/passportConfig');
 const mongoose = require("mongoose");
+const MongoStore = require('connect-mongo'); // Persisting sessions
 
 const { PORT=8080, SESSION_SECRET} = process.env; 
 
@@ -31,8 +32,12 @@ app.use(
       saveUninitialized: false,
       cookie: { 
         httpOnly: true, 
-        secure: false, // HTTP requests using Postman
-        maxAge: 60000 *60 }
+        secure: false, // HTTP requests using Postman. True in production
+        sameSite: 'None', // This allows the cookie to be sent with cross-origin requests
+        maxAge: 60000 *60 },
+        store: MongoStore.create({
+            client: mongoose.connection.getClient()
+        })
     })
 );
 

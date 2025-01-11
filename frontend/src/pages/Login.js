@@ -29,7 +29,7 @@ function Login() {
       });
 
       if (response.ok) {
-        navigate('/landing');
+        navigate('/');
       } else {
         const result = await response.json();
         setError(result.message || 'Login failed.');
