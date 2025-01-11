@@ -10,6 +10,6 @@ router.post('/register', controller.registerUser);
 router.post('/login', controller.loginUser);
 
 // // Protected dashboard route for testing
-// router.get('/dashboard', controller.dashboard);
+router.get('/status', controller.status);
 
 module.exports = router; 

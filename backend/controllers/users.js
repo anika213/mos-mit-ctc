@@ -36,10 +36,10 @@ exports.loginUser = (req, res, next) => {
 };
 
 // Dashboard
-// exports.dashboard = (req, res) => {
-//     if (req.isAuthenticated()) {
-//         res.json({ message: `Welcome, ${req.user.username}! You've made it the dashboard.` });
-//     } else {
-//         res.status(401).json({ message: 'Unauthorized' });
-//     }
-// };
+exports.status = (req, res) => {
+    if (req.isAuthenticated()) {
+        res.json({ message: `Welcome, ${req.user.username}! You've made it the dashboard.` });
+    } else {
+        res.status(401).json({ message: 'Unauthorized' });
+    }
+};
