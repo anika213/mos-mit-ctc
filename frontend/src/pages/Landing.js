@@ -5,10 +5,14 @@ import jameel from '../assets/jameel.jpg';
 import mit from '../assets/mit.png';
 import mos from '../assets/mos.jpg';
 import dna from '../assets/dna.jpg';
-
+import { useNavigate } from 'react-router-dom';
 // TODO: fix the button sizing, kinda weird when changing screen size rn
 // TODO: add the challenges at the bottom as drop down (FAQ style)
 function Landing() {
+  const navigate = useNavigate();
+  function goToChallenge() {
+    navigate('/challenge');
+  }
   return (
     <div className={styles.mainContainer}>
       <Navbar />
@@ -17,7 +21,7 @@ function Landing() {
           <p className={styles.subheading}>An interactive exhibit</p>
           <p className={styles.heading}>Exploring Clinical AI</p>
           <br></br>
-          <button className={styles.button}>Let's start</button>
+          <button className={styles.button} onClick={goToChallenge}>Let's start</button>
           <br></br>
           <div className={styles.imageContainer}>
             <img src={mos} alt="MOS" className={styles.logos} />
