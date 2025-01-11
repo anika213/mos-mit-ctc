@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from "react";
 import Konva from "konva";
-import { shuffleArray, isColliding } from "../../utils/utils";
+import { shuffleArray, isColliding, toAlphabetBase26 } from "../../utils/utils";
 
 class NucleotideSequences {
   game;
@@ -140,15 +140,6 @@ class RNAGame {
 
   children = [];
 
-  static identifierFromI(i) {
-    let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    let result = "";
-    while (i >= 0) {
-      result = alphabet[i % 26] + result;
-      i = Math.floor(i / 26) - 1;
-    }
-    return result;
-  }
 
   static generateRNA(length) {
     // somewhere from 40-60% of the sequence is exons
@@ -161,7 +152,7 @@ class RNAGame {
     let exonI = 0;
     let sequence = isExonArray.map((isExon, i) => {
       return isExon
-        ? { isExon, identifier: this.identifierFromI(exonI++), i }
+        ? { isExon, identifier: toAlphabetBase26(exonI++), i }
         : { isExon, identifier: "-", i };
     });
     return sequence;
