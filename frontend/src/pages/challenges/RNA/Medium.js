@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import styles from "./Medium.module.css";
 
+// TODO: Make more specific feedback for incorrect answers
+// TODO: Change all colors in teh module.css file to match the color scheme of the website
+// TODO: I feel like on a phone, the clicking is weird, need to click twice..
+
 const sequence =
   "AUGCGCUAAGGUGGGAGGCAUGGAAUAGGCUAUGGGUAAUAGGGUAUGGUCAAAAGCAUGGGCUAAGUCGAAUACAGCUAUGA";
 
