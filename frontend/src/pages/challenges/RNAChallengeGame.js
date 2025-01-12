@@ -100,6 +100,27 @@ class SequenceChild extends NucleotideSequences {
     if (isColliding(this.sprite, this.game.primaryLayer)) {
       this.game.removeChild(this);
     }
+
+    const childrenByXPos = this.game.children.map((element) => element.sprite);
+    childrenByXPos.sort((a, b) => a.getClientRect().x - b.getClientRect().x);
+    for (const child of childrenByXPos) {
+      if (child === this.sprite) {
+        continue;
+      }
+      if (isColliding(this.sprite, child)) {
+        const newPosition = {
+          x: child.position().x,
+          y: child.position().y,
+        };
+        if (this.sprite.getClientRect().x < child.getClientRect().x) {
+          newPosition.x -= this.sprite.width();
+        } else {
+          newPosition.x += child.width();
+        }
+
+        this.sprite.position(newPosition);
+      }
+    }
   }
 }
 
