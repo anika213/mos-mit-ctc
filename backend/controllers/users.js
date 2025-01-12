@@ -2,10 +2,17 @@ const passport = require('../utils/passportConfig');
 const hashPassword = require('../utils/bcryptHash.js');
 
 const User = require('../models/user.js');
+const { validationResult } = require('express-validator');
 
 // Register user
 // Should probably run a schema validator before continuing the registration process
 exports.registerUser = async (req, res) => {
+    const validationErrors = validationResult(req);
+
+    if (!validationErrors.isEmpty()) {
+        return res.status(400).json({ errors: validationErrors.array() });
+    }
+
     const { body } = req;
     body.password = hashPassword(body.password);
     const newUser = new User(body);

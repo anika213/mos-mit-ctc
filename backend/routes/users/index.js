@@ -2,9 +2,10 @@
 const express = require ("express"); 
 const controller = require ("../../controllers/users"); 
 const router = express.Router (); 
+const userValidationSchema = require ("../../validators/userValidation"); 
 
 // Registration route
-router.post('/register', controller.registerUser);
+router.post('/register', userValidationSchema, controller.registerUser);
 
 // Login route (using Passport for authentication)
 router.post('/login', controller.loginUser);
