@@ -11,5 +11,7 @@
     "frontend",
     "backend"
   ],
-  "dependencies": {}
+  "dependencies": {
+    "connect-mongo": "^5.1.0"
+  }
 }

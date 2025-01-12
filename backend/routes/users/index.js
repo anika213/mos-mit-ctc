@@ -12,4 +12,7 @@ router.post('/login', controller.loginUser);
 // // Protected dashboard route for testing
 router.get('/status', controller.status);
 
+// Leaderboard route
+router.get('/leaderboard', controller.leaderboard);
+
 module.exports = router; 

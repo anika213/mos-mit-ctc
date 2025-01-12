@@ -43,3 +43,15 @@ exports.status = (req, res) => {
         res.status(401).json({ message: 'Unauthorized' });
     }
 };
+
+// Leaderboard
+exports.leaderboard = async (req, res) => {
+    try {
+        const users = await User.find({}).sort({ score: -1 }); // Sort by score descending
+        console.log(users);
+        return res.json(users);
+    } catch (err) {
+        console.error('Error fetching leaderboard:', err);
+        return res.status(500).send('Internal Server Error');
+    }
+}

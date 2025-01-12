@@ -7,7 +7,7 @@ const passport = require('./utils/passportConfig');
 const mongoose = require("mongoose");
 const MongoStore = require('connect-mongo'); // Persisting sessions
 
-const { PORT=8080, SESSION_SECRET} = process.env; 
+const { PORT=8080, SESSION_SECRET = 'default-secret-key'} = process.env; 
 
 const app = express();
 

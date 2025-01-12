@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 const Navbar = () => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!isMobileMenuOpen);
@@ -28,7 +28,7 @@ const Navbar = () => {
           <li className="relative group">
             <span 
               className="cursor-pointer hover:text-gray-400" 
-              onMouseEnter={toggleDropdown} 
+              onMouseClick={toggleDropdown} 
               onMouseLeave={toggleDropdown}
             >
               Challenges ▼
