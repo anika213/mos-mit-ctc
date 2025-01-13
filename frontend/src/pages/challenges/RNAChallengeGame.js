@@ -16,14 +16,16 @@ class NucleotideSequences {
     this.identifier = identifier;
     this.i = i;
     this.isExon = isExon;
+    let colorOptions = ['#79ADDC', '#FFC09F', '#FFEE93', '#FCF5C7', '#ADF7B6', '#A3BCF9', '#7796CB', '#87BBA2', '#B8E1FF', '#E8AEB7']
     this.sprite = this.makeRect({
-      color: isExon ? "green" : "blue",
+      color: isExon ? colorOptions[Math.floor(Math.random() * 10)] : "black",
+      textColor: isExon ? "black" : "white",
       ...spriteParams,
     });
     this.spriteParams = spriteParams;
   }
 
-  makeRect({ color, size, position }) {
+  makeRect({ color, textColor, size, position }) {
     const group = new Konva.Group({
       draggable: true,
       ...position,
@@ -53,14 +55,15 @@ class NucleotideSequences {
         ...size,
         fill: color,
         stroke: "black",
-        strokeWidth: 3,
+        strokeWidth: 2,
       })
     );
 
     const text = new Konva.Text({
       text: this.identifier.toString(),
-      fill: "white",
+      fill: textColor,
       fontSize: 20,
+      
     });
 
     const textX = (size.width - text.width()) / 2;
@@ -81,7 +84,9 @@ class NucleotideSequences {
 
 class SequencePrimary extends NucleotideSequences {
   makeChild() {
+    const parentColor = this.sprite.findOne("Rect").fill();
     return new SequenceChild(this.game, this.identifier, this.i, this.isExon, {
+      color: parentColor,
       ...this.spriteParams,
     });
   }
@@ -173,14 +178,22 @@ class RNAGame {
     const rnaLength = 10;
     let x = 0;
     let y = 0;
-    const spriteWidth = this.sceneWidth / rnaLength;
-    const spriteHeight = spriteWidth;
+    const spriteHeight = this.sceneWidth / rnaLength / 2;
+    //varying widths
+    const proportions = Array.from({ length: rnaLength }, () => Math.random());
+    const totalProportion = proportions.reduce((sum, value) => sum + value, 0);
+    const normalizedProportions = proportions.map(value => value / totalProportion);
+    const minWidth = this.sceneWidth / 20 
+    const remainingWidth = this.sceneWidth - (minWidth * rnaLength)
+    const randomWidth = normalizedProportions.map(  proportion => proportion * remainingWidth + minWidth);
+
+
 
     const rnaBlueprint = RNAGame.generateRNA(rnaLength);
     const sequence = [];
     for (let i = 0; i < rnaBlueprint.length; i++) {
       const spriteParams = {
-        size: { width: spriteWidth, height: spriteHeight },
+        size: { width: randomWidth[i], height: spriteHeight },
         position: { x, y },
         stage: this.stage,
       };
@@ -196,7 +209,7 @@ class RNAGame {
 
       sequence.push(element);
       this.primaryLayer.add(element.sprite);
-      x += spriteWidth;
+      x += randomWidth[i];
     }
 
     this.resize(size.width);
