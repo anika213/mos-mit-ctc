@@ -38,7 +38,7 @@ function Landing() {
           <p className={styles.subheading}>An interactive exhibit</p>
           <p className={styles.heading}>Exploring Clinical AI</p>
           <br></br>
-          <button className={styles.button} onClick={goToChallenge}>Let's start</button>
+          <button className={styles.button} onClick={goToChallenge}>Get Started</button>
           <br></br>
           <div className={styles.imageContainer}>
             <img src={mos} alt="MOS" className={styles.logos} />

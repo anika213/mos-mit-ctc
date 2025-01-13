@@ -32,19 +32,26 @@ const Navbar = () => {
         <ul className={`md:flex md:items-center md:space-x-6 ${isMobileMenuOpen ? 'block' : 'hidden'} md:block`}>
           <li><Link to="/" className="hover:text-gray-400">Home</Link></li>
           <li><Link to="/leaderboard" className="hover:text-gray-400">Leaderboard</Link></li>
-          <li className="relative group">
-            <span 
+          <li className="relative group" >
+              
+            
+              <span 
               className="cursor-pointer hover:text-gray-400" 
-              onClick={toggleDropdown} 
-            >
-              Challenges ▼
-            </span>
-            {isDropdownOpen && (
-              <ul className="absolute left-0 mt-2 bg-black text-white shadow-lg rounded-md w-40">
+              onClick={toggleDropdown}
+              onMouseEnter={toggleDropdown}
+              >
+                Challenges ▼
+              </span>
+              {isDropdownOpen && (
+              <ul className="absolute left-0 mt-2 bg-black text-white shadow-lg rounded-md w-40"
+              onMouseLeave={isDropdownOpen ? toggleDropdown : null}
+              >
                 <li className="p-2 hover:bg-gray-700"><Link to="/challenge/rna">RNA Challenge</Link></li>
                 <li className="p-2 hover:bg-gray-700"><Link to="/challenge/rna">Challenge 2</Link></li>
               </ul>
-            )}
+             )}
+            
+            
           </li>
 
           {!isAuthenticated ? (
