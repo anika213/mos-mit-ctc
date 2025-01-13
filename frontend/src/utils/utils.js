@@ -1,7 +1,7 @@
 export function shuffleArray(array) {
   for (let i = array.length - 1; i >= 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
   }
 
   return array;
@@ -18,4 +18,14 @@ export function isColliding(elm1, elm2) {
     elm1.getClientRect().y + elm1.getClientRect().height <
       elm2.getClientRect().y
   );
+}
+
+export function toAlphabetBase26(i) {
+  let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  let result = "";
+  while (i >= 0) {
+    result = alphabet[i % 26] + result;
+    i = Math.floor(i / 26) - 1;
+  }
+  return result;
 }

@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Konva from "konva";
-import { shuffleArray, isColliding } from "../../utils/utils";
+import { shuffleArray, isColliding, toAlphabetBase26 } from "../../utils/utils";
 
 class NucleotideSequences {
   game;
@@ -16,16 +16,16 @@ class NucleotideSequences {
     this.identifier = identifier;
     this.i = i;
     this.isExon = isExon;
+    let colorOptions = ['#79ADDC', '#FFC09F', '#FFEE93', '#FCF5C7', '#ADF7B6', '#A3BCF9', '#7796CB', '#87BBA2', '#B8E1FF', '#E8AEB7']
     this.sprite = this.makeRect({
-      color: isExon ? "green" : "blue",
-      ...spriteParams
+      color: isExon ? colorOptions[Math.floor(Math.random() * 10)] : "black",
+      textColor: isExon ? "black" : "white",
+      ...spriteParams,
     });
     this.spriteParams = spriteParams;
   }
 
-  makeRect(
-    { color, size, position }
-  ) {
+  makeRect({ color, textColor, size, position }) {
     const group = new Konva.Group({
       draggable: true,
       ...position,
@@ -44,7 +44,7 @@ class NucleotideSequences {
     group.on("mouseleave", () => {
       group.getStage().container().style.cursor = "default";
     });
-    
+
     group.on("dragmove", (e) => {
       this.dragMove();
     });
@@ -55,14 +55,15 @@ class NucleotideSequences {
         ...size,
         fill: color,
         stroke: "black",
-        strokeWidth: 3
+        strokeWidth: 2,
       })
     );
 
     const text = new Konva.Text({
       text: this.identifier.toString(),
-      fill: "white",
+      fill: textColor,
       fontSize: 20,
+      
     });
 
     const textX = (size.width - text.width()) / 2;
@@ -83,7 +84,9 @@ class NucleotideSequences {
 
 class SequencePrimary extends NucleotideSequences {
   makeChild() {
+    const parentColor = this.sprite.findOne("Rect").fill();
     return new SequenceChild(this.game, this.identifier, this.i, this.isExon, {
+      color: parentColor,
       ...this.spriteParams,
     });
   }
@@ -95,60 +98,48 @@ class SequencePrimary extends NucleotideSequences {
     this.game.addChild(child);
     child.sprite.startDrag();
   }
-};
+}
 
 class SequenceChild extends NucleotideSequences {
   dragEnd() {
     if (isColliding(this.sprite, this.game.primaryLayer)) {
       this.game.removeChild(this);
     }
-  }
 
-  dragMove() {
-    this.checkCollision();
-  }
-
-  checkCollision() {
-    this.sprite.getLayer().children.forEach((group) => {
-      if (group === this.sprite || group.isPrimary)  {
-        return;
+    const childrenByXPos = this.game.children.map((element) => element.sprite);
+    childrenByXPos.sort((a, b) => a.getClientRect().x - b.getClientRect().x);
+    for (const child of childrenByXPos) {
+      if (child === this.sprite) {
+        continue;
       }
+      if (isColliding(this.sprite, child)) {
+        const newPosition = {
+          x: child.position().x,
+          y: child.position().y,
+        };
+        if (this.sprite.getClientRect().x < child.getClientRect().x) {
+          newPosition.x -= this.sprite.width();
+        } else {
+          newPosition.x += child.width();
+        }
 
-      if (isColliding(group, this.sprite)) {
-        this.highlight(group, this.sprite);  // Highlight in red
-      } else {
-        group.findOne("Rect").stroke("black");
+        this.sprite.position(newPosition);
       }
-    });
+    }
   }
-
-  highlight(group1, group2) {
-    group1.findOne("Rect").stroke("red"); 
-    group2.findOne("Rect").stroke("red");
-  }
-};
-
+}
 
 class RNAGame {
   sceneWidth = 1000;
-  sceneHeight = 1000;
+  sceneHeight = 500;
   stage;
 
   primaryLayer;
   childLayer;
-  uiLayer;
 
   children = [];
 
-  static identifierFromI(i) {
-    let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    let result = "";
-    while (i >= 0) {
-      result = alphabet[i % 26] + result;
-      i = Math.floor(i / 26) - 1;
-    }
-    return result;
-  }
+  showAlert;
 
   static generateRNA(length) {
     // somewhere from 40-60% of the sequence is exons
@@ -161,13 +152,15 @@ class RNAGame {
     let exonI = 0;
     let sequence = isExonArray.map((isExon, i) => {
       return isExon
-        ? { isExon, identifier: this.identifierFromI(exonI++), i }
+        ? { isExon, identifier: toAlphabetBase26(exonI++), i }
         : { isExon, identifier: "-", i };
     });
     return sequence;
   }
 
-  constructor(div, size) {
+  constructor(showAlert, div, size) {
+    this.showAlert = showAlert;
+
     // we will scale it later, 1000x1000 for consistency
     this.stage = new Konva.Stage({
       container: div,
@@ -175,9 +168,6 @@ class RNAGame {
       height: this.sceneHeight,
     });
     this.stage.getContainer().style.border = "1px solid black";
-
-    this.uiLayer = new Konva.Layer();
-    this.stage.add(this.uiLayer);
 
     this.primaryLayer = new Konva.Layer();
     this.stage.add(this.primaryLayer);
@@ -188,14 +178,22 @@ class RNAGame {
     const rnaLength = 10;
     let x = 0;
     let y = 0;
-    const spriteWidth = this.sceneWidth / rnaLength;
-    const spriteHeight = spriteWidth;
+    const spriteHeight = this.sceneWidth / rnaLength / 2;
+    //varying widths
+    const proportions = Array.from({ length: rnaLength }, () => Math.random());
+    const totalProportion = proportions.reduce((sum, value) => sum + value, 0);
+    const normalizedProportions = proportions.map(value => value / totalProportion);
+    const minWidth = this.sceneWidth / 20 
+    const remainingWidth = this.sceneWidth - (minWidth * rnaLength)
+    const randomWidth = normalizedProportions.map(  proportion => proportion * remainingWidth + minWidth);
+
+
 
     const rnaBlueprint = RNAGame.generateRNA(rnaLength);
     const sequence = [];
     for (let i = 0; i < rnaBlueprint.length; i++) {
       const spriteParams = {
-        size: { width: spriteWidth, height: spriteHeight },
+        size: { width: randomWidth[i], height: spriteHeight },
         position: { x, y },
         stage: this.stage,
       };
@@ -211,24 +209,19 @@ class RNAGame {
 
       sequence.push(element);
       this.primaryLayer.add(element.sprite);
-      x += spriteWidth;
+      x += randomWidth[i];
     }
 
-    const resetButton = new Konva.Rect({
-      x: 0,
-      y: 100,
-      width: 100,
-      height: 50,
-      fill: "red",
-    });
-    resetButton.on("click", () => {
-      this.children.forEach((element) => element.sprite.destroy());
-      this.children = [];
-    });
-
-    this.uiLayer.add(resetButton);
-
     this.resize(size.width);
+  }
+
+  resetClicked() {
+    this.children.forEach((element) => element.sprite.destroy());
+    this.children = [];
+  }
+
+  checkClicked() {
+    this.checkProtein();
   }
 
   resize(actualWidth) {
@@ -253,6 +246,55 @@ class RNAGame {
   destroy() {
     this.stage.destroy();
   }
+
+  checkProtein() {
+    const allGroupsByXPos = this.children.map((element) => {
+      return {
+        sprite: element.sprite,
+        i: element.i,
+        isExon: element.isExon,
+      };
+    });
+    allGroupsByXPos.sort(
+      (a, b) => a.sprite.getClientRect().x - b.sprite.getClientRect().x
+    ); // Sort by x-position
+
+    if (allGroupsByXPos.length === 0) {
+      this.showAlert("You haven't created a protein!");
+      return;
+    }
+
+    let errors = new Set();
+    let lastGroupI = -1;
+    for (let i = 0; i < allGroupsByXPos.length; i++) {
+      if (!allGroupsByXPos[i].isExon) {
+        errors.add("There's an intron!");
+        continue;
+      }
+      let currSprite = allGroupsByXPos[i].sprite;
+      let groupI = allGroupsByXPos[i].i;
+
+      if (i !== 0) {
+        if (isColliding(currSprite, allGroupsByXPos[i - 1].sprite)) {
+          if (groupI === lastGroupI) {
+            errors.add("An exon can only appear once!");
+          } else if (groupI < lastGroupI) {
+            errors.add("The order of your exons are incorrect!");
+          }
+        } else {
+          errors.add("Not all your protein chains are connected!");
+        }
+      }
+      lastGroupI = groupI;
+    } // end checking for errors
+
+    if (errors.size > 0) {
+      const output = Array.from(errors).join("\n");
+      this.showAlert("There are errors in your protein: \n" + output);
+      return;
+    }
+    this.showAlert("Congratulations! The challenge is completed :)");
+  } // end create protien
 }
 
 function RNAChallengeGame({ className = "" }) {
@@ -260,23 +302,31 @@ function RNAChallengeGame({ className = "" }) {
   const resizeRef = useRef(null);
   const gameRef = useRef(null);
 
+  const [alertShowing, setAlertShowing] = useState(false);
+  const [alertText, setAlertText] = useState("");
+
+  const showAlert = useCallback((text = "") => {
+    setAlertShowing(true);
+    setAlertText(text);
+  }, []);
+
   const destroyGame = useCallback(() => {
     gameRef.current.destroy();
     gameRef.current = null;
-  });
+  }, []);
 
   const createGame = useCallback(() => {
     if (gameRef.current) {
       destroyGame();
     }
 
-    const game = new RNAGame(divRef.current, {
+    const game = new RNAGame(showAlert, divRef.current, {
       width: resizeRef.current.clientWidth,
       height: resizeRef.current.clientHeight,
     });
 
     gameRef.current = game;
-  });
+  }, [showAlert, destroyGame]);
 
   // Create stage on mount
   useEffect(() => {
@@ -285,8 +335,56 @@ function RNAChallengeGame({ className = "" }) {
     return destroyGame;
   }, [createGame, destroyGame]);
 
+  useEffect(() => {
+    const resizeCallback = () => {
+      if (gameRef.current) {
+        gameRef.current.resize(resizeRef.current.clientWidth);
+      }
+    };
+    window.addEventListener("resize", resizeCallback);
+
+    return () => {
+      window.removeEventListener("resize", resizeCallback);
+    };
+  }, []);
+
   return (
     <div className={className}>
+      {alertShowing && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <p className="mb-4 whitespace-pre-line">{alertText}</p>
+            <button
+              className="bg-red-600 text-white px-4 py-2 rounded"
+              onClick={() => setAlertShowing(false)}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+      <div>
+        <button
+          className="bg-red-600 p-2 mr-2"
+          onClick={() => {
+            if (gameRef.current) {
+              gameRef.current.resetClicked();
+            }
+          }}
+        >
+          Reset Game
+        </button>
+        <button
+          className="bg-green-600 p-2"
+          onClick={() => {
+            if (gameRef.current) {
+              gameRef.current.checkClicked();
+            }
+          }}
+        >
+          Check
+        </button>
+      </div>
       <div ref={resizeRef} className="w-full h-full">
         <div ref={divRef}></div>
       </div>
