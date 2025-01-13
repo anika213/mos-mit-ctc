@@ -32,14 +32,21 @@ function Register() {
         });
 
         if (response.ok) {
-        navigate('/login');
+            navigate('/login');
         } else {
-        const result = await response.json();
-        setError(result.message || 'Registration failed.');
+            const result = await response.json();
+
+            // Validation errors from express-validator
+            if (result.errors) {
+                const errorMessages = result.errors.map((error) => error.msg).join('\n');
+                setError(errorMessages); // Display all validation errors
+            } else {
+                setError(result.message || 'Registration failed.');
+            }
         }
     } catch(err) {
         console.log(`Error registering: ${err}`);
-        setError('Some error');
+        setError('Some error occured during registration.');
     }
     }
 
@@ -72,9 +79,9 @@ function Register() {
             <button className={styles.button} type="submit">Register</button>
             </form>
 
-            {error && <p className={styles.subheading}>{error}</p>}
-
             <button className={styles.guestButton}>Continue as Guest</button>
+
+            {error && <p className={styles.subheading}>{error}</p>}
         </div>
         <div className={styles.sideImageContainer}>
             <img src={dna} alt="Side" className={styles.sideImage} />
