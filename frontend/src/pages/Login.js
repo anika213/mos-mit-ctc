@@ -3,6 +3,8 @@ import dna from '../assets/dna.jpg';
 import Navbar from './Navbar.js'
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext.js';
 
 // TODO: whne the screen size is smaller, the side image shld be above the form, rn its below..
 // TODO: impelement all the functionality.
@@ -11,6 +13,7 @@ function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { setUser } = useContext(AuthContext); 
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -29,6 +32,8 @@ function Login() {
       });
 
       if (response.ok) {
+        const userData = await response.json(); // Get user data from response
+        setUser(userData); // Update the auth context with the logged in user
         navigate('/');
       } else {
         const result = await response.json();

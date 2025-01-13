@@ -18,12 +18,10 @@ mongoose.connect("mongodb://mos-mit-ctc:local_dev@db:27017")
 app.use(express.urlencoded({ extended: true })); 
 app.use(express.json());
 
-const corsOptions = {
+app.use(cors({
     origin: 'http://localhost:3000', // Our frontend
     credentials: true, // cookies yum
-}
-
-app.use(cors(corsOptions)); 
+})); 
 
 app.use(
     session({
@@ -32,8 +30,8 @@ app.use(
       saveUninitialized: false,
       cookie: { 
         httpOnly: true, 
-        secure: false, // HTTP requests using Postman. True in production
-        sameSite: 'None', // This allows the cookie to be sent with cross-origin requests
+        secure: false, // True in production, false in dev
+        sameSite: 'Lax', // This allows the cookie to be sent with cross-origin requests. None in production, lax in dev.
         maxAge: 60000 *60 },
         store: MongoStore.create({
             client: mongoose.connection.getClient()

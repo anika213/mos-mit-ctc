@@ -10,6 +10,9 @@ router.post('/register', userValidationSchema, controller.registerUser);
 // Login route (using Passport for authentication)
 router.post('/login', controller.loginUser);
 
+// Logout route
+router.post('/logout', controller.logoutUser);
+
 // // Protected dashboard route for testing
 router.get('/status', controller.status);
 

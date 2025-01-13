@@ -1,14 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 
 const Navbar = () => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
+  const { isAuthenticated, logout } = useContext(AuthContext);
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const handleLogout = () => {
+    logout(); // Calls the logout function from AuthContext
+    navigate('/');
   };
 
   const toggleDropdown = () => {
@@ -28,8 +35,7 @@ const Navbar = () => {
           <li className="relative group">
             <span 
               className="cursor-pointer hover:text-gray-400" 
-              onMouseClick={toggleDropdown} 
-              onMouseLeave={toggleDropdown}
+              onClick={toggleDropdown} 
             >
               Challenges ▼
             </span>
@@ -40,7 +46,14 @@ const Navbar = () => {
               </ul>
             )}
           </li>
-          <li><Link to="/login" className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600">Login</Link></li>
+
+          {!isAuthenticated ? (
+            <li><Link to="/login" className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600">Login</Link></li>
+          ) : (
+            <li>
+              <button onClick={handleLogout} className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600">Logout</button>
+            </li>
+          )}
         </ul>
       </div>
     </nav>

@@ -42,12 +42,26 @@ exports.loginUser = (req, res, next) => {
     })(req, res, next); // Pass control to passport authenticate
 };
 
-// Dashboard
+// Logout user
+exports.logoutUser = (req, res) => {
+    if (req.isAuthenticated()) {
+        req.logout((err) => {
+            if (err) {
+                return res.status(500).json({ message: 'Error logging out' });
+            }
+            res.status(200).json({ message: 'Logout successful' });
+        });
+    } else {
+        return res.status(400).json({ message: 'No user is logged in' });
+    }
+};
+
+// Status
 exports.status = (req, res) => {
     if (req.isAuthenticated()) {
-        res.json({ message: `Welcome, ${req.user.username}! You've made it the dashboard.` });
+        res.json(req.user);
     } else {
-        res.status(401).json({ message: 'Unauthorized' });
+        res.status(401).json({ message: 'Not authenticated' });
     }
 };
 
@@ -55,7 +69,6 @@ exports.status = (req, res) => {
 exports.leaderboard = async (req, res) => {
     try {
         const users = await User.find({}).sort({ score: -1 }); // Sort by score descending
-        console.log(users);
         return res.json(users);
     } catch (err) {
         console.error('Error fetching leaderboard:', err);
