@@ -352,10 +352,10 @@ function RNAChallengeGame({ className = "" }) {
     <div className={className}>
       {alertShowing && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg">
+          <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col justify-center items-center border-2 border-red-600">
             <p className="mb-4 whitespace-pre-line">{alertText}</p>
             <button
-              className="bg-red-600 text-white px-4 py-2 rounded"
+              className="bg-red-600 text-white px-4 py-2"
               onClick={() => setAlertShowing(false)}
             >
               Close
@@ -363,9 +363,14 @@ function RNAChallengeGame({ className = "" }) {
           </div>
         </div>
       )}
-      <div>
+      
+      <div ref={resizeRef} className="w-full h-full">
+        <div ref={divRef}></div>
+      </div>
+      
+      <div className="flex flex-row justify-center items-center">
         <button
-          className="bg-red-600 p-2 mr-2"
+          className="bg-red-600 px-7 py-2 m-2 text-white "
           onClick={() => {
             if (gameRef.current) {
               gameRef.current.resetClicked();
@@ -375,7 +380,7 @@ function RNAChallengeGame({ className = "" }) {
           Reset Game
         </button>
         <button
-          className="bg-green-600 p-2"
+          className="bg-black px-7 py-2 m-2 text-white"
           onClick={() => {
             if (gameRef.current) {
               gameRef.current.checkClicked();
@@ -384,9 +389,6 @@ function RNAChallengeGame({ className = "" }) {
         >
           Check
         </button>
-      </div>
-      <div ref={resizeRef} className="w-full h-full">
-        <div ref={divRef}></div>
       </div>
     </div>
   );
