@@ -10,8 +10,8 @@ function Challenge() {
       <Navbar />
       <h1 className={styles.heading}>Challenge Name</h1>
       <p className={styles.paragraphBox}>Challenge Description</p>
-      {/* <Outlet /> */}
-      <Medium />
+      <Outlet />
+      {/* <Medium /> */}
     </div>
   );
 }

@@ -6,6 +6,7 @@ import Leaderboard from './pages/Leaderboard'
 import Register from './pages/Register';
 import Challenge from './pages/Challenge';
 import RNAChallenge from './pages/challenges/RNAChallenge';
+import Easy from './pages/challenges/Wireless/Easy';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/challenge" element={<Challenge />}>
           <Route path='rna' element={<RNAChallenge/>}/>
+          <Route path='wirelesseasy' element={<Easy/>}/>
         </Route>
       </Routes>
     </div>
