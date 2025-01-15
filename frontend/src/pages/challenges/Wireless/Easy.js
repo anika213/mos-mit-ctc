@@ -45,10 +45,13 @@ function Easy() {
           />
         )
       }
-      <p>{images[currentImage].src}</p>
-      <div>
-        <button className="mx-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onClick={() => handleCategorization("regular")}>Regular</button>
-        <button className="mx-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600" onClick={() => handleCategorization("irregular")}>Irregular</button>
+      <div className="text-center content-center">
+        <p>Breathing Pattern {currentImage + 1} / {images.length}</p>
+        <p>{images[currentImage].src}</p>
+        <div>
+          <button className="mx-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onClick={() => handleCategorization("regular")}>Regular</button>
+          <button className="mx-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600" onClick={() => handleCategorization("irregular")}>Irregular</button>
+        </div>
       </div>
     </div>
   )
