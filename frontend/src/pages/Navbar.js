@@ -23,7 +23,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-black text-white">
+    <nav className="bg-black text-white z-10">
       <div className="container mx-auto flex items-center justify-between p-4">
         <div className="text-xl font-bold">Clinical AI</div>
         <div className="md:hidden" onClick={toggleMobileMenu}>
@@ -33,8 +33,6 @@ const Navbar = () => {
           <li><Link to="/" className="hover:text-gray-400">Home</Link></li>
           <li><Link to="/leaderboard" className="hover:text-gray-400">Leaderboard</Link></li>
           <li className="relative group" >
-              
-            
               <span 
               className="cursor-pointer hover:text-gray-400" 
               onClick={toggleDropdown}
@@ -50,10 +48,7 @@ const Navbar = () => {
                 <li className="p-2 hover:bg-gray-700"><Link to="/challenge/rna">Challenge 2</Link></li>
               </ul>
              )}
-            
-            
           </li>
-
           {!isAuthenticated ? (
             <li><Link to="/login" className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600">Login</Link></li>
           ) : (

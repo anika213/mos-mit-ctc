@@ -46,16 +46,21 @@ function Landing() {
             <img src={jameel} alt="Jameel" className={styles.logos} />
             <img src={hmc} alt="HMC" className={styles.logos} />
           </div>
-       
         </div>
         <div className={styles.sideImageContainer}>
           <img src={dna} alt="Side" className={styles.sideImage} />
         </div>
       </div>
+      <div>
+        <div className={styles.mobileImageContainer}>
+          <img src={mos} alt="MOS" className={styles.logos} />
+          <img src={mit} alt="MIT" className={styles.logos} />
+          <img src={jameel} alt="Jameel" className={styles.logos} />
+          <img src={hmc} alt="HMC" className={styles.logos} />
+        </div>
+      </div>
       <div className={styles.challengescontainer}>
         <h1 style={{ textAlign: "right" }}>Explore Challenges</h1>
-
-
         {challenges.map((challenge) => (
           <div key={challenge.id} style={{ marginBottom: "10px" }}>
             <div
@@ -69,7 +74,7 @@ function Landing() {
               <div className={styles.openchallenge}>
                 <p>{challenge.description}</p>
                 <br/>
-                <a href={challenge.link} className={styles.button} style={{ width: "10%"}}>
+                <a href={challenge.link} className={styles.challengeButton}>
                   Try it out!
                 </a>
               </div>
