@@ -22,7 +22,13 @@ exports.registerUser = async (req, res) => {
         res.status(201).json({ message: 'User registered successfully!' });
     } catch (err) {
         console.log(err);
-        return res.status(400).json({ message: 'Error registering user' });
+
+        // Check if it's a duplicate key error
+        if (err.code === 11000) {
+            return res.status(400).json({ message: 'Username is already taken.' });
+        }
+
+        return res.status(500).json({ message: 'Error registering user' });
     }
 };
 
