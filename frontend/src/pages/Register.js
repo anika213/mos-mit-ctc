@@ -11,12 +11,17 @@ function Register() {
     // const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    // const [passwordConfirmation, setPasswordConfirmation] = useState('');
+    const [passwordConfirmation, setPasswordConfirmation] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
     const handleRegistration = async (e) => {
     e.preventDefault();
+
+    if (password !== passwordConfirmation) {
+        setError('Passwords do not match.');
+        return;
+    }
 
     try {
         const response = await fetch('http://localhost:8080/users/register', {
@@ -75,6 +80,15 @@ function Register() {
             placeholder='Password' 
             value={password}
             onChange={(e) => setPassword(e.target.value)} />
+
+            <input 
+            className={styles.input} 
+            type="password" 
+            id="passwordConfirmation" 
+            name="passwordConfirmation" 
+            placeholder='Confirm password' 
+            value={passwordConfirmation}
+            onChange={(e) => setPasswordConfirmation(e.target.value)} />
 
             <button className={styles.button} type="submit">Register</button>
             </form>
