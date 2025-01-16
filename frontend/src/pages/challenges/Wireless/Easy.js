@@ -2,7 +2,7 @@ import { useCallback, useMemo, useEffect, useState } from "react";
 import Popup from "../../../components/Popup";
 import UplotReact from "uplot-react";
 import "uplot/dist/uPlot.min.css";
-import { generateRegularBreathing, generateSleepApnea } from "./generator";
+import { generateLightSleep, generateDeepSleep, generateObstructiveSleepApnea, generateCentralSleepApnea } from "./generator";
 
 function getPlotSize(windowWidth) {
   const plotWidth = windowWidth * 0.6;
@@ -17,14 +17,15 @@ function getPlotOptions(size) {
     width: size.width,
     height: size.height,
     legend: {
-      show: false,
+      show: true, // True for testing purposes
     },
     scales: {
       x: {
         time: false,
       },
       y: {
-        auto: true,
+        auto: false, // y axis should NOT scale so that amplitudes look different
+        range: [-2000, 2000],
       },
     },
     cursor: {
@@ -34,7 +35,7 @@ function getPlotOptions(size) {
         y: false,
       },
     },
-    axes: [{ show: false }, { show: false }],
+    axes: [{ show: true }, { show: true }], // True for testing purposes
     series: [
       {},
       {
@@ -50,17 +51,22 @@ function getPlots() {
   return [
     {
       src: "image1",
-      data: generateRegularBreathing(4995, 15),
+      data: generateDeepSleep(),
       category: "regular",
     },
     {
       src: "image2",
-      data: generateRegularBreathing(5000, 12),
+      data: generateLightSleep(),
       category: "regular",
     },
     {
       src: "image3",
-      data: generateSleepApnea(4995, 15),
+      data: generateObstructiveSleepApnea(),
+      category: "irregular",
+    },
+    {
+      src: "image4",
+      data: generateCentralSleepApnea(),
       category: "irregular",
     },
   ];
@@ -113,7 +119,13 @@ function Easy() {
         <p>
           Breathing Pattern {currentPlot + 1} / {plots.length}
         </p>
+
+        <p>
+          Breathing Pattern {plots[currentPlot].category}
+        </p>
+
         <UplotReact data={plots[currentPlot].data} options={options} />
+
         <div className="pt-2">
           <button
             className="mx-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"

@@ -2,7 +2,9 @@ import { useCallback, useMemo, useEffect, useState } from "react";
 import Popup from "../../../components/Popup";
 import UplotReact from "uplot-react";
 import "uplot/dist/uPlot.min.css";
-import { generateRegularBreathing, generateSleepApnea } from "./generator";
+import { generateLightSleep, generateDeepSleep, generateREM, generateBiotsRespiration,
+    generateCentralSleepApnea, generateCheyneStokes, generateHypopnea, 
+    generateObstructiveSleepApnea} from "./generator";
 
 // Creates a 1:2 plot that takes up 60% of the width of the window
 function getPlotSize(windowWidth) {
@@ -19,14 +21,15 @@ function getPlotOptions(size) {
     width: size.width,
     height: size.height,
     legend: {
-      show: false,
+      show: true, // True for testing purposes
     },
     scales: {
       x: {
         time: false,
       },
       y: {
-        auto: true,
+        auto: false, // y axis should NOT scale so that amplitudes look different
+        range: [-2000, 2000],
       },
     },
     cursor: {
@@ -36,7 +39,7 @@ function getPlotOptions(size) {
         y: false,
       },
     },
-    axes: [{ show: false }, { show: false }],
+    axes: [{ show: true }, { show: true }], // True for testing purposes
     series: [
       {},
       {
@@ -51,48 +54,49 @@ function getPlotOptions(size) {
 // Creates plots for each sleeping pattern
 // Should probably be in a random order right?
 function getPlots() {
-  return [
+  const plots = [
     {
-        src: "image1",
-        data: generateRegularBreathing(4995, 15),
+        data: generateLightSleep(),
         category: "regular light sleep",
     },
     {
-        src: "image2",
-        data: generateRegularBreathing(5000, 12),
+        data: generateDeepSleep(),
         category: "regular deep sleep",
     },
     {
-        src: "image3",
-        data: generateSleepApnea(4995, 15),
+        data: generateREM(),
         category: "irregular rem sleep",
     },
     {
-        src: "image4",
-        data: generateRegularBreathing(4995, 15),
+        data: generateObstructiveSleepApnea(),
         category: "obstructive sleep apnea",
     },
     {
-        src: "image5",
-        data: generateRegularBreathing(5000, 12),
+        data: generateHypopnea(),
         category: "hypopnea",
     },
     {
-        src: "image6",
-        data: generateSleepApnea(4995, 15),
+        data: generateCheyneStokes(),
         category: "cheyne-stokes respiration",
     },
     {
-        src: "image7",
-        data: generateRegularBreathing(4995, 15),
+        data: generateCentralSleepApnea(),
         category: "central sleep apnea",
     },
     {
-        src: "image8",
-        data: generateRegularBreathing(5000, 12),
+        data: generateBiotsRespiration(),
         category: "biot's respiration",
     },
   ];
+
+  const duplicatedPlots = [...plots, ...plots];
+
+  for (let i = duplicatedPlots.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [duplicatedPlots[i], duplicatedPlots[j]] = [duplicatedPlots[j], duplicatedPlots[i]];
+  }
+
+  return duplicatedPlots;
 }
 
 function Medium() {
@@ -148,24 +152,28 @@ function Medium() {
           Breathing Pattern {currentPlot + 1} / {plots.length}
         </p>
 
+        <p>
+          Breathing Pattern {plots[currentPlot].category}
+        </p>
+
         <UplotReact data={plots[currentPlot].data} options={options} />
 
         <div className="pt-2">
             <button
             className="mx-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            onClick={() => handleCategorization("regular")}>
+            onClick={() => handleCategorization("regular light sleep")}>
                 Regular Light Sleep
             </button>
 
             <button
             className="mx-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            onClick={() => handleCategorization("regular")}>
+            onClick={() => handleCategorization("regular deep sleep")}>
                 Regular Deep Sleep
             </button>
 
             <button
             className="mx-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            onClick={() => handleCategorization("regular")}>
+            onClick={() => handleCategorization("regular rem sleep")}>
                 Regular REM Sleep
             </button>
         </div>
@@ -173,19 +181,19 @@ function Medium() {
         <div className="pt-2">
             <button
             className="mx-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-            onClick={() => handleCategorization("irregular")}>
+            onClick={() => handleCategorization("hypopnea")}>
                 Hypopnea
             </button>
 
             <button
             className="mx-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-            onClick={() => handleCategorization("irregular")}>
+            onClick={() => handleCategorization("cheyne-stokes respiration")}>
                 Cheyne-Stokes Respiration
             </button>
 
             <button
             className="mx-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-            onClick={() => handleCategorization("irregular")}>
+            onClick={() => handleCategorization("biot's respiration")}>
                 Biot's Respiration
             </button>
         </div>
@@ -193,13 +201,13 @@ function Medium() {
         <div className="pt-2">
             <button
             className="mx-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-            onClick={() => handleCategorization("irregular")}>
+            onClick={() => handleCategorization("obstructive sleep apnea")}>
                 Obstructive Sleep Apnea
             </button>
 
             <button
             className="mx-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-            onClick={() => handleCategorization("irregular")}>
+            onClick={() => handleCategorization("central sleep apnea")}>
                 Central Sleep Apnea
             </button>
         </div>
