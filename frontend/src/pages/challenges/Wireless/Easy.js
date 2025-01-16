@@ -113,7 +113,6 @@ function Easy() {
         <p>
           Breathing Pattern {currentPlot + 1} / {plots.length}
         </p>
-        <p>{plots[currentPlot].src}</p>
         <UplotReact data={plots[currentPlot].data} options={options} />
         <div className="pt-2">
           <button
