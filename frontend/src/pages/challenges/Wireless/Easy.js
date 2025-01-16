@@ -17,7 +17,7 @@ function getPlotOptions(size) {
     width: size.width,
     height: size.height,
     legend: {
-      show: true, // True for testing purposes
+      show: false, // True for testing purposes
     },
     scales: {
       x: {
@@ -35,7 +35,7 @@ function getPlotOptions(size) {
         y: false,
       },
     },
-    axes: [{ show: true }, { show: true }], // True for testing purposes
+    axes: [{ show: false }, { show: false }], // True for testing purposes
     series: [
       {},
       {
@@ -48,28 +48,31 @@ function getPlotOptions(size) {
 }
 
 function getPlots() {
-  return [
+  const plots = [
     {
-      src: "image1",
       data: generateDeepSleep(),
       category: "regular",
     },
     {
-      src: "image2",
       data: generateLightSleep(),
       category: "regular",
     },
     {
-      src: "image3",
       data: generateObstructiveSleepApnea(),
       category: "irregular",
     },
     {
-      src: "image4",
       data: generateCentralSleepApnea(),
       category: "irregular",
     },
   ];
+
+  for (let i = plots.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [plots[i], plots[j]] = [plots[j], plots[i]];
+  }
+
+  return plots;
 }
 
 function Easy() {
@@ -118,10 +121,6 @@ function Easy() {
       <div className="text-center">
         <p>
           Breathing Pattern {currentPlot + 1} / {plots.length}
-        </p>
-
-        <p>
-          Breathing Pattern {plots[currentPlot].category}
         </p>
 
         <UplotReact data={plots[currentPlot].data} options={options} />

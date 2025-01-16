@@ -161,7 +161,6 @@ export function generateREM() {
 // Irregular sleep uses light sleep as its framework for cycles and amplitudes
 
 // Obstructive Sleep Apnea: flatline with recovery breaths
-// For now: regular breaths, apnea, and then recovery breaths.
 export function generateObstructiveSleepApnea() {
   const points = 5000;
   const cycles = 14;
@@ -173,7 +172,7 @@ export function generateObstructiveSleepApnea() {
     if (cycleCount > 6) {
       // Simulate an obstructive apnea episode: flatline followed by recovery breaths
       const recoveryBreath = generateCycle(0, 1800, 0.10, 20); // Sharp recovery spikes (gasp)
-      nextStartValue = recoveryBreath.endValue; // Reset breath
+      nextStartValue = recoveryBreath.endValue;
       data.push(...recoveryBreath.data);
       cycleCount = 0;
     } else if (cycleCount > 3) {
@@ -194,27 +193,38 @@ export function generateObstructiveSleepApnea() {
   return processBreathingData(data, points);
 }
 
-// Central Sleep Apnea: flatline without recovery
+// Central Sleep Apnea: flatline without recovery gasps
 export function generateCentralSleepApnea() {
   const points = 5000;
-  const cycles = 16;
+  const cycles = 14;
   const data = [];
-  let nextStartValue = getRandom(-1500, -1300);
-  let normalCycleCount = 0;
+  let nextStartValue = -1200;
+  let cycleCount = 0;
 
+  // Would prob be better to use a switch but it's fine
   for (let cycle = 0; cycle < cycles; cycle++) {
-    if (normalCycleCount >= 5) {
+    if (cycleCount > 5) {
       // Simulate an central apnea episode: flatline without recovery breaths
-      const apnea = new Array(15).fill(0); // No airflow
-      const gradualRecoveryBreath = new Array(6).fill(getRandom(-100, 100));
-      data.push(...apnea, ...gradualRecoveryBreath);
-      normalCycleCount = 0;
+      const gradualRecoveryBreath = generateCycle(0, cycleCount * 100, 0.10, 20); // Gradual recovery breaths
+      nextStartValue = gradualRecoveryBreath.endValue;
+      data.push(...gradualRecoveryBreath.data);
+      cycleCount++;
+
+      if (cycleCount > 8) {
+        cycleCount = 0;
+      }
+    } else if (cycleCount > 2) {
+      // Simulate an central apnea episode: flatline without recovery breaths
+      const apnea = generateCycle(0, 0, 0, 10); // No airflow
+      nextStartValue = apnea.endValue;
+      data.push(...apnea.data);
+      cycleCount++;
     } else {
       // Normal breathing cycle
-      const newCycle = generateCycle(nextStartValue, 1500, 20);
+      const newCycle = generateCycle(nextStartValue, 1200, 0.10, 20);
       nextStartValue = newCycle.endValue;
       data.push(...newCycle.data);
-      normalCycleCount++;
+      cycleCount++;
     }
   }
 
