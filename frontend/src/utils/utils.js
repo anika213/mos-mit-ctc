@@ -29,3 +29,7 @@ export function toAlphabetBase26(i) {
   }
   return result;
 }
+
+export function getRandom(min, max) {
+  return Math.random() * (max - min) + min;
+}
