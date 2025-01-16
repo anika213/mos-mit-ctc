@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
 const challenges = [
   { id: 1, title: "RNA Splicing", description: "Description for Challenge #1", link: "/challenge/rnasplicing" },
   { id: 2, title: "Molecular Docking", description: "Description for Challenge #2", link: "/challenge/moleculardocking" },
-  { id: 3, title: "Wireless Detecting", description: "Description for Challenge #3", link: "/challenge/wirelessdetecting" },
+  { id: 3, title: "Wireless Detecting", description: "Description for Challenge #3", link: "/challenge/wirelesseasy" },
 ];
 
 
