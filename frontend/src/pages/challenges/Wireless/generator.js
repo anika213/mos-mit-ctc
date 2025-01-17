@@ -1,16 +1,16 @@
 import { getRandom } from "../../../utils/utils";
 
-// Generates a cycle from a start value, target amplitude, and fluctuation given as a decimal
+// Fluctuation is given as a decimal
 function generateCycle(startValue, targetAmplitude, fluctuation) {
   const data = [];
-  const points = 25;
+  const points = 30;
 
   // Five phases for every cycle: rise (10%), first drop (40%), plateau (20%), second drop (10%), and a lower plateau (20%)
-  const upPoints = points / 10; // 1/10
-  const downPoints = 2 * points / 5; // 5/10
-  const stillPoints = points / 5; // 7/10
-  const down2Points = points / 10; // 8/10
-  const stillDownPoints = points - upPoints - downPoints - stillPoints - down2Points; // 10/10
+  const upPoints = points / 10;
+  const downPoints = 2 * points / 5;
+  const stillPoints = points / 5;
+  const down2Points = points / 10;
+  const stillDownPoints = points - upPoints - downPoints - stillPoints - down2Points;
 
   // Target peak value for the cycle and upward amplitude
   const amplitude = Math.floor(targetAmplitude * getRandom(1 - fluctuation, 1 + fluctuation));
@@ -43,14 +43,12 @@ function generateCycle(startValue, targetAmplitude, fluctuation) {
     data.push(finalValue + getRandom(-50, 50));
   }
 
-  // Return cycle
   return {
     data: data,
     endValue: finalValue
   };
 }
 
-// linear interpolation
 function interpolateData(data, totalPoints) {
   const factor = totalPoints / data.length;
   const interpolated = [];
@@ -68,7 +66,6 @@ function interpolateData(data, totalPoints) {
   return interpolated;
 }
 
-// Gaussian smoothing
 function smoothData(data, sigma) {
   const kernelSize = Math.ceil(sigma * 3) * 2 + 1;
   const kernel = [];
@@ -101,7 +98,6 @@ function smoothData(data, sigma) {
   return smoothed;
 }
 
-// Processes the breathing data by interpolating it, smoothing it, and returning an array including time
 function processBreathingData(data) {
   const interpolatedData = interpolateData(data, 5000);
   const smoothedData = smoothData(interpolatedData, 5000 / 250);
@@ -110,14 +106,13 @@ function processBreathingData(data) {
   return [time, smoothedData];
 }
 
-// Generates regular light breathing cycles: shallower and faster than deep sleep
 export function generateLightSleep() {
   const cycles = 14;
   const data = [];
   let nextStartValue = -1100;
 
   for (let cycle = 0; cycle < cycles; cycle++) {
-    const newCycle = generateCycle(nextStartValue, 1000, 0.15); // Target end value of 1100, minor fluctuations
+    const newCycle = generateCycle(nextStartValue, 1000, 0.15);
     nextStartValue = newCycle.endValue;
     data.push(...newCycle.data);
   }
@@ -125,14 +120,13 @@ export function generateLightSleep() {
   return processBreathingData(data);
 }
 
-// Generates regular deep breathing cycles
 export function generateDeepSleep() {
   const cycles = 12;
   const data = [];
   let nextStartValue = -1600;
 
   for (let cycle = 0; cycle < cycles; cycle++) {
-    const newCycle = generateCycle(nextStartValue, 1800, 0.10); // Targent end value of 1800, very small fluctuations
+    const newCycle = generateCycle(nextStartValue, 1800, 0.10);
     nextStartValue = newCycle.endValue;
     data.push(...newCycle.data);
   }
@@ -140,14 +134,13 @@ export function generateDeepSleep() {
   return processBreathingData(data);
 }
 
-// Generates regular REM breathing cycles: irregular with bursts
 export function generateREM() {
   const cycles = 16;
   const data = [];
   let nextStartValue = -1000;
   
   for (let cycle = 0; cycle < cycles; cycle++) {
-    const newCycle = generateCycle(nextStartValue, 800, 0.35); // Target value of 1000, major fluctuations
+    const newCycle = generateCycle(nextStartValue, 800, 0.35);
     nextStartValue = newCycle.endValue;
     data.push(...newCycle.data);
   }
@@ -155,7 +148,6 @@ export function generateREM() {
   return processBreathingData(data);
 }
 
-// Obstructive Sleep Apnea: flatline with recovery breaths
 export function generateObstructiveSleepApnea() {
   const cycles = 14;
   const data = [];
@@ -165,13 +157,13 @@ export function generateObstructiveSleepApnea() {
   for (let cycle = 0; cycle < cycles; cycle++) {
     if (cycleCount > 6) {
       // Simulate an obstructive apnea episode: flatline followed by recovery breaths
-      const recoveryBreath = generateCycle(0, 1800, 0.10); // Sharp recovery spikes (gasp)
+      const recoveryBreath = generateCycle(0, 1800, 0.10);
       nextStartValue = recoveryBreath.endValue;
       data.push(...recoveryBreath.data);
       cycleCount = 0;
     } else if (cycleCount > 3) {
       // Simulate an obstructive apnea episode: flatline followed by recovery breaths
-      const apnea = generateCycle(0, 0, 0); // No airflow
+      const apnea = generateCycle(0, 0, 0);
       nextStartValue = apnea.endValue;
       data.push(...apnea.data);
       cycleCount++;
@@ -187,18 +179,16 @@ export function generateObstructiveSleepApnea() {
   return processBreathingData(data);
 }
 
-// Central Sleep Apnea: flatline with gradual recovery instead of recovery gasps
 export function generateCentralSleepApnea() {
   const cycles = 14;
   const data = [];
   let nextStartValue = -1200;
   let cycleCount = 0;
 
-  // Would prob be better to use a switch but it's fine
   for (let cycle = 0; cycle < cycles; cycle++) {
     if (cycleCount > 4) {
       // Simulate an central apnea episode: flatline without recovery breaths
-      const gradualRecoveryBreath = generateCycle(0, cycleCount * 100, 0.05); // Gradual recovery breaths
+      const gradualRecoveryBreath = generateCycle(0, cycleCount * 100, 0.05);
       nextStartValue = gradualRecoveryBreath.endValue;
       data.push(...gradualRecoveryBreath.data);
       cycleCount++;
@@ -208,7 +198,7 @@ export function generateCentralSleepApnea() {
       }
     } else if (cycleCount > 2) {
       // Simulate an central apnea episode: flatline without recovery breaths
-      const apnea = generateCycle(0, 0, 0); // No airflow
+      const apnea = generateCycle(0, 0, 0);
       nextStartValue = apnea.endValue;
       data.push(...apnea.data);
       cycleCount++;
@@ -224,7 +214,6 @@ export function generateCentralSleepApnea() {
   return processBreathingData(data);
 }
 
-// Hypopnea: Shallow breathing episodes (basically apnea without complete obstruction)
 export function generateHypopnea() {
   const cycles = 14;
   const data = [];
@@ -254,7 +243,6 @@ export function generateHypopnea() {
   return processBreathingData(data);
 }
 
-// Cheyne-Stokes Respiration: Crescendo-decrescendo with apnea
 export function generateCheyneStokes() {
   const data = [];
   let nextStartValue = getRandom(-1200);
@@ -283,7 +271,6 @@ export function generateCheyneStokes() {
   return processBreathingData(data);
 }
 
-// Biot’s Respiration: clusters (rapid & shallow breaths) with apnea
 export function generateBiotsRespiration() {
   const data = [];
   let nextStartValue = -500;
