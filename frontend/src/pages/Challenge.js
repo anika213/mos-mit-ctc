@@ -4,7 +4,7 @@ import styles from './Challenge.module.css';
 import Navbar from './Navbar.js';
 import Medium from './challenges/RNA/Medium.js'
 import Hard from './challenges/RNA/Hard.js'
-import Easy from './challenges/RNA/Easy.js';
+import Easy from './challenges/Molecules/Easy';
 import { use } from 'react';
 function Challenge() {
   return (
@@ -12,7 +12,7 @@ function Challenge() {
       <Navbar />
       <h1 className={styles.heading}>Challenge Name</h1>
       <p className={styles.paragraphBox}>Challenge Description</p>
-      {/* <Outlet /> */}
+      <Easy />
       <div className={styles.challengesContainer}>
                      
 
