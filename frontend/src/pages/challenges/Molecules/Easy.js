@@ -1,15 +1,17 @@
 import React, { useEffect, useRef } from "react";
 import Konva from "konva";
-import antigen from '../../../assets/antigen.png'
-import enzyme from '../../../assets/enzyme.png'
-import molecule from '../../../assets/molecule.png'
-import antibody from '../../../assets/antibody.png'
-import receptor from '../../../assets/receptor.png'
-import signal from '../../../assets/signal.png'
-import substrate from '../../../assets/substrate.png'
-import transport from '../../../assets/transport.png'
+import protein1 from '../../../assets/protein1.png'
+import protein2 from '../../../assets/protein2.png'
+import protein3 from '../../../assets/protein3.png'
+import protein4 from '../../../assets/protein4.png'
+import molecule1 from '../../../assets/molecule1.png'
+import molecule2 from '../../../assets/molecule2.png'
+import molecule3 from '../../../assets/molecule3.png'
+import molecule4 from '../../../assets/molecule4.png'
 
-function MoleculeProteinGame() {
+
+
+function MolecularDockingEasy() {
   const stageRef = useRef(null);
   const layerRef = useRef(null);
   var moleculesCorrect = 0;
@@ -32,37 +34,37 @@ function MoleculeProteinGame() {
     const proteins = [
       {
         id: "1",
-        imagePath: antibody, 
-        position: { x: 50, y: 50 }, // Replace with desired position
+        imagePath: protein1, 
+        position: { x: 325, y: 100 },
         bindingSites: [
-          { x: 105, y: 120 },
-          { x: 200, y: 120 },
-          { x: 240, y: 55 },
+          { x: 455, y: 100 }, //CORRECT BINDING SITE
+          { x: 425, y: 170 },
+          { x: 372, y: 170 },
         ],
       },
       {
         id: "2",
-        imagePath: enzyme, 
-        position: { x: 400, y: 50 }, // Replace with desired position
+        imagePath: protein2, 
+        position: { x: 525, y: 100 }, 
         bindingSites: [
-          { x: 565, y: 130 },
+          { x: 590, y: 220 },
+          { x: 630, y: 170 }, //CORRECT BINDING SITE
         ],
       },
       {
         id: "3",
-        imagePath: transport, 
-        position: { x: 50, y: 300 }, // Replace with desired position
+        imagePath: protein3, 
+        position: { x: 325, y: 300 }, 
         bindingSites: [
-          { x: 150, y: 430 },
-          { x: 190, y: 365 },
+          { x: 440, y: 375 }, //CORRECT BINDING SITE
         ],
       },
       {
         id: "4",
-        imagePath: receptor,
-        position: { x: 400, y: 300 }, // Replace with desired position
+        imagePath: protein4,
+        position: { x: 525, y: 300 }, 
         bindingSites: [
-          { x: 500, y: 350 },
+          { x: 605, y: 325 }, //CORRECT BINDING SITE
         ],
       },
     ];
@@ -70,38 +72,46 @@ function MoleculeProteinGame() {
     const molecules = [
       {
         id: "1",
-        imagePath: antigen, 
-        initialPosition: { x: 50, y: 550 },
+        imagePath: molecule1, 
+        initialPosition: { x: 525, y: 450 },
         targetProtein: "1",
+        W: 89, //dimensions of png
+        H: 96,
       },
       {
         id: "2",
-        imagePath: substrate, 
-        initialPosition: { x: 150, y: 550 },
+        imagePath: molecule2, 
+        initialPosition: { x: 125, y: 450 },
         targetProtein: "2",
+        W: 121,
+        H: 64,
       },
       {
         id: "3",
-        imagePath: molecule, 
-        initialPosition: { x: 250, y: 550 },
+        imagePath: molecule3, 
+        initialPosition: { x: 725, y: 450 },
         targetProtein: "3",
+        W: 76,
+        H: 70,
       },
       {
         id: "4",
-        imagePath: signal, 
-        initialPosition: { x: 350, y: 550 },
+        imagePath: molecule4, 
+        initialPosition: { x: 325, y: 450 },
         targetProtein: "4",
+        W: 167,
+        H: 167,
       },
     ];
 
     var text = new Konva.Text({
-        x: 650, // Adjust position to fit within the canvas
-        y: 50, 
+        x: 125, // Adjust position to fit within the canvas
+        y: 25, 
         text: "Welcome! Drag the molecules to the binding sites.", // Initial message
         fontSize: 20, // Smaller size for better placement
         fontFamily: "Roboto",
         fill: "black",
-        width: 350, 
+        width: 750, 
         wrap: "word",
       });
       
@@ -119,8 +129,8 @@ function MoleculeProteinGame() {
           x: protein.position.x,
           y: protein.position.y,
           image: proteinImage,
-          width: 200, // Adjust size if needed
-          height: 150, // Adjust size if needed
+          width: 150, 
+          height: 150, 
         });
 
         layer.add(proteinNode);
@@ -132,8 +142,8 @@ function MoleculeProteinGame() {
             y: site.y,
             radius: 20, // Size of the binding site placeholder
             fill: "rgba(252, 245, 199, 0.3)", // Transparent yellow
-            stroke: "green",
-            strokeWidth: 2,
+            stroke: "yellow",
+            strokeWidth: 1,
             name: `${protein.id}-bindingSite-${index}`, // Unique name for reference
           });
 
@@ -153,11 +163,13 @@ function MoleculeProteinGame() {
           x: molecule.initialPosition.x,
           y: molecule.initialPosition.y,
           image: moleculeImage,
-          width: 50, // Adjust size if needed
-          height: 50, // Adjust size if needed
+          width: Math.round(molecule.W * 0.4),
+          height: Math.round(molecule.H * 0.4),
           draggable: true,
           name: molecule.id, // Unique name for reference
         });
+
+        console.log(molecule.id + ": width - " + moleculeNode.width() + " height -" + moleculeNode.height());
 
         moleculeNode.on("dragend", () => {
           let snapped = false;
@@ -179,8 +191,8 @@ function MoleculeProteinGame() {
                 ) {
                   // Snap molecule to the binding site's center
                   moleculeNode.position({
-                    x: site.x() - 25,
-                    y: site.y() - 25,
+                    x: site.x() - Math.round(moleculeNode.width()/2),
+                    y: site.y() - Math.round(moleculeNode.height()/2),
                   });
                   snapped = true;
 
@@ -190,10 +202,10 @@ function MoleculeProteinGame() {
                   
                   // Update the text
                   if (snapped && (
-                    moleculeNode.x() === 215 ||
-                    moleculeNode.x() === 475 ||
-                    moleculeNode.x() === 165 ||
-                    moleculeNode.x() === 540)
+                    moleculeNode.x() === 437   || //(455 - 18)
+                    moleculeNode.x() === 606   || //(630 - 24)
+                    moleculeNode.x() === 425   || //(440 - 15)
+                    moleculeNode.x() === 571)     //(605 - 34)
                   ) {
                     moleculesCorrect++;
                     console.log(moleculesCorrect);
@@ -204,14 +216,12 @@ function MoleculeProteinGame() {
                         text.text("Great job! You attached the molecule to the correct binding site!");
                         console.log("Great job! You attached the molecule to the correct binding site!");
                     }
-                    
-                    
                   } else {
                     text.text("You attached the molecule to one of the binding sites available to it, but there's one that is a better option. Try again!");
                     console.log("You attached the molecule to one of the binding sites available to it, but there's one that is a better option. Try again!");
                     moleculeNode.position({
-                        x: 450,
-                        y: 550,
+                        x: 425,
+                        y: 450,
                       });
 
                   }
@@ -247,4 +257,4 @@ function MoleculeProteinGame() {
   return <div id="container" style={{ width: "1000px", height: "600px" }} />;
 }
 
-export default MoleculeProteinGame;
+export default MolecularDockingEasy;
