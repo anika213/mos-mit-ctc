@@ -21,7 +21,7 @@ function getPlotOptions(size) {
     width: size.width,
     height: size.height,
     legend: {
-      show: true, // True for testing purposes
+      show: false, // True for testing purposes
     },
     scales: {
       x: {
@@ -39,7 +39,7 @@ function getPlotOptions(size) {
         y: false,
       },
     },
-    axes: [{ show: true }, { show: true }], // True for testing purposes
+    axes: [{ show: false }, { show: false }], // True for testing purposes
     series: [
       {},
       {
@@ -65,7 +65,7 @@ function getPlots() {
     },
     {
         data: generateREM(),
-        category: "irregular rem sleep",
+        category: "regular rem sleep",
     },
     {
         data: generateObstructiveSleepApnea(),
@@ -150,10 +150,6 @@ function Medium() {
       <div className="text-center">
         <p>
           Breathing Pattern {currentPlot + 1} / {plots.length}
-        </p>
-
-        <p>
-          Breathing Pattern {plots[currentPlot].category}
         </p>
 
         <UplotReact data={plots[currentPlot].data} options={options} />

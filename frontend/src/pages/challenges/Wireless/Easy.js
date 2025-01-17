@@ -102,6 +102,10 @@ function Easy() {
         setAlertShowing(true);
         return;
       }
+      else {
+        setAlertText("Correct!");
+        setAlertShowing(true);
+      }
 
       if (currentPlot === plots.length - 1) {
         setAlertText("You have completed the challenge!");
