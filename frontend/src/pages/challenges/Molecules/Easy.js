@@ -99,7 +99,7 @@ function MoleculeProteinGame() {
         y: 50, 
         text: "Welcome! Drag the molecules to the binding sites.", // Initial message
         fontSize: 20, // Smaller size for better placement
-        fontFamily: "Calibri",
+        fontFamily: "Roboto",
         fill: "black",
         width: 350, 
         wrap: "word",

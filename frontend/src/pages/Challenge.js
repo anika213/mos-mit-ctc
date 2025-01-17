@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import Navbar from "./Navbar.js";
+// Challenge.js
+import React, { useState, Suspense } from "react";
+import ChallengeNavbar from "../components/ChallengesNavbar.js";
 import styles from "./Challenge.module.css";
-import ReactLazy from "react";
+import Navbar from "./Navbar.js";
 
 const challengeData = {
   RNA: {
@@ -37,73 +38,49 @@ const challengeData = {
 };
 
 function Challenge() {
-  const [selectedChallenge, setSelectedChallenge] = useState("");
-  const [selectedLevel, setSelectedLevel] = useState("");
-
-  const handleChallengeChange = (event) => {
-    setSelectedChallenge(event.target.value);
-  };
+  const [selectedChallenge, setSelectedChallenge] = useState("RNA");
+  const [selectedLevel, setSelectedLevel] = useState("Easy");
 
   const handleLevelChange = (event) => {
     setSelectedLevel(event.target.value);
   };
 
-  const getCurrentChallengeData = () => {
-    if (selectedChallenge && selectedLevel) {
-      return challengeData[selectedChallenge][selectedLevel];
-    }
-    return { title: "Challenge Name", description: "Challenge Description" };
-  };
+  const { title, description } = challengeData[selectedChallenge][selectedLevel];
 
-  const { title, description } = getCurrentChallengeData();
-
-  const renderChallengeComponent = () => {
-    if (!selectedChallenge || !selectedLevel) {
-      return <p className={styles.paragraphBox}>Please select a challenge and level.</p>;
-    }
-
-    try {
-      const ChallengeComponent = React.lazy(() =>
-        import(`./challenges/${selectedChallenge}/${selectedLevel}.js`)
-      );
-      return (
-        <React.Suspense fallback={<p>Loading challenge...</p>}>
-          <ChallengeComponent />
-        </React.Suspense>
-      );
-    } catch (error) {
-      return <p>Error loading challenge. Please try again.</p>;
-    }
-  };
+  const DynamicChallengeComponent = React.lazy(() =>
+    import(`./challenges/${selectedChallenge}/${selectedLevel}.js`).catch(() =>
+      import("../components/ChallengeFallback.js")
+    )
+  );
 
   return (
     <div>
-      <Navbar />
+<Navbar />
+    
+    <div className={styles.challengeBox}>
+     
       <h1 className={styles.heading}>{title}</h1>
-      <p className={styles.paragraphBox}>{description}</p>
-      <div className={styles.selectorContainer}>
-      <div className={styles.labelRow}>
-        <label>Select Challenge:</label>
+      
+      <p className={styles.description}>{description}</p>
+      <div className={styles.levelSelector}>
+      <ChallengeNavbar
+        selectedChallenge={selectedChallenge}
+        onChallengeSelect={setSelectedChallenge}
+      />
+      <br></br>
         <label>Select Level:</label>
-      </div>
-      <div className={styles.dropdownRow}>
-        <select value={selectedChallenge} onChange={handleChallengeChange}>
-          <option value="">--Choose a Challenge--</option>
-          <option value="RNA">RNA</option>
-          <option value="Molecules">Molecules</option>
-          <option value="Wireless">Wireless</option>
-        </select>
         <select value={selectedLevel} onChange={handleLevelChange}>
-          <option value="">--Choose a Level--</option>
           <option value="Easy">Easy</option>
           <option value="Medium">Medium</option>
         </select>
       </div>
+    
+      <div className={styles.challengeContent}>
+        <Suspense fallback={<p>Loading challenge...</p>}>
+          <DynamicChallengeComponent />
+        </Suspense>
+      </div>
     </div>
-
-
-
-      <div className={styles.challengesContainer}>{renderChallengeComponent()}</div>
     </div>
   );
 }
