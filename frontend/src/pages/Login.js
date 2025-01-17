@@ -2,7 +2,7 @@ import styles from './Login.module.css';
 import dna from '../assets/dna.jpg';
 import Navbar from './Navbar.js'
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext.js';
 
@@ -13,7 +13,7 @@ function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const { setUser } = useContext(AuthContext); 
+  const { login } = useContext(AuthContext); 
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -33,7 +33,7 @@ function Login() {
 
       if (response.ok) {
         const userData = await response.json(); // Get user data from response
-        setUser(userData); // Update the auth context with the logged in user
+        login(userData); // Update the auth context with the logged in user
         navigate('/');
       } else {
         const result = await response.json();
@@ -76,6 +76,8 @@ function Login() {
           </form>
 
           {error && <p className={styles.subheading}>{error}</p>}
+
+          <Link to="/register" className={styles.registerButton}>Register</Link>
 
           <button className={styles.guestButton}>Continue as Guest</button>
         </div>

@@ -98,6 +98,24 @@
   background-color: #d30e0e;
 }
 
+.registerButton {
+  text-align: center;
+  background-color: #333;
+  color: white;
+  font-size: 1rem;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  width: 70%;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.registerButton:hover {
+  background-color: #222;
+}
+
 /* Guest login button */
 .guestButton {
   background-color: #ccc;
