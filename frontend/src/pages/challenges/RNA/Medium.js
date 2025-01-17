@@ -4,6 +4,7 @@ import styles from "./Medium.module.css";
 // TODO: Make more specific feedback for incorrect answers
 // TODO: Change all colors in teh module.css file to match the color scheme of the website
 // TODO: I feel like on a phone, the clicking is weird, need to click twice..
+// TODO: Make the grid responsive t screen size
 
 const sequence =
   "AUGCGCUAAGGUGGGAGGCAUGGAAUAGGCUAUGGGUAAUAGGGUAUGGUCAAAAGCAUGGGCUAAGUCGAAUACAGCUAUGA";
@@ -119,19 +120,6 @@ const Medium = () => {
             <button onClick={handleDone} className={styles.doneButton}>
                 Done
             </button>
-            {clickedCells.length > 0 && (
-                <div className={styles.results}>
-                    <h2>Clicked Cells:</h2>
-                    <ul>
-                        {clickedCells.map(({ row, col }, index) => (
-                            <li key={index}>
-                                Row: {row + 1}, Column: {col + 1}, Letter:{" "}
-                                {gridLetters[row][col]}
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            )}
         </div>
     );
 };

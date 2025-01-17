@@ -5,7 +5,6 @@ import Login from './pages/Login';
 import Leaderboard from './pages/Leaderboard'
 import Register from './pages/Register';
 import Challenge from './pages/Challenge';
-import RNAChallenge from './pages/challenges/RNAChallenge';
 
 function App() {
   return (
@@ -16,7 +15,6 @@ function App() {
         <Route path="/leaderboard" element={<Leaderboard />}/>
         <Route path="/register" element={<Register />} />
         <Route path="/challenge" element={<Challenge />}>
-          <Route path='rna' element={<RNAChallenge/>}/>
         </Route>
       </Routes>
     </div>

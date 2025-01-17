@@ -41,7 +41,6 @@
     color: white;
     border: none;
     cursor: pointer;
-    border-radius: 4px;
   }
   
   .doneButton:hover {
