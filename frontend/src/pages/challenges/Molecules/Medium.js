@@ -2,12 +2,24 @@ import './Medium.module.css';
 import Konva from "konva";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { isColliding } from '../../../utils/utils';
+import mainprotein from '../../../assets/mainprotein.png';
+import bs1 from '../../../assets/bindingsite1.png'
+import bs2 from '../../../assets/bindingsite2.png'
+import bs1correct from '../../../assets/bs1-correct.png'
+import bs2correct from '../../../assets/bs2-correct.png'
+import wrongd1 from '../../../assets/wrongd1.png'
+import wrongd2 from '../../../assets/wrongd2.png'
+import wrongd3 from '../../../assets/wrongd3.png'
+import wrongd4 from '../../../assets/wrongd4.png'
+import wrongd5 from '../../../assets/wrongd5.png'
+import wrongd6 from '../../../assets/wrongd6.png'
+
 
 //TODO - responsiveness (99, 48-50), change to actual images (47, 99, 106, 115, )
 
 class RNAMedGame {
   sceneWidth = 1000;
-  sceneHeight = 500;
+  sceneHeight = 600;
   stage;
 
   primaryLayer;
@@ -30,7 +42,7 @@ class RNAMedGame {
       width: this.sceneWidth,
       height: this.sceneHeight,
     });
-    this.stage.getContainer().style.border = "1px solid black";
+    // this.stage.getContainer().style.border = "1px solid black";
 
     this.primaryLayer = new Konva.Layer();
     this.stage.add(this.primaryLayer);
@@ -41,26 +53,70 @@ class RNAMedGame {
     this.childLayer = new Konva.Layer();
     this.stage.add(this.childLayer);
 
-    this.createProtein(this.sceneWidth / 4);
+    // creating protein
 
-    // start creating main chain
-    let proteinImgList = ['https://d2bzx2vuetkzse.cloudfront.net/fit-in/0x450/unshoppable_producs/6c7b6164-8956-4ab0-a147-2608783fccdc.png', 'https://popupfilmresidency.org/wp-content/uploads/2021/07/blue-blob-4.png', 'https://popupfilmresidency.org/wp-content/uploads/2021/07/blue-blob-4.png','https://popupfilmresidency.org/wp-content/uploads/2021/07/blue-blob-4.png']
-    let setWidth = 50;
-    let setHeight = 50;
-    let x = 30;
-    let y = this.sceneHeight - setHeight;
+    this.createProtein(this.sceneWidth / 2.4);
 
-    for (let i = 0; i < proteinImgList.length; i++) {
-        const spriteParams = { 
-            size: { width:setWidth, height: setHeight },
-            position: {x: x, y: y},
-            stage: this.stage
-        };
-        const drugSeqElement = new DrugOptions(this, i, proteinImgList[i], spriteParams,);
-        this.optionsLayer.add(drugSeqElement.sprite);
+   this.createBindingSites(bs1,
+     this.mainProtein.x() + (this.mainProtein.width() / 9), // make more responsive?
+     this.mainProtein.y() + (this.mainProtein.height() * 0.01),
+     (bindingSite) => {
+       this.bindingsites[0] = (bindingSite);
+     }
+   )
+   this.createBindingSites(bs2,
+     this.mainProtein.x() + (this.mainProtein.width() / 3),
+     this.mainProtein.y() + (this.mainProtein.height() / 1.5),
+     (bindingSite) => {
+       this.bindingsites[1] = (bindingSite);
+     }
+ )
 
-        x += setWidth + 10;
+      // creating key
+      let keyColors = {"Hydrophobic": "#e92a39", "Positive Charge": "#98acff", "Negative Charge": "#fde25d", "Hydrogen Bond Donors": "#fb9ab5", "Hydrogen Bond Acceptors": "#caa8f5"}
+      let keyX = 0;
+      let keyY = 5;
+      for (let key in keyColors) {
+        const keygroup = this.createKey(keyColors[key], key, keyX, keyY, 10, 100, 30)
+        this.primaryLayer.add(keygroup);
+        keyX += keygroup.width() + 10;
+      }
+      
 
+
+   // start creating main chain
+   let proteinImgList = [wrongd1, bs2correct, wrongd2, wrongd3, wrongd4, wrongd5, bs1correct, wrongd6]
+   let drugInfo = [
+     {shape: 'weird'},
+     {shape: 'heart', left: 'hydrophobic', middle: 'acceptor', right: 'negative'},
+     {shape: 'heart', left: 'hydrophobic', middle: 'acceptor', right: 'positive'},
+     {shape: 'heart', left: 'positive', middle: 'donor', right: 'negative'},
+     {shape: 'boot', left: 'positive', right: 'hydrophobic'},
+     {shape: 'boot', left: 'negative', right: 'hydrophobic'},
+     {shape: 'boot', left: 'hydrophobic', right: 'donor'},
+     {shape: 'weird'},
+   ]
+   let setWidth = this.mainProtein.width() / 2.7;
+   let setHeight = this.mainProtein.height() / 2.7;
+   let x = this.sceneWidth - (setWidth * 2.5);
+   let y = 40;
+
+
+   for (let i = 0; i < proteinImgList.length; i++) {
+    
+     if (i % 2 === 0 && i !== 0) {
+       y += (setHeight/1.1);
+       x = this.sceneWidth - (setWidth * 2.5);
+     }
+     const spriteParams = { 
+      size: { width:setWidth, height: setHeight },
+      position: {x: x, y: y},
+      stage: this.stage
+   };
+
+     const drugSeqElement = new DrugOptions(this, i, proteinImgList[i], spriteParams, drugInfo[i]);
+     this.optionsLayer.add(drugSeqElement.sprite);
+     x += setWidth;
     };
 
     this.resize(size.width);
@@ -80,39 +136,52 @@ class RNAMedGame {
     this.stage.destroy();
   }
 
+  createKey(color, t, x, y, padding, width, height) {
+    let key = new Konva.Group({
+      x:x,
+      y:y,
+      width: width,
+    })
+    let colorSegment = new Konva.Rect({
+      width: height,
+      height: height,
+      fill: color
+    })
+    key.add(colorSegment)
+
+    let text = new Konva.Text({
+      text: t,
+      fill: "black",
+      fontSize: 15,
+      x: height + padding, 
+      y: (height - 15) / 2,
+    })
+    key.add(text)
+    key.width(height + padding + text.width());
+
+    return key
+
+  }
+
 // main protein background
   createProtein(width) {
     let mainProtein = new Image();
-    mainProtein.onload= () => {
-        const proteinImage= new Konva.Image({
-            x: this.sceneWidth / 2 - (width/2),
-            y: this.sceneHeight / 2 - (width/2),
-            image: mainProtein,
-            width:width,
-            height:width,
-            
-          });
+    mainProtein.src =  mainprotein;
 
-        this.mainProtein = proteinImage;
+   const proteinImage= new Konva.Image({
+     x: 20,
+     y: this.sceneHeight / 2 - (width/2),
+     width:width,
+     height:width,
+   })
 
-        this.primaryLayer.add(proteinImage);
-        this.createBindingSites('https://jwconstruction.tc/wp-content/uploads/2020/07/blob-1.png', 
-          this.mainProtein.x() + 50, // make more responsive?
-          this.mainProtein.y() + 10,
-          (bindingSite) => {
-            this.bindingsites[0] = (bindingSite);
-          }
-        )
-        this.createBindingSites('https://jwconstruction.tc/wp-content/uploads/2020/07/blob-1.png', 
-          this.mainProtein.x() + 100, 
-          this.mainProtein.y() + 200,
-          (bindingSite) => {
-            this.bindingsites[1] = (bindingSite);
-          }
-      )
-    }
 
-    mainProtein.src = 'https://popupfilmresidency.org/wp-content/uploads/2021/07/blue-blob-4.png'
+   mainProtein.onload= () => {
+     proteinImage.image(mainProtein)
+     };
+
+       this.mainProtein = proteinImage;
+       this.primaryLayer.add(proteinImage);
   } // constructing the main body of protein
 
 
@@ -124,8 +193,8 @@ class RNAMedGame {
             x: x,
             y: y,
             image: site,
-            width: this.mainProtein.width() / 4, 
-            height: this.mainProtein.height() / 4,
+            width: this.mainProtein.width() / 2.7,
+            height: this.mainProtein.height() / 2.7,
           });
           
         this.childLayer.add(siteImg);
@@ -175,38 +244,63 @@ class RNAMedGame {
   }
 
   checkWinner() {
-    let playerSequence = []
-    this.proteinsBonded.forEach(child => { 
-      playerSequence.push(child.drugID)
-    })
-    let correctSequence = [0, 2]
-    let errors = correctSequence.length;
-    console.log(playerSequence)
+
+  let playerSequence = this.proteinsBonded;
+   let answer = [{shape: 'boot', left: 'hydrophobic', right: 'donor'}, {shape: 'heart', left: 'hydrophobic', middle: 'acceptor', right: 'negative'}];
+   let error = "Please fix the following errors: \n";
+   let hydrophobic = false;
+   let charge = false;
+   let hydrogenb = false;
+   let shape = false;
 
     if (playerSequence.length != 2) {
       this.showAlert("One or more of your binding sites doesn't have a drug attached!")
     }
-    else if (JSON.stringify(playerSequence) === JSON.stringify(correctSequence)) {
-      this.showAlert("Challenge Complete! \n All your binding sites have correctly matched drug fragments.")
-    }
     else {
-      console.log('hi')
       for (let i = 0; i < playerSequence.length; i++) {
-        if (correctSequence[i] === playerSequence[i]) {
-          errors -=1
+        if (playerSequence[i].drugInfo.shape !== answer[i].shape) {
+          shape = true;
         }
-      
-    }
-  
-    if (errors != 1) {
-      this.showAlert("Sorry! You currently have " + errors + " fragments in the wrong binding site.")
+        else {
+          if (playerSequence[i].drugInfo.left !== answer[i].left) {
+            hydrophobic = true;
+          }
+          if (playerSequence[i].drugInfo.right !== answer[i].right) {
+            if (answer[i].right === 'donor') {
+              hydrogenb = true;
+            }
+            else {
+              charge = true;
+            }
+          }
+          if (playerSequence[i].drugInfo.shape === 'heart' && playerSequence[i].drugInfo.middle !== answer[i].middle) {
+            hydrogenb = true;
+          }
+        }
+    } // checking for errors
+ 
+ 
+    if (shape || hydrogenb || hydrophobic || charge || hydrogenb) {
+      if (shape) {
+        error += "There is a better shaped ligand for this protein. \n"
+      }
+      if (hydrophobic) {
+        error += "Hydrophobic regions of the drug match with to hydrophobic areas in the protein. \n"
+      }
+      if (charge) {
+        error += "Positively charged groups match with negatively charged groups and vice versa. \n"
+      }
+      if (hydrogenb) {
+        error += "Hydrogen bond donors match with hydrogen bond acceptors. \n"
+      }
     }
     else {
-      this.showAlert("Sorry! You currently have " + errors + " fragment in the wrong binding site.")
+      error = "Congratulations! You've completed this challenge."
     }
+    this.showAlert(error)
       
     }    
-  }
+  } // end checkwinner
 
 } // end main game class
 
@@ -217,13 +311,17 @@ class DrugComponent {
     sprite;
     drugID;
     drugImg;
+    drugInfo;
 
-    constructor(game, drugID, drugImg, spriteParams) {
+
+    constructor(game, drugID, drugImg, spriteParams, drugInfo) {
+        this.drugInfo = drugInfo;
         this.game = game;
         this.sprite = this.createNewDrug( drugImg, {...spriteParams});
         this.drugImg = drugImg;
         this.spriteParams = spriteParams;
         this.drugID = drugID;
+        
     } // end constructor for a drug component
 
 
@@ -276,9 +374,8 @@ class DrugOptions extends DrugComponent {
     }
 
     makeChild() {
-      console.log(this.drugImg)
-        let child = new PlayerDrug(this.game, this.drugID, this.drugImg, {...this.spriteParams});
-        return child;
+      let child = new PlayerDrug(this.game, this.drugID, this.drugImg, {...this.spriteParams}, this.drugInfo);
+      return child;
     }
 } // end drug options class
 
@@ -321,11 +418,9 @@ class PlayerDrug extends DrugComponent {
                     this.currentBindingSite = index;
 
                     if(index === 0) {
-                        console.log('adding to front')
                         this.game.addBondedProFront(this)
                     }
                     else {
-                        console.log('adding to back')
                         this.game.addBondedPro(this)
                     }
                 }
@@ -418,7 +513,8 @@ function Medium() {
       
       {/* game box */}
       <div className="flex justify-center py-30">
-        <div ref={resizeRef} className="w-3/4 h-3/4 border border-gray-300 shadow-lg rounded-lg">
+        <div ref={resizeRef} className="w-3/4 h-3/4">
+        {/*  border border-gray-300 shadow-lg rounded-lg */}
             <div ref={divRef}></div>
         </div>
       </div>
