@@ -1,91 +1,52 @@
-import { useCallback, useMemo, useEffect, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import Popup from "../../../components/Popup";
-import UplotReact from "uplot-react";
-import "uplot/dist/uPlot.min.css";
-import { generateLightSleep, generateDeepSleep, generateREM, generateBiotsRespiration,
-    generateCentralSleepApnea, generateCheyneStokes, generateHypopnea, 
-    generateObstructiveSleepApnea} from "./generator";
-
-// Creates a 1:2 plot that takes up 60% of the width of the window
-function getPlotSize(windowWidth) {
-  const plotWidth = windowWidth * 0.6;
-  return {
-    width: plotWidth,
-    height: plotWidth / 2,
-  };
-}
-
-// Basic plot settings
-function getPlotOptions(size) {
-  return {
-    width: size.width,
-    height: size.height,
-    legend: {
-      show: false, // True for testing purposes
-    },
-    scales: {
-      x: {
-        time: false,
-      },
-      y: {
-        auto: false, // y axis should NOT scale so that amplitudes look different
-        range: [-2000, 2000],
-      },
-    },
-    cursor: {
-      drag: {
-        setScale: false,
-        x: false,
-        y: false,
-      },
-    },
-    axes: [{ show: false }, { show: false }], // True for testing purposes
-    series: [
-      {},
-      {
-        spanGaps: false,
-        stroke: "red",
-        width: 2,
-      },
-    ],
-  };
-}
+import {
+  generateLightSleep,
+  generateDeepSleep,
+  generateREM,
+  generateBiotsRespiration,
+  generateObstructiveSleepApnea,
+  generateHypopnea,
+  generateCentralSleepApnea,
+  generateCheyneStokes,
+} from "./generator";
+import { WirelessDetectionPlot, WirelessDetectionButton } from "./common";
 
 // Creates plots for each sleeping pattern
 // Should probably be in a random order right?
 function getPlots() {
   const plots = [
     {
-        data: generateLightSleep(),
-        category: "regular light sleep",
+      data: generateLightSleep(),
+      category: "regular light sleep",
     },
     {
-        data: generateDeepSleep(),
-        category: "regular deep sleep",
+      data: generateDeepSleep(),
+      category: "regular deep sleep",
     },
     {
-        data: generateREM(),
-        category: "regular rem sleep",
+      data: generateREM(),
+      category: "regular rem sleep",
     },
     {
-        data: generateObstructiveSleepApnea(),
-        category: "obstructive sleep apnea",
+      data: generateObstructiveSleepApnea(),
+      category: "obstructive sleep apnea",
     },
     {
-        data: generateHypopnea(),
-        category: "hypopnea",
+      data: generateHypopnea(),
+      category: "hypopnea",
     },
     {
-        data: generateCheyneStokes(),
-        category: "cheyne-stokes respiration",
+      data: generateCheyneStokes(),
+      category: "cheyne-stokes respiration",
     },
     {
-        data: generateCentralSleepApnea(),
-        category: "central sleep apnea",
+      data: generateCentralSleepApnea(),
+      category: "central sleep apnea",
     },
     {
-        data: generateBiotsRespiration(),
-        category: "biot's respiration",
+      data: generateBiotsRespiration(),
+      category: "biot's respiration",
     },
   ];
 
@@ -93,7 +54,10 @@ function getPlots() {
 
   for (let i = duplicatedPlots.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [duplicatedPlots[i], duplicatedPlots[j]] = [duplicatedPlots[j], duplicatedPlots[i]];
+    [duplicatedPlots[i], duplicatedPlots[j]] = [
+      duplicatedPlots[j],
+      duplicatedPlots[i],
+    ];
   }
 
   return duplicatedPlots;
@@ -103,21 +67,8 @@ function Medium() {
   const [currentPlot, setCurrentImage] = useState(0);
   const [alertShowing, setAlertShowing] = useState(false);
   const [alertText, setAlertText] = useState("");
-  const [size, setSize] = useState(getPlotSize(window.innerWidth));
 
   const plots = useMemo(() => getPlots(), []);
-  const options = useMemo(() => getPlotOptions(size), [size]);
-
-  useEffect(() => {
-    const resizeCallback = () => {
-      setSize(getPlotSize(window.innerWidth));
-    };
-    window.addEventListener("resize", resizeCallback);
-
-    return () => {
-      window.removeEventListener("resize", resizeCallback);
-    };
-  }, []);
 
   const handleCategorization = useCallback(
     (category) => {
@@ -125,8 +76,7 @@ function Medium() {
         setAlertText("Incorrect!");
         setAlertShowing(true);
         return;
-      }
-      else {
+      } else {
         setAlertText("Correct!");
         setAlertShowing(true);
       }
@@ -152,60 +102,68 @@ function Medium() {
           Breathing Pattern {currentPlot + 1} / {plots.length}
         </p>
 
-        <UplotReact data={plots[currentPlot].data} options={options} />
+        <WirelessDetectionPlot data={plots[currentPlot].data} />
 
         <div className="pt-2">
-            <button
-            className="mx-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            onClick={() => handleCategorization("regular light sleep")}>
-                Regular Light Sleep
-            </button>
+          <WirelessDetectionButton
+            isIrregular={false}
+            onClick={() => handleCategorization("regular light sleep")}
+          >
+            Regular Light Sleep
+          </WirelessDetectionButton>
 
-            <button
-            className="mx-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            onClick={() => handleCategorization("regular deep sleep")}>
-                Regular Deep Sleep
-            </button>
+          <WirelessDetectionButton
+            isIrregular={false}
+            onClick={() => handleCategorization("regular deep sleep")}
+          >
+            Regular Deep Sleep
+          </WirelessDetectionButton>
 
-            <button
-            className="mx-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            onClick={() => handleCategorization("regular rem sleep")}>
-                Regular REM Sleep
-            </button>
+          <WirelessDetectionButton
+            isIrregular={false}
+            onClick={() => handleCategorization("regular rem sleep")}
+          >
+            Regular REM Sleep
+          </WirelessDetectionButton>
         </div>
 
         <div className="pt-2">
-            <button
-            className="mx-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-            onClick={() => handleCategorization("hypopnea")}>
-                Hypopnea
-            </button>
+          <WirelessDetectionButton
+            isIrregular={true}
+            onClick={() => handleCategorization("hypopnea")}
+          >
+            Hypopnea
+          </WirelessDetectionButton>
 
-            <button
-            className="mx-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-            onClick={() => handleCategorization("cheyne-stokes respiration")}>
-                Cheyne-Stokes Respiration
-            </button>
+          <WirelessDetectionButton
+            isIrregular={true}
+            onClick={() => handleCategorization("cheyne-stokes respiration")}
+          >
+            Cheyne-Stokes Respiration
+          </WirelessDetectionButton>
 
-            <button
-            className="mx-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-            onClick={() => handleCategorization("biot's respiration")}>
-                Biot's Respiration
-            </button>
+          <WirelessDetectionButton
+            isIrregular={true}
+            onClick={() => handleCategorization("biot's respiration")}
+          >
+            Biot's Respiration
+          </WirelessDetectionButton>
         </div>
 
         <div className="pt-2">
-            <button
-            className="mx-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-            onClick={() => handleCategorization("obstructive sleep apnea")}>
-                Obstructive Sleep Apnea
-            </button>
+          <WirelessDetectionButton
+            isIrregular={true}
+            onClick={() => handleCategorization("obstructive sleep apnea")}
+          >
+            Obstructive Sleep Apnea
+          </WirelessDetectionButton>
 
-            <button
-            className="mx-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-            onClick={() => handleCategorization("central sleep apnea")}>
-                Central Sleep Apnea
-            </button>
+          <WirelessDetectionButton
+            isIrregular={true}
+            onClick={() => handleCategorization("central sleep apnea")}
+          >
+            Central Sleep Apnea
+          </WirelessDetectionButton>
         </div>
       </div>
     </div>
