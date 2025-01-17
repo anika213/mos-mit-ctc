@@ -17,9 +17,9 @@ function App() {
         <Route path="/leaderboard" element={<Leaderboard />}/>
         <Route path="/register" element={<Register />} />
         <Route path="/challenge" element={<Challenge />}>
-          {/* <Route path='rna' element={<RNAChallenge/>}/> */}
+          {/* <Route path='rna' element={<RNAChallenge/>}/>
           <Route path='wirelesseasy' element={<Easy/>}/>
-          <Route path='wirelessmedium' element={<Medium/>}/>
+          <Route path='wirelessmedium' element={<Medium/>}/> */}
         </Route>
       </Routes>
     </div>

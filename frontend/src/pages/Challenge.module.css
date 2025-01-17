@@ -1,4 +1,4 @@
-.heading{
+.heading {
     font-size: 4.7vw;
     margin: 0;
     margin-left: 7%;
@@ -7,7 +7,7 @@
     text-align: left;
 }
 
-.paragraphBox{
+.paragraphBox {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -15,11 +15,12 @@
     padding: 20px;
     flex: 1;
     width: 80%;
-    margin-left:7%;
+    margin-left: 7%;
     background-color: rgb(215, 222, 227);
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for better visibility */
 }
-.challengesContainer{
+
+.challengesContainer {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -31,4 +32,53 @@
     height: 100%; /* Increase the height */
     margin-left: 7%;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for better visibility */
+}
+/* Selector container styling */
+.selectorContainer {
+    display: flex;
+    flex-direction: column; /* Stack rows */
+    align-items: flex-start;
+    margin-left: 7%;
+    margin-top: 20px;
+    gap: 10px; /* Space between rows */
+}
+
+/* Label row styling */
+.labelRow {
+    display: flex;
+    justify-content: flex-start;
+    gap: 50px; /* Space between labels */
+    width: 100%;
+}
+
+/* Dropdown row styling */
+.dropdownRow {
+    display: flex;
+    justify-content: flex-start;
+    gap: 50px; /* Space between dropdowns */
+    width: 100%;
+}
+
+/* Dropdown styling */
+.dropdownRow select {
+    padding: 10px;
+    font-size: 1.2rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: white;
+    cursor: pointer;
+    transition: box-shadow 0.3s, border 0.3s;
+}
+
+.dropdownRow select:focus {
+    outline: none;
+    border-color: #6ca0dc; /* Highlight color on focus */
+    box-shadow: 0 0 8px rgba(108, 160, 220, 0.5); /* Subtle glow */
+}
+
+/* Label styling */
+.labelRow label {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
 }

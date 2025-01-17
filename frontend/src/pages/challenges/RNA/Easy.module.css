@@ -1,33 +1,54 @@
-.container{
+.container {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    margin-top: 20px;
+    align-items: center;
+    justify-content: center;
+    margin: 20px auto;
     padding: 20px;
-    flex: 1;
     width: 100%;
-    margin-left: 20px;
+    height: 85vh; /* Increase height to make it larger */
     box-sizing: border-box;
-    gap: 10px;
+    gap: 20px;
+    border: 2px solid #ccc;
+    background-color: #f8f9fa;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    overflow: hidden; /* Prevent overflow issues */
 }
 
-.textBox{
+.resizeWrapper {
+    width: 90%;
+    height: 70vh; /* Ensure consistent sizing with the container */
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin-top: 20px;
-    padding: 20px;
-    flex: 1;
-    border: 1px solid black;
-    width: 80%;
-    margin-left: 20px;
-    background-color: rgb(215, 222, 227);
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    border: 1px solid #ddd;
+    background-color: #fff;
 }
 
-.doneButton{
+.canvasContainer {
     width: 100%;
-    font-size: 1.2rem;
-    margin-top: 10px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
+.doneButton {
+    width: 80%; /* Reduce width slightly to fit inside the container */
+    font-size: 1.5rem; /* Larger font size for better visibility */
+    margin-top: 20px;
+    padding: 10px; /* Add padding for a larger clickable area */
+    color: #fff;
+    background-color: #007bff; /* Bootstrap blue for better contrast */
+    border: none;
+    border-radius: 5px; /* Smooth corners */
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Add hover effect */
+}
+
+.doneButton:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
