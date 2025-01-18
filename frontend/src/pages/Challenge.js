@@ -18,21 +18,21 @@ const challengeData = {
   Molecules: {
     Easy: {
       title: "Molecules Easy Challenge",
-      description: "Learn how molecules interact with each other in this beginner challenge.",
+      description: "Connect each molecule to its corresponding binding site",
     },
     Medium: {
       title: "Molecules Medium Challenge",
-      description: "Test your knowledge of molecular interactions at an intermediate level.",
+      description: "Connect each molecule to its corresponding binding site",
     },
   },
   Wireless: {
     Easy: {
       title: "Wireless Easy Challenge",
-      description: "Understand the basics of wireless communication in this easy challenge.",
+      description: "Classify each breathing pattern as regular or irregular.",
     },
     Medium: {
       title: "Wireless Medium Challenge",
-      description: "Enhance your knowledge of wireless networks with this medium-level task.",
+      description: "Classify each breathing pattern",
     },
   },
 };
