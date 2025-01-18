@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import buttonStyles from "../../Buttons.module.css"
 import styles from "./Medium.module.css";
 
 // TODO: Make more specific feedback for incorrect answers
@@ -97,6 +98,10 @@ const Medium = () => {
         
     };
 
+    const handleReset = () => {
+        setGrid(gridLetters.map((row) => row.map(() => false)));
+    };
+
     return (
         <div className={styles.container}>
             <div className={styles.grid}>
@@ -117,9 +122,14 @@ const Medium = () => {
                 ))}
             </div>
             <br></br>
-            <button onClick={handleDone} className={styles.doneButton}>
+            <button onClick={handleReset} className={styles.doneButton}>
+                Reset
+            </button>
+
+            <button onClick={handleDone} className={`px-7 py-2 m-2 text-white ${buttonStyles.blackButton}`}>
                 Done
             </button>
+            
         </div>
     );
 };

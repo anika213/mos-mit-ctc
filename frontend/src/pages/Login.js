@@ -1,4 +1,5 @@
 import styles from './Login.module.css';
+import buttonStyles from './Buttons.module.css'
 import dna from '../assets/dna.jpg';
 import Navbar from './Navbar.js'
 import { useState } from 'react';
@@ -72,7 +73,7 @@ function Login() {
             value={password}
             onChange={(e) => setPassword(e.target.value)} />
 
-            <button className={styles.button} type="submit">Login</button>
+            <button  type="submit" className={`${styles.button} ${buttonStyles.redButton}`}>Login</button>
           </form>
 
           {error && <p className={styles.subheading}>{error}</p>}

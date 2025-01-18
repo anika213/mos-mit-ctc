@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Konva from "konva";
 import { shuffleArray, isColliding, toAlphabetBase26 } from "../../../utils/utils";
+import buttonStyles from "../../Buttons.module.css"
 
 class NucleotideSequences {
   game;
@@ -16,7 +17,7 @@ class NucleotideSequences {
     this.identifier = identifier;
     this.i = i;
     this.isExon = isExon;
-    let colorOptions = ['#79ADDC', '#FFC09F', '#FFEE93', '#FCF5C7', '#ADF7B6', '#A3BCF9', '#7796CB', '#87BBA2', '#B8E1FF', '#E8AEB7']
+    let colorOptions = ['#98ACFF', '#FDE25D', '#FB9AB5', '#CAA8F5', '#A3BCF9', '#7796CB', '#B8E1FF', '#E8AEB7', '#ada5d4', 'a5c6d4']
     this.sprite = this.makeRect({
       color: isExon ? colorOptions[Math.floor(Math.random() * 10)] : "black",
       textColor: isExon ? "black" : "white",
@@ -167,7 +168,7 @@ class RNAGame {
       width: this.sceneWidth,
       height: this.sceneHeight,
     });
-    this.stage.getContainer().style.border = "1px solid black";
+    this.stage.getContainer().style.border = "2px solid gray";
 
     this.primaryLayer = new Konva.Layer();
     this.stage.add(this.primaryLayer);
@@ -370,17 +371,17 @@ function Easy({ className = "" }) {
       
       <div className="flex flex-row justify-center items-center">
         <button
-          className="bg-red-600 px-7 py-2 m-2 text-white "
+          className={`bg-red-600 px-7 py-2 m-2 text-white ${buttonStyles.redButton}`}
           onClick={() => {
             if (gameRef.current) {
               gameRef.current.resetClicked();
             }
           }}
         >
-          Reset Game
+          Reset
         </button>
         <button
-          className="bg-black px-7 py-2 m-2 text-white"
+          className={`bg-black px-7 py-2 m-2 text-white ${buttonStyles.blackButton}`}
           onClick={() => {
             if (gameRef.current) {
               gameRef.current.checkClicked();

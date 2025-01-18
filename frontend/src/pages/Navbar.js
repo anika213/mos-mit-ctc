@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import buttonStyles from './Buttons.module.css'
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
@@ -22,10 +23,17 @@ const Navbar = () => {
     setDropdownOpen(!isDropdownOpen);
   };
 
+  const handleChallengeClick = (link) => {
+    navigate(link);
+    setDropdownOpen(false);
+    setMobileMenuOpen(false);
+
+  }
+
   return (
     <nav className="bg-black text-white z-10">
-      <div className="container mx-auto flex items-center justify-between p-4">
-        <div className="text-xl font-bold">Clinical AI</div>
+      <div className="flex items-center justify-between px-10 py-4">
+        <div className="text-xl font-bold"><Link to="/">Clinical AI</Link></div>
         <div className="md:hidden" onClick={toggleMobileMenu}>
           <div className="text-2xl">☰</div>
         </div>
@@ -44,13 +52,14 @@ const Navbar = () => {
               <ul className="absolute left-0 mt-2 bg-black text-white shadow-lg rounded-md w-40"
               onMouseLeave={isDropdownOpen ? toggleDropdown : null}
               >
-                <li className="p-2 hover:bg-gray-700"><Link to="/challenge/rna">RNA Challenge</Link></li>
-                <li className="p-2 hover:bg-gray-700"><Link to="/challenge/rna">Challenge 2</Link></li>
+                <li className="p-2 hover:bg-gray-700"><button onClick={() => handleChallengeClick('/challenge/RNA')}>RNA Challenge</button></li>
+                <li className="p-2 hover:bg-gray-700"><button onClick={() => handleChallengeClick('/challenge/Molecules')}>Molecular Docking</button></li>
+                <li className="p-2 hover:bg-gray-700"><button onClick={() => handleChallengeClick('/challenge/Wireless')}>Wireless Detection</button></li>
               </ul>
              )}
           </li>
           {!isAuthenticated ? (
-            <li><Link to="/login" className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600">Login</Link></li>
+            <li><Link to="/login" className={`bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 ${buttonStyles.redButton}`}>Login</Link></li>
           ) : (
             <li>
               <button onClick={handleLogout} className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600">Logout</button>

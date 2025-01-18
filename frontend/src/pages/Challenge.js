@@ -1,5 +1,6 @@
 // Challenge.js
-import React, { useState, Suspense } from "react";
+import React, { useState, Suspense, useEffect } from "react";
+import { useParams } from 'react-router-dom';
 import ChallengeNavbar from "../components/ChallengesNavbar.js";
 import styles from "./Challenge.module.css";
 import Navbar from "./Navbar.js";
@@ -7,11 +8,11 @@ import Navbar from "./Navbar.js";
 const challengeData = {
   RNA: {
     Easy: {
-      title: "RNA Splicing",
+      title: "RNA Splicing Easy Challenge",
       description: "Drag each block of RNA to form a complete protein!",
     },
     Medium: {
-      title: "RNA Splicing",
+      title: "RNA Splicing Medium Challenge",
       description: "Select all the introns in the given RNA sequence.",
     },
   },
@@ -38,17 +39,24 @@ const challengeData = {
 };
 
 function Challenge() {
-  const [selectedChallenge, setSelectedChallenge] = useState("RNA");
+
+  let { challengeName } = useParams();
+  // const [selectedChallenge, setSelectedChallenge] = useState(challengeName);
   const [selectedLevel, setSelectedLevel] = useState("Easy");
 
   const handleLevelChange = (event) => {
     setSelectedLevel(event.target.value);
   };
 
-  const { title, description } = challengeData[selectedChallenge][selectedLevel];
+  useEffect(() => {
+    // Reset to Easy level whenever the challenge changes
+    setSelectedLevel("Easy");
+  }, [challengeName]);
+
+  const { title, description } = challengeData[challengeName][selectedLevel];
 
   const DynamicChallengeComponent = React.lazy(() =>
-    import(`./challenges/${selectedChallenge}/${selectedLevel}.js`).catch(() =>
+    import(`./challenges/${challengeName}/${selectedLevel}.js`).catch(() =>
       import("../components/ChallengeFallback.js")
     )
   );
@@ -57,15 +65,17 @@ function Challenge() {
     <div>
 <Navbar />
     
-    <div className={styles.challengeBox}>
+    <div className={styles.challengeBox} key={challengeName}>
      
       <h1 className={styles.heading}>{title}</h1>
       
       <p className={styles.description}>{description}</p>
       <div className={styles.levelSelector}>
       <ChallengeNavbar
-        selectedChallenge={selectedChallenge}
-        onChallengeSelect={setSelectedChallenge}
+        selectedChallenge={challengeName}
+        onChallengeSelect={(newChallenge) =>
+          (window.location.href = `/challenge/${newChallenge}`)
+        }
       />
       <br></br>
         <label>Select Level:</label>
