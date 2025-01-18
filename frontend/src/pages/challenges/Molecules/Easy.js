@@ -25,10 +25,14 @@ function MolecularDockingEasy() {
   const resizeCanvas = () => {
     const container = document.getElementById("container");
     const width = container.offsetWidth;
-    const height = container.offsetHeight;
+    //const height = container.offsetHeight;
+    const aspectRatio = 1000/600
     const stage = stageRef.current;
 
     if (stage) {
+      // Calculate height based on the width and aspect ratio
+      const height = width / aspectRatio;
+
       stage.width(width);
       stage.height(height);
       stage.scale({
@@ -56,9 +60,9 @@ function MolecularDockingEasy() {
             imagePath: protein1,
             position: { x: 325, y: 100 },
             bindingSites: [
-                { x: 455, y: 100 },
-                { x: 425, y: 170 },
-                { x: 372, y: 170 },
+                { x: 475, y: 100, correct: true },
+                { x: 445, y: 190, correct: false },
+                { x: 372, y: 170, correct: false },
             ],
         },
         {
@@ -66,8 +70,8 @@ function MolecularDockingEasy() {
             imagePath: protein2,
             position: { x: 525, y: 100 },
             bindingSites: [
-                { x: 590, y: 220 },
-                { x: 630, y: 170 },
+                { x: 590, y: 220, correct: false },
+                { x: 640, y: 180, correct: true },
             ],
         },
         {
@@ -75,7 +79,7 @@ function MolecularDockingEasy() {
             imagePath: protein3,
             position: { x: 325, y: 300 },
             bindingSites: [
-                { x: 440, y: 375 },
+                { x: 460, y: 385, correct: true },
             ],
         },
         {
@@ -83,16 +87,16 @@ function MolecularDockingEasy() {
             imagePath: protein4,
             position: { x: 525, y: 300 },
             bindingSites: [
-                { x: 605, y: 325 },
+                { x: 615, y: 345, correct: true },
             ],
         },
     ];
 
     const molecules = [
-        { id: "1", imagePath: molecule1, initialPosition: { x: 525, y: 450 }, targetProtein: "1", W: 89, H: 96 },
-        { id: "2", imagePath: molecule2, initialPosition: { x: 125, y: 450 }, targetProtein: "2", W: 121, H: 64 },
-        { id: "3", imagePath: molecule3, initialPosition: { x: 725, y: 450 }, targetProtein: "3", W: 76, H: 70 },
-        { id: "4", imagePath: molecule4, initialPosition: { x: 325, y: 450 }, targetProtein: "4", W: 167, H: 167 },
+        { id: "1", imagePath: molecule1, initialPosition: { x: 525, y: 500 }, targetProtein: "1", W: 89, H: 96 },
+        { id: "2", imagePath: molecule2, initialPosition: { x: 125, y: 500 }, targetProtein: "2", W: 121, H: 64 },
+        { id: "3", imagePath: molecule3, initialPosition: { x: 725, y: 500 }, targetProtein: "3", W: 76, H: 70 },
+        { id: "4", imagePath: molecule4, initialPosition: { x: 325, y: 475 }, targetProtein: "4", W: 167, H: 167 },
     ];
     proteins.forEach((protein) => {
       const proteinImage = new Image();
@@ -102,8 +106,8 @@ function MolecularDockingEasy() {
           x: protein.position.x,
           y: protein.position.y,
           image: proteinImage,
-          width: 150,
-          height: 150,
+          width: 150 * stage.scaleX(),
+          height: 150 * stage.scaleY(),
         });
         layer.add(proteinNode);
 
@@ -117,6 +121,9 @@ function MolecularDockingEasy() {
             strokeWidth: 1,
             name: `${protein.id}-bindingSite-${index}`,
           });
+          // Set the correct property explicitly
+          bindingSite.setAttr("correct", site.correct);
+
           layer.add(bindingSite);
         });
 
@@ -132,8 +139,8 @@ function MolecularDockingEasy() {
           x: molecule.initialPosition.x,
           y: molecule.initialPosition.y,
           image: moleculeImage,
-          width: Math.round(molecule.W * 0.4),
-          height: Math.round(molecule.H * 0.4),
+          width: Math.round(molecule.W * 0.4) * stage.scaleX(),
+          height: Math.round(molecule.H * 0.4) * stage.scaleY(),
           draggable: true,
         });
 
@@ -157,13 +164,9 @@ function MolecularDockingEasy() {
                   });
                   snapped = true;
 
-                  const positionTolerance = 2; // Tolerance for float comparison
-                  const validPositions = [437, 606, 425, 571]; // Pre-calculated positions
-          
-                  const isPositionValid = validPositions.some(
-                      (validX) => Math.abs(moleculeNode.x() - validX) <= positionTolerance
-                  );
-                  if (isPositionValid) {
+                  console.log(site.getAttr("correct"));
+
+                  if (site.getAttr("correct")) {
                     moleculesCorrect++;
                     if(moleculesCorrect === 4){
                         showAlert("Great job! You have completed the challenge!");
