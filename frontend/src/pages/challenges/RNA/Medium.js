@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import buttonStyles from "../../Buttons.module.css"
 import styles from "./Medium.module.css";
+import Popup from "../../../components/Popup";
+
 
 // TODO: Make more specific feedback for incorrect answers
 // TODO: Change all colors in teh module.css file to match the color scheme of the website
@@ -65,7 +67,10 @@ const Medium = () => {
         { row: 6, col: 3 },
         { row: 6, col: 4 }
     ];
-    
+    const [alertShowing, setAlertShowing] = useState(false);
+    const [alertText, setAlertText] = useState("");
+
+
     const handleDone = () => {
         const clicked = [];
         grid.forEach((row, rowIndex) =>
@@ -91,9 +96,12 @@ const Medium = () => {
             }
         }
         if (correct) {
-            alert("Congratulations! You have successfully completed the challenge.");
+            setAlertShowing(true);
+            setAlertText("Congratulations! You have successfully completed the challenge.");
+            
         } else {
-            alert("Incorrect. Please try again.");
+            setAlertShowing(true);
+            setAlertText("Incorrect. Please try again.")
         }
         
     };
@@ -104,6 +112,9 @@ const Medium = () => {
 
     return (
         <div className={styles.container}>
+            {alertShowing ? (
+        <Popup alertText={alertText} setAlertShowing={setAlertShowing} />
+      ) : null}
             <div className={styles.grid}>
                 {gridLetters.map((row, rowIndex) => (
                     <div key={rowIndex} className={styles.row}>

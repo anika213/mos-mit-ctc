@@ -19,8 +19,8 @@ const Navbar = () => {
     navigate('/');
   };
 
-  const toggleDropdown = () => {
-    setDropdownOpen(!isDropdownOpen);
+  const toggleDropdown = (state) => {
+    setDropdownOpen(state);
   };
 
   const handleChallengeClick = (link) => {
@@ -37,32 +37,39 @@ const Navbar = () => {
         <div className="md:hidden" onClick={toggleMobileMenu}>
           <div className="text-2xl">☰</div>
         </div>
-        <ul className={`md:flex md:items-center md:space-x-6 ${isMobileMenuOpen ? 'block' : 'hidden'} md:block`}>
-          <li><Link to="/" className="hover:text-gray-400">Home</Link></li>
-          <li><Link to="/leaderboard" className="hover:text-gray-400">Leaderboard</Link></li>
-          <li className="relative group" >
-              <span 
-              className="cursor-pointer hover:text-gray-400" 
-              onClick={toggleDropdown}
-              onMouseEnter={toggleDropdown}
-              >
-                Challenges ▼
-              </span>
-              {isDropdownOpen && (
-              <ul className="absolute left-0 mt-2 bg-black text-white shadow-lg rounded-md w-40"
-              onMouseLeave={isDropdownOpen ? toggleDropdown : null}
-              >
-                <li className="p-2 hover:bg-gray-700"><button onClick={() => handleChallengeClick('/challenge/RNA')}>RNA Challenge</button></li>
-                <li className="p-2 hover:bg-gray-700"><button onClick={() => handleChallengeClick('/challenge/Molecules')}>Molecular Docking</button></li>
-                <li className="p-2 hover:bg-gray-700"><button onClick={() => handleChallengeClick('/challenge/Wireless')}>Wireless Detection</button></li>
-              </ul>
-             )}
-          </li>
+
+        {/* <ul className={`md:flex md:items-center md:space-x-6 ${isMobileMenuOpen ? 'block' : 'hidden'} md:block`}> */}
+        <ul className={`md:flex flex flex-col md:flex-row items-center justify-center md:gap-x-6 gap-y-8 md:pb-0 pb-16 absolute md:static md:z-auto bg-black left-0 w-full md:w-auto ml-0 duration-200 ease-in ${isMobileMenuOpen ? 'top-16 ':'top-[-490px]'}`}>
+          <li><Link to="/" className="hover:text-gray-400 duration-500 md:mb-0 mb-7">Home</Link></li>
+          <li><Link to="/leaderboard" className="hover:text-gray-400 duration-500 md:mb-0 mb-7" >Leaderboard</Link></li>
+          <div  onClick={toggleDropdown}
+                onMouseEnter={() => toggleDropdown(true)}
+                onMouseLeave={() => toggleDropdown(false)}
+                // onMouseLeave={isDropdownOpen ? toggleDropdown : null}
+                >
+            <li className="relative group duration-500" >
+                <span 
+                className="cursor-pointer hover:text-gray-400 duration-500 pb-2" 
+               
+                >
+                  Challenges ▼
+                </span>
+                {isDropdownOpen && (
+                <ul className="absolute left-0 p-4 bg-black text-white shadow-lg rounded-md w-40"
+                
+                >
+                  <li className="p-2 hover:bg-gray-700 duration-300 rounded-md"><button onClick={() => handleChallengeClick('/challenge/RNA')}>RNA Challenge</button></li>
+                  <li className="p-2 hover:bg-gray-700 duration-300 rounded-md"><button onClick={() => handleChallengeClick('/challenge/Molecules')}>Molecular Docking</button></li>
+                  <li className="p-2 hover:bg-gray-700 duration-300 rounded-md"><button onClick={() => handleChallengeClick('/challenge/Wireless')}>Wireless Detection</button></li>
+                </ul>
+              )}
+            </li>
+          </div>
           {!isAuthenticated ? (
-            <li><Link to="/login" className={`bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 ${buttonStyles.redButton}`}>Login</Link></li>
+            <li><Link to="/login" className={` duration-500bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600  ${buttonStyles.redButton}`}>Login</Link></li>
           ) : (
             <li>
-              <button onClick={handleLogout} className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600">Logout</button>
+              <button onClick={handleLogout} className={` duration-500 bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600  ${buttonStyles.redButton}`}>Logout</button>
             </li>
           )}
         </ul>

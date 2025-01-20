@@ -278,16 +278,16 @@ class RNAMedGame {
  
     if (shape || hydrogenb || hydrophobic || charge || hydrogenb) {
       if (shape) {
-        error += "There is a better shaped ligand for this protein. \n"
+        error += "- There is a better shaped ligand for this protein. \n"
       }
       if (hydrophobic) {
-        error += "Hydrophobic regions of the drug match with to hydrophobic areas in the protein. \n"
+        error += "- Hydrophobic regions of the drug match with to hydrophobic areas in the protein. \n"
       }
       if (charge) {
-        error += "Positively charged groups match with negatively charged groups and vice versa. \n"
+        error += "- Positively charged groups match with negatively charged groups and vice versa. \n"
       }
       if (hydrogenb) {
-        error += "Hydrogen bond donors match with hydrogen bond acceptors. \n"
+        error += "- Hydrogen bond donors match with hydrogen bond acceptors. \n"
       }
     }
     else {
@@ -493,8 +493,8 @@ function Medium() {
       <div>
       {alertShowing && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col justify-center items-center border-2 border-red-600">
-            <p className="mb-4 whitespace-pre-line">{alertText}</p>
+          <div className="w-80 bg-white p-6 rounded-lg shadow-lg flex flex-col justify-center items-center border-2 border-red-600">
+            <p className="mb-4 whitespace-pre-line text-center ">{alertText}</p>
             <button
               className="bg-red-600 text-white px-4 py-2"
               onClick={() => setAlertShowing(false)}
