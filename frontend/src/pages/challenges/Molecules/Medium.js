@@ -1,7 +1,7 @@
-import './Medium.module.css';
 import Konva from "konva";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { isColliding } from '../../../utils/utils';
+import buttonStyles from '../../Buttons.module.css'
 import mainprotein from '../../../assets/mainprotein.png';
 import bs1 from '../../../assets/bindingsite1.png'
 import bs2 from '../../../assets/bindingsite2.png'
@@ -218,10 +218,6 @@ class RNAMedGame {
     this.children = this.children.filter((c) => c !== child);
   }
 
-  destroy() {
-    this.stage.destroy();
-  }
-
   setProteinsBonded(proteinsBonded) {
     this.proteinsBonded = proteinsBonded;
   }
@@ -253,7 +249,7 @@ class RNAMedGame {
    let hydrogenb = false;
    let shape = false;
 
-    if (playerSequence.length != 2) {
+    if (playerSequence.length !== 2) {
       this.showAlert("One or more of your binding sites doesn't have a drug attached!")
     }
     else {
@@ -282,16 +278,16 @@ class RNAMedGame {
  
     if (shape || hydrogenb || hydrophobic || charge || hydrogenb) {
       if (shape) {
-        error += "There is a better shaped ligand for this protein. \n"
+        error += "- There is a better shaped ligand for this protein. \n"
       }
       if (hydrophobic) {
-        error += "Hydrophobic regions of the drug match with to hydrophobic areas in the protein. \n"
+        error += "- Hydrophobic regions of the drug match with to hydrophobic areas in the protein. \n"
       }
       if (charge) {
-        error += "Positively charged groups match with negatively charged groups and vice versa. \n"
+        error += "- Positively charged groups match with negatively charged groups and vice versa. \n"
       }
       if (hydrogenb) {
-        error += "Hydrogen bond donors match with hydrogen bond acceptors. \n"
+        error += "- Hydrogen bond donors match with hydrogen bond acceptors. \n"
       }
     }
     else {
@@ -494,13 +490,11 @@ function Medium() {
   }, []);
 
     return (
-      <div>  {/* start of holder for the game */}
-        
-        {/* alert */ }
+      <div>
       {alertShowing && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col justify-center items-center border-2 border-red-600">
-            <p className="mb-4 whitespace-pre-line">{alertText}</p>
+          <div className="w-80 bg-white p-6 rounded-lg shadow-lg flex flex-col justify-center items-center border-2 border-red-600">
+            <p className="mb-4 whitespace-pre-line text-center ">{alertText}</p>
             <button
               className="bg-red-600 text-white px-4 py-2"
               onClick={() => setAlertShowing(false)}
@@ -513,26 +507,26 @@ function Medium() {
       
       {/* game box */}
       <div className="flex justify-center py-30">
-        <div ref={resizeRef} className="w-3/4 h-3/4">
+        <div ref={resizeRef} className="w-5/6 h-5/6">
         {/*  border border-gray-300 shadow-lg rounded-lg */}
             <div ref={divRef}></div>
         </div>
       </div>
       
       {/* game buttons */}
-      <div className="flex flex-row justify-center items-center">
+      <div className='flex flex-row justify-center items-center pt-7'>
         <button
-          className="bg-red-600 px-7 py-2 m-2 text-white "
+          className={`px-7 py-2 m-2 text-white ${buttonStyles.redButton}`}
           onClick={() => {
             if (gameRef.current) {
               gameRef.current.resetClicked();
             }
           }}
         >
-          Reset Game
+          Reset
         </button>
         <button
-          className="bg-black px-7 py-2 m-2 text-white"
+          className={`px-7 py-2 m-2 text-white ${buttonStyles.blackButton}`}
           onClick={() => {
             if (gameRef.current) {
               gameRef.current.checkClicked();

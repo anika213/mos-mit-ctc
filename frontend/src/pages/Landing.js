@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './Landing.module.css';
+import buttonStyles from './Buttons.module.css'
 import Navbar from './Navbar.js';
 import hmc from '../assets/hmc.png';
 import jameel from '../assets/jameel.jpg';
@@ -10,9 +11,9 @@ import { useNavigate } from 'react-router-dom';
 
 
 const challenges = [
-  { id: 1, title: "RNA Splicing", description: "Description for Challenge #1", link: "/challenge/rnasplicing" },
-  { id: 2, title: "Molecular Docking", description: "Description for Challenge #2", link: "/challenge/moleculardocking" },
-  { id: 3, title: "Wireless Detecting", description: "Description for Challenge #3", link: "/challenge/wirelesseasy" },
+  { id: 1, title: "RNA Splicing", description: "Description for Challenge #1", link: "/challenge/RNA" },
+  { id: 2, title: "Molecular Docking", description: "Description for Challenge #2", link: "/challenge/Molecules" },
+  { id: 3, title: "Wireless Detecting", description: "Description for Challenge #3", link: "/challenge/Wireless" },
 ];
 
 
@@ -21,9 +22,9 @@ const challenges = [
 function Landing() {
   const navigate = useNavigate();
 
-  function goToChallenge() {
-    navigate('/challenge');
-  }
+  const handleChallengeClick = (link) => {
+    navigate(link); 
+  };
   const [activeChallenge, setActiveChallenge] = useState(null);
 
   const toggleChallenge = (id) => {
@@ -38,7 +39,7 @@ function Landing() {
           <p className={styles.subheading}>An interactive exhibit</p>
           <p className={styles.heading}>Exploring Clinical AI</p>
           <br></br>
-          <button className={styles.button} onClick={goToChallenge}>Get Started</button>
+          <button className={`${styles.button} ${buttonStyles.redButton}`} onClick={() => handleChallengeClick("/challenge/RNA")}>Get Started</button>
           <br></br>
           <div className={styles.imageContainer}>
             <img src={mos} alt="MOS" className={styles.logos} />
@@ -74,9 +75,9 @@ function Landing() {
               <div className={styles.openchallenge}>
                 <p>{challenge.description}</p>
                 <br/>
-                <a href={challenge.link} className={styles.challengeButton}>
+                <button onClick={() => handleChallengeClick(challenge.link)} className={`${styles.challengeButton} ${buttonStyles.redButton}`}>
                   Try it out!
-                </a>
+                </button>
               </div>
             )}
           </div>
