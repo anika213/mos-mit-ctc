@@ -1,21 +1,24 @@
-// ChallengeNavbar.js
 import React from "react";
 import styles from "./ChallengesNavbar.module.css";
 
 function ChallengeNavbar({ selectedChallenge, onChallengeSelect }) {
-  const challenges = ["RNA", "Molecules", "Wireless"];
-  
+  const challengeData = {
+    RNA: "RNA Splicing",
+    Molecules: "Molecular Docking",
+    Wireless: "Wireless Detection",
+  };
+
   return (
     <div className={styles.navbar}>
-      {challenges.map((challenge) => (
+      {Object.entries(challengeData).map(([key, fullName]) => (
         <button
-          key={challenge}
+          key={key}
           className={`${styles.navButton} ${
-            selectedChallenge === challenge ? styles.active : ""
+            selectedChallenge === key ? styles.active : ""
           }`}
-          onClick={() => onChallengeSelect(challenge)}
+          onClick={() => onChallengeSelect(key)}
         >
-          {challenge}
+          {fullName}
         </button>
       ))}
     </div>

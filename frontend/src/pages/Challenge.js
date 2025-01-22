@@ -60,39 +60,37 @@ function Challenge() {
       import("../components/ChallengeFallback.js")
     )
   );
-
   return (
     <div>
-<Navbar />
-    
-    <div className={styles.challengeBox} key={challengeName}>
-     
-      <h1 className={styles.heading}>{title}</h1>
-      
-      <p className={styles.description}>{description}</p>
-      <div className={styles.levelSelector}>
-      <ChallengeNavbar
-        selectedChallenge={challengeName}
-        onChallengeSelect={(newChallenge) =>
-          (window.location.href = `/challenge/${newChallenge}`)
-        }
-      />
-      <br></br>
-        <label>Select Level:</label>
-        <select value={selectedLevel} onChange={handleLevelChange}>
-          <option value="Easy">Easy</option>
-          <option value="Medium">Medium</option>
-        </select>
+      <Navbar />
+  
+      <div className={styles.challengeBox} key={challengeName}>
+        <div className={styles.navbarWrapper}>
+          <ChallengeNavbar
+            selectedChallenge={challengeName}
+            onChallengeSelect={(newChallenge) =>
+              (window.location.href = `/challenge/${newChallenge}`)
+            }
+          />
+        </div>
+        <h1 className={styles.heading}>{title}</h1>
+        <p className={styles.description}>{description}</p>
+        <div className={styles.levelSelector}>
+          <label>Select Level:</label>
+          <select value={selectedLevel} onChange={handleLevelChange}>
+            <option value="Easy">Easy</option>
+            <option value="Medium">Medium</option>
+          </select>
+        </div>
+        <div className={styles.challengeContent}>
+          <Suspense fallback={<p>Loading challenge...</p>}>
+            <DynamicChallengeComponent />
+          </Suspense>
+        </div>
       </div>
-    
-      <div className={styles.challengeContent}>
-        <Suspense fallback={<p>Loading challenge...</p>}>
-          <DynamicChallengeComponent />
-        </Suspense>
-      </div>
-    </div>
     </div>
   );
+  
 }
 
 export default Challenge;
