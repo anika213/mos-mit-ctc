@@ -31,7 +31,7 @@ function getPlots() {
   return plots;
 }
 
-function Easy() {
+function Easy({ onComplete }) {
   const [currentPlot, setCurrentImage] = useState(0);
   const [alertShowing, setAlertShowing] = useState(false);
   const [alertText, setAlertText] = useState("");
@@ -53,6 +53,7 @@ function Easy() {
       if (currentPlot === plots.length - 1) {
         setAlertText("You have completed the challenge!");
         setAlertShowing(true);
+        onComplete();
         return;
       }
       setCurrentImage(currentPlot + 1);

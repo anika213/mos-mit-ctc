@@ -28,14 +28,16 @@ class RNAMedGame {
   mainProtein;
 
   showAlert;
+  onComplete;
 
   children = [];
   bindingsites = [0, 0];
   proteinsBonded = [];
   //set up variables
 
-  constructor(showAlert, div, size) {
+  constructor(showAlert, div, size, onComplete) {
     this.showAlert = showAlert;
+    this.onComplete = onComplete;
 
     this.stage = new Konva.Stage({
       container: div,
@@ -292,6 +294,7 @@ class RNAMedGame {
     }
     else {
       error = "Congratulations! You've completed this challenge."
+      this.onComplete();
     }
     this.showAlert(error)
       
@@ -464,7 +467,7 @@ function Medium({ onComplete }) {
     const game = new RNAMedGame(showAlert, divRef.current, {
       width: resizeRef.current.clientWidth,
       height: resizeRef.current.clientHeight,
-    });
+    }, onComplete);
 
     gameRef.current = game;
   }, [showAlert, destroyGame]);

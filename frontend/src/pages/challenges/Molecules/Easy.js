@@ -170,6 +170,7 @@ function MolecularDockingEasy({ onComplete }) {
                     moleculesCorrect++;
                     if(moleculesCorrect === 4){
                         showAlert("Great job! You have completed the challenge!");
+                        onComplete();
                     } else {
                         showAlert("Great job! You attached the molecule to the correct binding site!");
                     }
@@ -202,7 +203,7 @@ function MolecularDockingEasy({ onComplete }) {
       stage.destroy();
       window.removeEventListener("resize", resizeCanvas);
     };
-  }, [showAlert]);
+  }, [showAlert, onComplete]);
 
   return (
     <div>

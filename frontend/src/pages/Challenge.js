@@ -1,11 +1,9 @@
 // Challenge.js
-import React, { useState, Suspense, useEffect } from "react";
-import { useParams } from 'react-router-dom';
+import React, { useState, Suspense, useEffect, useCallback } from "react";
+import { useParams } from "react-router-dom";
 import ChallengeNavbar from "../components/ChallengesNavbar.js";
-import React, { useCallback, useState } from "react";
 import Navbar from "./Navbar.js";
 import styles from "./Challenge.module.css";
-import Navbar from "./Navbar.js";
 
 const challengeData = {
   RNA: {
@@ -45,7 +43,6 @@ const challengeData = {
 };
 
 function Challenge() {
-
   let { challengeName } = useParams();
   // const [selectedChallenge, setSelectedChallenge] = useState(challengeName);
   const [selectedLevel, setSelectedLevel] = useState("Easy");
@@ -63,14 +60,14 @@ function Challenge() {
 
   const onComplete = useCallback(() => {
     // mark challenge as complete in the backend
-      method: "POST",
     fetch("http://localhost:8080/users/challenges", {
-        "Content-Type": "application/json",
       headers: {
-      credentials: "include",
+        "Content-Type": "application/json",
       },
+      method: "POST",
+      credentials: "include",
       body: JSON.stringify({
-        challenge: `${selectedChallenge}-${selectedLevel}`,
+        challenge: `${challengeName}-${selectedLevel}`,
       }),
     })
       .then((res) => res.json())
@@ -80,60 +77,43 @@ function Challenge() {
       .catch((error) => {
         console.error("Error updating challenges:", error);
       });
+  });
+
   const DynamicChallengeComponent = React.lazy(() =>
     import(`./challenges/${challengeName}/${selectedLevel}.js`).catch(() =>
       import("../components/ChallengeFallback.js")
     )
   );
 
-    try {
-      const ChallengeComponent = React.lazy(() =>
-        import(`./challenges/${selectedChallenge}/${selectedLevel}.js`)
-      );
-      return (
-        <React.Suspense fallback={<p>Loading challenge...</p>}>
-          <ChallengeComponent />
-        </React.Suspense>
-      );
-    } catch (error) {
-      return <p>Error loading challenge. Please try again.</p>;
-    }
-  };
-
   return (
     <div>
-<Navbar />
-    
-    <div className={styles.challengeBox} key={challengeName}>
-     
-      <h1 className={styles.heading}>{title}</h1>
-      
-      <p className={styles.description}>{description}</p>
-      <div className={styles.levelSelector}>
-      <ChallengeNavbar
-        selectedChallenge={challengeName}
-        onChallengeSelect={(newChallenge) =>
-          (window.location.href = `/challenge/${newChallenge}`)
-        }
-      />
-      <br></br>
-        <label>Select Level:</label>
-        <select value={selectedLevel} onChange={handleLevelChange}>
-          <option value="Easy">Easy</option>
-          <option value="Medium">Medium</option>
-        </select>
+      <Navbar />
+
+      <div className={styles.challengeBox} key={challengeName}>
+        <h1 className={styles.heading}>{title}</h1>
+
+        <p className={styles.description}>{description}</p>
+        <div className={styles.levelSelector}>
+          <ChallengeNavbar
+            selectedChallenge={challengeName}
+            onChallengeSelect={(newChallenge) =>
+              (window.location.href = `/challenge/${newChallenge}`)
+            }
+          />
+          <br></br>
+          <label>Select Level:</label>
+          <select value={selectedLevel} onChange={handleLevelChange}>
+            <option value="Easy">Easy</option>
+            <option value="Medium">Medium</option>
+          </select>
+        </div>
+
+        <div className={styles.challengeContent}>
+          <Suspense fallback={<p>Loading challenge...</p>}>
+            <DynamicChallengeComponent onComplete={onComplete} />
+          </Suspense>
+        </div>
       </div>
-    
-      <div className={styles.challengeContent}>
-        <Suspense fallback={<p>Loading challenge...</p>}>
-          <DynamicChallengeComponent />
-        </Suspense>
-      </div>
-    </div>
-
-
-
-      <div className={styles.challengesContainer}>{renderChallengeComponent()}</div>
     </div>
   );
 }
