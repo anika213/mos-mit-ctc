@@ -34,8 +34,9 @@
   }
   
   .doneButton {
+    margin: 0px 0.5rem;
     margin-top: 20px;
-    padding: 10px 20px;
+    padding: 0.5rem 1.75rem;
     font-size: 16px;
     background-color: #ff4343;
     color: white;
@@ -44,7 +45,8 @@
   }
   
   .doneButton:hover {
-    background-color: #b6bfbd;
+    background-color: #dc2625;
+    transition: 0.3s;
   }
   
   .results {

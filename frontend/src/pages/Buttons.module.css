@@ -1,0 +1,16 @@
+.redButton {
+    background-color: #ff4343;
+}
+.redButton:hover {
+    background-color: #dc2625;
+    transition: 0.3s;
+}
+
+.blackButton {
+    background-color: #333;
+}
+.blackButton:hover {
+    background-color: #101010;
+    transition: 0.3s;
+}
+

@@ -1,116 +1,103 @@
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Konva from "konva";
-import antigen from '../../../assets/antigen.png'
-import enzyme from '../../../assets/enzyme.png'
-import molecule from '../../../assets/molecule.png'
-import antibody from '../../../assets/antibody.png'
-import receptor from '../../../assets/receptor.png'
-import signal from '../../../assets/signal.png'
-import substrate from '../../../assets/substrate.png'
-import transport from '../../../assets/transport.png'
+import protein1 from "../../../assets/protein1.png";
+import protein2 from "../../../assets/protein2.png";
+import protein3 from "../../../assets/protein3.png";
+import protein4 from "../../../assets/protein4.png";
+import molecule1 from "../../../assets/molecule1.png";
+import molecule2 from "../../../assets/molecule2.png";
+import molecule3 from "../../../assets/molecule3.png";
+import molecule4 from "../../../assets/molecule4.png";
 
-function MoleculeProteinGame({ onComplete }) {
+function MolecularDockingEasy({ onComplete }) {
   const stageRef = useRef(null);
   const layerRef = useRef(null);
-  var moleculesCorrect = 0;
+  const [alertShowing, setAlertShowing] = useState(false);
+  const [alertText, setAlertText] = useState("");
+  
+  let moleculesCorrect = 0;
+
+  const showAlert = useCallback((text = "") => {
+    setAlertShowing(true);
+    setAlertText(text);
+  }, []);
+
+  const resizeCanvas = () => {
+    const container = document.getElementById("container");
+    const width = container.offsetWidth;
+    //const height = container.offsetHeight;
+    const aspectRatio = 1000/600
+    const stage = stageRef.current;
+
+    if (stage) {
+      // Calculate height based on the width and aspect ratio
+      const height = width / aspectRatio;
+
+      stage.width(width);
+      stage.height(height);
+      stage.scale({
+        x: width / 1000,
+        y: height / 600,
+      });
+    }
+  };
 
   useEffect(() => {
-    // Initialize the stage and layer
     const stage = new Konva.Stage({
-      container: "container", // ID of the container DOM element
-      width: 1000, // Canvas width
-      height: 600, // Canvas height
+      container: "container",
+      width: 1000,
+      height: 600,
     });
     const layer = new Konva.Layer();
     stage.add(layer);
 
-    // Store references for cleanup
     stageRef.current = stage;
     layerRef.current = layer;
 
-    // Data for proteins and molecules
     const proteins = [
-      {
-        id: "1",
-        imagePath: antibody, 
-        position: { x: 50, y: 50 }, // Replace with desired position
-        bindingSites: [
-          { x: 105, y: 120 },
-          { x: 200, y: 120 },
-          { x: 240, y: 55 },
-        ],
-      },
-      {
-        id: "2",
-        imagePath: enzyme, 
-        position: { x: 400, y: 50 }, // Replace with desired position
-        bindingSites: [
-          { x: 565, y: 130 },
-        ],
-      },
-      {
-        id: "3",
-        imagePath: transport, 
-        position: { x: 50, y: 300 }, // Replace with desired position
-        bindingSites: [
-          { x: 150, y: 430 },
-          { x: 190, y: 365 },
-        ],
-      },
-      {
-        id: "4",
-        imagePath: receptor,
-        position: { x: 400, y: 300 }, // Replace with desired position
-        bindingSites: [
-          { x: 500, y: 350 },
-        ],
-      },
+        {
+            id: "1",
+            imagePath: protein1,
+            position: { x: 325, y: 100 },
+            bindingSites: [
+                { x: 475, y: 100, correct: true },
+                { x: 445, y: 190, correct: false },
+                { x: 372, y: 170, correct: false },
+            ],
+        },
+        {
+            id: "2",
+            imagePath: protein2,
+            position: { x: 525, y: 100 },
+            bindingSites: [
+                { x: 590, y: 220, correct: false },
+                { x: 640, y: 180, correct: true },
+            ],
+        },
+        {
+            id: "3",
+            imagePath: protein3,
+            position: { x: 325, y: 300 },
+            bindingSites: [
+                { x: 460, y: 385, correct: true },
+            ],
+        },
+        {
+            id: "4",
+            imagePath: protein4,
+            position: { x: 525, y: 300 },
+            bindingSites: [
+                { x: 615, y: 345, correct: true },
+            ],
+        },
     ];
 
     const molecules = [
-      {
-        id: "1",
-        imagePath: antigen, 
-        initialPosition: { x: 50, y: 550 },
-        targetProtein: "1",
-      },
-      {
-        id: "2",
-        imagePath: substrate, 
-        initialPosition: { x: 150, y: 550 },
-        targetProtein: "2",
-      },
-      {
-        id: "3",
-        imagePath: molecule, 
-        initialPosition: { x: 250, y: 550 },
-        targetProtein: "3",
-      },
-      {
-        id: "4",
-        imagePath: signal, 
-        initialPosition: { x: 350, y: 550 },
-        targetProtein: "4",
-      },
+        { id: "1", imagePath: molecule1, initialPosition: { x: 525, y: 500 }, targetProtein: "1", W: 89, H: 96 },
+        { id: "2", imagePath: molecule2, initialPosition: { x: 125, y: 500 }, targetProtein: "2", W: 121, H: 64 },
+        { id: "3", imagePath: molecule3, initialPosition: { x: 725, y: 500 }, targetProtein: "3", W: 76, H: 70 },
+        { id: "4", imagePath: molecule4, initialPosition: { x: 325, y: 475 }, targetProtein: "4", W: 167, H: 167 },
     ];
-
-    var text = new Konva.Text({
-        x: 650, // Adjust position to fit within the canvas
-        y: 50, 
-        text: "Welcome! Drag the molecules to the binding sites.", // Initial message
-        fontSize: 20, // Smaller size for better placement
-        fontFamily: "Calibri",
-        fill: "black",
-        width: 350, 
-        wrap: "word",
-      });
-      
-    // Add the text to the layer and stage
-    layer.add(text);
-    layer.draw();  // Force the layer to render immediately
-    
-
-    // Load proteins
     proteins.forEach((protein) => {
       const proteinImage = new Image();
       proteinImage.src = protein.imagePath;
@@ -119,32 +106,31 @@ function MoleculeProteinGame({ onComplete }) {
           x: protein.position.x,
           y: protein.position.y,
           image: proteinImage,
-          width: 200, // Adjust size if needed
-          height: 150, // Adjust size if needed
+          width: 150 * stage.scaleX(),
+          height: 150 * stage.scaleY(),
         });
-
         layer.add(proteinNode);
 
-        // Add binding sites for this protein
         protein.bindingSites.forEach((site, index) => {
           const bindingSite = new Konva.Circle({
             x: site.x,
             y: site.y,
-            radius: 20, // Size of the binding site placeholder
-            fill: "rgba(252, 245, 199, 0.3)", // Transparent yellow
-            stroke: "green",
-            strokeWidth: 2,
-            name: `${protein.id}-bindingSite-${index}`, // Unique name for reference
+            radius: 20,
+            fill: "rgba(252, 245, 199, 0.3)",
+            stroke: "yellow",
+            strokeWidth: 1,
+            name: `${protein.id}-bindingSite-${index}`,
           });
+          // Set the correct property explicitly
+          bindingSite.setAttr("correct", site.correct);
 
           layer.add(bindingSite);
         });
 
-        layer.draw();
+        layer.batchDraw();
       };
     });
 
-    // Load molecules
     molecules.forEach((molecule) => {
       const moleculeImage = new Image();
       moleculeImage.src = molecule.imagePath;
@@ -153,10 +139,9 @@ function MoleculeProteinGame({ onComplete }) {
           x: molecule.initialPosition.x,
           y: molecule.initialPosition.y,
           image: moleculeImage,
-          width: 50, // Adjust size if needed
-          height: 50, // Adjust size if needed
+          width: Math.round(molecule.W * 0.4) * stage.scaleX(),
+          height: Math.round(molecule.H * 0.4) * stage.scaleY(),
           draggable: true,
-          name: molecule.id, // Unique name for reference
         });
 
         moleculeNode.on("dragend", () => {
@@ -172,79 +157,71 @@ function MoleculeProteinGame({ onComplete }) {
                 const siteBounds = site.getClientRect();
                 const moleculeBounds = moleculeNode.getClientRect();
 
-                // Check collision with binding site
-                if (
-                  Konva.Util.haveIntersection(siteBounds, moleculeBounds) &&
-                  !snapped
-                ) {
-                  // Snap molecule to the binding site's center
+                if (Konva.Util.haveIntersection(siteBounds, moleculeBounds) && !snapped) {
                   moleculeNode.position({
-                    x: site.x() - 25,
-                    y: site.y() - 25,
+                    x: site.x() - Math.round(moleculeNode.width() / 2),
+                    y: site.y() - Math.round(moleculeNode.height() / 2),
                   });
                   snapped = true;
 
-                  console.log(moleculeNode.position());
-                  console.log(moleculeNode.x());
-                  console.log(moleculeNode.y());
-                  
-                  // Update the text
-                  if (snapped && (
-                    moleculeNode.x() === 215 ||
-                    moleculeNode.x() === 475 ||
-                    moleculeNode.x() === 165 ||
-                    moleculeNode.x() === 540)
-                  ) {
+                  console.log(site.getAttr("correct"));
+
+                  if (site.getAttr("correct")) {
                     moleculesCorrect++;
-                    console.log(moleculesCorrect);
-                    if (moleculesCorrect == 4) {
-                        text.text("Great job on completing the challenge!");
-                        console.log( "Great job on completing the challenge!");
+                    if(moleculesCorrect === 4){
+                        showAlert("Great job! You have completed the challenge!");
                     } else {
-                        text.text("Great job! You attached the molecule to the correct binding site!");
-                        console.log("Great job! You attached the molecule to the correct binding site!");
+                        showAlert("Great job! You attached the molecule to the correct binding site!");
                     }
-                    
-                    
                   } else {
-                    text.text("You attached the molecule to one of the binding sites available to it, but there's one that is a better option. Try again!");
-                    console.log("You attached the molecule to one of the binding sites available to it, but there's one that is a better option. Try again!");
-                    moleculeNode.position({
-                        x: 450,
-                        y: 550,
-                      });
-
+                    showAlert("You attached the molecule to one of the binding sites, but there's a better option. Try again!");
+                    moleculeNode.position(molecule.initialPosition); // Reset to initial position
                   }
-
-                  layer.batchDraw();
-
                 }
               });
             }
           });
 
           if (!snapped) {
-            console.log(`Molecule ${molecule.id} is not placed correctly.`);
+            showAlert("Incorrect placement. Try again!");
+            moleculeNode.position(molecule.initialPosition);
           }
-          
-          layer.draw(); // Redraw layer
+
+          layer.batchDraw();
         });
 
         layer.add(moleculeNode);
-        layer.draw();
+        layer.batchDraw();
       };
     });
 
-   
-
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
 
     return () => {
-      // Cleanup on component unmount
       stage.destroy();
+      window.removeEventListener("resize", resizeCanvas);
     };
-  }, []);
+  }, [showAlert]);
 
-  return <div id="container" style={{ width: "1000px", height: "600px" }} />;
+  return (
+    <div>
+      {alertShowing && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col justify-center items-center border-2 border-red-600 w-80">
+            <p className="mb-4 whitespace-pre-line text-center">{alertText}</p>
+            <button 
+                className="bg-red-600 text-white px-4 py-2"
+                onClick={() => setAlertShowing(false)}
+            >
+                Close
+            </button>
+          </div>
+        </div>
+      )}
+      <div id="container" style={{ width: "100%", height: "100vh" }} />
+    </div>
+  );
 }
 
-export default MoleculeProteinGame;
+export default MolecularDockingEasy;

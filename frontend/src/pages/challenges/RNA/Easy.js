@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Konva from "konva";
 import { shuffleArray, isColliding, toAlphabetBase26 } from "../../../utils/utils";
+import buttonStyles from "../../Buttons.module.css"
 
 class NucleotideSequences {
   game;
@@ -16,9 +17,9 @@ class NucleotideSequences {
     this.identifier = identifier;
     this.i = i;
     this.isExon = isExon;
-    let colorOptions = ['#79ADDC', '#FFC09F', '#FFEE93', '#FCF5C7', '#ADF7B6', '#A3BCF9', '#7796CB', '#87BBA2', '#B8E1FF', '#E8AEB7']
+    let colorOptions = ['#98ACFF', '#FDE25D', '#FB9AB5', '#CAA8F5', '#A3BCF9', '#7796CB', '#B8E1FF', '#E8AEB7', '#ada5d4', 'a5c6d4']
     this.sprite = this.makeRect({
-      color: isExon ? colorOptions[Math.floor(Math.random() * 10)] : "black",
+      color: isExon ? colorOptions[Math.floor(Math.random() * 9)] : "black",
       textColor: isExon ? "black" : "white",
       ...spriteParams,
     });
@@ -106,6 +107,18 @@ class SequenceChild extends NucleotideSequences {
       this.game.removeChild(this);
     }
 
+    const spriteBounds = this.sprite.getClientRect();
+
+    if (
+      spriteBounds.x > this.game.stage.width() || 
+      spriteBounds.x + spriteBounds.width < 0 || 
+      spriteBounds.y > this.game.stage.height() || 
+      spriteBounds.y + spriteBounds.height < 0
+    ) {
+      console.log("hi")
+      this.game.removeChild(this); // Remove the sprite
+    }
+
     const childrenByXPos = this.game.children.map((element) => element.sprite);
     childrenByXPos.sort((a, b) => a.getClientRect().x - b.getClientRect().x);
     for (const child of childrenByXPos) {
@@ -167,7 +180,7 @@ class RNAGame {
       width: this.sceneWidth,
       height: this.sceneHeight,
     });
-    this.stage.getContainer().style.border = "1px solid black";
+    this.stage.getContainer().style.border = "2px solid gray";
 
     this.primaryLayer = new Konva.Layer();
     this.stage.add(this.primaryLayer);
@@ -268,7 +281,7 @@ class RNAGame {
     let lastGroupI = -1;
     for (let i = 0; i < allGroupsByXPos.length; i++) {
       if (!allGroupsByXPos[i].isExon) {
-        errors.add("There's an intron!");
+        errors.add("- There's an intron present");
         continue;
       }
       let currSprite = allGroupsByXPos[i].sprite;
@@ -277,12 +290,12 @@ class RNAGame {
       if (i !== 0) {
         if (isColliding(currSprite, allGroupsByXPos[i - 1].sprite)) {
           if (groupI === lastGroupI) {
-            errors.add("An exon can only appear once!");
+            errors.add("- An exon can only appear once");
           } else if (groupI < lastGroupI) {
-            errors.add("The order of your exons are incorrect!");
+            errors.add("- The order of your exons are incorrect");
           }
         } else {
-          errors.add("Not all your protein chains are connected!");
+          errors.add("- Not all your protein chains are connected");
         }
       }
       lastGroupI = groupI;
@@ -353,8 +366,8 @@ function Easy({ onComplete }) {
     <div className={"w-full h-full"}>
       {alertShowing && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col justify-center items-center border-2 border-red-600">
-            <p className="mb-4 whitespace-pre-line">{alertText}</p>
+          <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col justify-center items-center border-2 border-red-600 w-80">
+            <p className="mb-4 whitespace-pre-line text-center">{alertText}</p>
             <button
               className="bg-red-600 text-white px-4 py-2"
               onClick={() => setAlertShowing(false)}
@@ -371,17 +384,17 @@ function Easy({ onComplete }) {
       
       <div className="flex flex-row justify-center items-center">
         <button
-          className="bg-red-600 px-7 py-2 m-2 text-white "
+          className={`bg-red-600 px-7 py-2 m-2 text-white ${buttonStyles.redButton}`}
           onClick={() => {
             if (gameRef.current) {
               gameRef.current.resetClicked();
             }
           }}
         >
-          Reset Game
+          Reset
         </button>
         <button
-          className="bg-black px-7 py-2 m-2 text-white"
+          className={`bg-black px-7 py-2 m-2 text-white ${buttonStyles.blackButton}`}
           onClick={() => {
             if (gameRef.current) {
               if (gameRef.current.checkClicked()) {

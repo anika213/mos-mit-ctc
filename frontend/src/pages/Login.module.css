@@ -82,7 +82,7 @@
 
 /* Login button */
 .button {
-  background-color: #f41010;
+  background-color: #ff4343;
   color: white;
   font-size: 1rem;
   padding: 10px 20px;
@@ -95,7 +95,7 @@
 }
 
 .button:hover {
-  background-color: #d30e0e;
+  background-color: #dc2625;
 }
 
 .registerButton {

@@ -1,6 +1,7 @@
 import { useMemo, useEffect, useState } from "react";
 import UplotReact from "uplot-react";
 import "uplot/dist/uPlot.min.css";
+import buttonStyles from "../../Buttons.module.css"
 
 // Creates a 1:2 plot that takes up 60% of the width of the window
 export function getPlotSize(windowWidth) {
@@ -67,10 +68,10 @@ export function WirelessDetectionButton({ children, onClick, isIrregular }) {
   return (
     <button
       className={
-        "mx-2 px-4 py-2 text-white rounded " +
+        "mx-2 px-4 py-2 text-white " +
         (isIrregular
-          ? "bg-red-500 hover:bg-red-600"
-          : "bg-blue-500 hover:bg-blue-600")
+          ? `${buttonStyles.redButton}`
+          : `${buttonStyles.blackButton}`)
       }
       onClick={onClick}
     >
