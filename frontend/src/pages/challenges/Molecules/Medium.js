@@ -346,7 +346,7 @@ class PlayerDrug extends DrugComponent {
 
 
 
-function Medium() {
+function Medium({ onComplete }) {
 
   const divRef = useRef(null);
   const resizeRef = useRef(null);

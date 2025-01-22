@@ -19,4 +19,10 @@ router.get('/status', controller.status);
 // Leaderboard route
 router.get('/leaderboard', controller.leaderboard);
 
+// Challenges route
+router.get('/challenges', controller.challenges);
+
+// Update challenges route
+router.post('/challenges', controller.updateChallenges);
+
 module.exports = router; 

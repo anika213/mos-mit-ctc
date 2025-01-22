@@ -20,6 +20,11 @@ const schema = new Schema ({
     {
         type: Number,
         default: 0
+    },
+    challenges: {
+        type: Map,
+        of: Boolean,
+        default: {}
     }
     
 })

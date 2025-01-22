@@ -74,10 +74,55 @@ exports.status = (req, res) => {
 // Leaderboard
 exports.leaderboard = async (req, res) => {
     try {
-        const users = await User.find({}).sort({ score: -1 }); // Sort by score descending
+        const users = await User.find({}).limit(100).sort({ score: -1 }).select('username score'); // Sort by score descending
         return res.json(users);
     } catch (err) {
         console.error('Error fetching leaderboard:', err);
+        return res.status(500).send('Internal Server Error');
+    }
+}
+
+const challenge_list = [
+    "RNA-Easy",
+    "RNA-Medium",
+    "Molecules-Easy",
+    "Molecules-Medium",
+    "Wireless-Easy",
+    "Wireless-Medium"
+];
+
+exports.challenges = async (req, res) => {
+    try {
+        if (!req.isAuthenticated()) {
+            return res.status(401).json({ message: 'Not authenticated' });
+        }
+        const user = await User.findById(req.user._id).select('challenges');
+        return res.json(user.challenges);
+    } catch (err) {
+        console.error('Error fetching challenges:', err);
+        return res.status(500).send('Internal Server Error');
+    }
+}
+
+exports.updateChallenges = async (req, res) => {
+    try {
+        if (!req.isAuthenticated()) {
+            return res.status(401).json({ message: 'Not authenticated' });
+        }
+        // get the challenge the user completed, and mark it as such
+        const { challenge } = req.body;
+        if (!challenge_list.includes(challenge)) {
+            return res.status(400).json({ message: 'Invalid challenge' });
+        }
+        const user = await User.findById(req.user._id);
+        if (user.challenges.get(challenge) !== true) {
+            user.challenges.set(challenge, true);
+            user.score += 1;
+        }
+        await user.save();
+        return res.json(user.challenges);
+    } catch (err) {
+        console.error('Error updating challenges:', err);
         return res.status(500).send('Internal Server Error');
     }
 }

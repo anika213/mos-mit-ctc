@@ -9,7 +9,7 @@ import styles from "./Medium.module.css";
 const sequence =
   "AUGCGCUAAGGUGGGAGGCAUGGAAUAGGCUAUGGGUAAUAGGGUAUGGUCAAAAGCAUGGGCUAAGUCGAAUACAGCUAUGA";
 
-const Medium = () => {
+const Medium = ({onComplete}) => {
     const gridSize = 12; // Adjust grid size (12x7 for this sequence)
     const gridLetters = Array.from({ length: Math.ceil(sequence.length / gridSize) }, (_, rowIndex) =>
         sequence.slice(rowIndex * gridSize, (rowIndex + 1) * gridSize).split("")
@@ -91,6 +91,7 @@ const Medium = () => {
         }
         if (correct) {
             alert("Congratulations! You have successfully completed the challenge.");
+            onComplete();
         } else {
             alert("Incorrect. Please try again.");
         }

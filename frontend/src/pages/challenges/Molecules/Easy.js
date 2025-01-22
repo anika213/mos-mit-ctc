@@ -9,7 +9,7 @@ import signal from '../../../assets/signal.png'
 import substrate from '../../../assets/substrate.png'
 import transport from '../../../assets/transport.png'
 
-function MoleculeProteinGame() {
+function MoleculeProteinGame({ onComplete }) {
   const stageRef = useRef(null);
   const layerRef = useRef(null);
   var moleculesCorrect = 0;
