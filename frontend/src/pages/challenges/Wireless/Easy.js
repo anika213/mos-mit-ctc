@@ -58,7 +58,7 @@ function Easy({ onComplete }) {
       }
       setCurrentImage(currentPlot + 1);
     },
-    [currentPlot, plots, setAlertText, setAlertShowing, setCurrentImage]
+    [currentPlot, plots, setAlertText, setAlertShowing, setCurrentImage, onComplete]
   );
 
   return (

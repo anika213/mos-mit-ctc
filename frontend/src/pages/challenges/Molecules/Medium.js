@@ -470,7 +470,7 @@ function Medium({ onComplete }) {
     }, onComplete);
 
     gameRef.current = game;
-  }, [showAlert, destroyGame]);
+  }, [showAlert, destroyGame, onComplete]);
 
   // Create stage on mount
   useEffect(() => {

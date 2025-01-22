@@ -77,7 +77,7 @@ function Challenge() {
       .catch((error) => {
         console.error("Error updating challenges:", error);
       });
-  });
+  }, [challengeName, selectedLevel]);
 
   const DynamicChallengeComponent = React.lazy(() =>
     import(`./challenges/${challengeName}/${selectedLevel}.js`).catch(() =>

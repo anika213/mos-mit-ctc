@@ -203,7 +203,7 @@ function MolecularDockingEasy({ onComplete }) {
       stage.destroy();
       window.removeEventListener("resize", resizeCanvas);
     };
-  }, [showAlert, onComplete]);
+  }, [showAlert, onComplete, moleculesCorrect]);
 
   return (
     <div>
