@@ -45,21 +45,28 @@ const challengeData = {
 function Challenge() {
   let { challengeName } = useParams();
   // const [selectedChallenge, setSelectedChallenge] = useState(challengeName);
+  const [startTime, setStartTime] = useState(Date.now());
   const [selectedLevel, setSelectedLevel] = useState("Easy");
 
+  const updateLevelAndStartTime = useCallback((level) => {
+    setSelectedLevel(level);  
+    setStartTime(Date.now());
+  }, []);
+
   const handleLevelChange = (event) => {
-    setSelectedLevel(event.target.value);
+    updateLevelAndStartTime(event.target.value);
   };
 
   useEffect(() => {
     // Reset to Easy level whenever the challenge changes
-    setSelectedLevel("Easy");
+    updateLevelAndStartTime("Easy");
   }, [challengeName]);
 
   const { title, description } = challengeData[challengeName][selectedLevel];
 
   const onComplete = useCallback(() => {
     // mark challenge as complete in the backend
+    const endTime = Date.now();
     fetch("http://localhost:8080/users/challenges", {
       headers: {
         "Content-Type": "application/json",
@@ -68,6 +75,7 @@ function Challenge() {
       credentials: "include",
       body: JSON.stringify({
         challenge: `${challengeName}-${selectedLevel}`,
+        time: endTime - startTime,
       }),
     })
       .then((res) => res.json())

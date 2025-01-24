@@ -19,6 +19,8 @@ router.get('/status', controller.status);
 // Leaderboard route
 router.get('/leaderboard', controller.leaderboard);
 
+router.get('/leaderboard/:challenge', controller.challenge_leaderboard);
+
 // Challenges route
 router.get('/challenges', controller.challenges);
 

@@ -6,16 +6,38 @@ function ChallengeNavbar({ selectedChallenge, onChallengeSelect }) {
   const challenges = ["RNA", "Molecules", "Wireless"];
   
   return (
+    <NavBar
+      list={challenges}
+      selected={selectedChallenge}
+      onSelect={onChallengeSelect}
+    />
+  )
+}
+
+export function LeaderboardNavbar({ selectedLeaderboard, onLeaderboardSelect }) {
+  const challenges = ["Overall", "RNA", "Molecules", "Wireless"];
+  
+  return (
+    <NavBar
+      list={challenges}
+      selected={selectedLeaderboard}
+      onSelect={onLeaderboardSelect}
+    />
+  )
+}
+
+function NavBar({ list, selected, onSelect }) {
+  return (
     <div className={styles.navbar}>
-      {challenges.map((challenge) => (
+      {list.map((current) => (
         <button
-          key={challenge}
+          key={current}
           className={`${styles.navButton} ${
-            selectedChallenge === challenge ? styles.active : ""
+            selected === current ? styles.active : ""
           }`}
-          onClick={() => onChallengeSelect(challenge)}
+          onClick={() => onSelect(current)}
         >
-          {challenge}
+          {current}
         </button>
       ))}
     </div>
