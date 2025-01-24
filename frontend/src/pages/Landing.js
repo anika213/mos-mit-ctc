@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styles from './Landing.module.css';
 import buttonStyles from './Buttons.module.css'
 import Navbar from './Navbar.js';

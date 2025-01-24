@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Konva from "konva";
 import { shuffleArray, isColliding, toAlphabetBase26 } from "../../../utils/utils";
+import {playClick, victoryClick, incorrectClick} from '../../../components/ChallengesSound';
 import buttonStyles from "../../Buttons.module.css"
 
 class NucleotideSequences {
@@ -115,7 +116,6 @@ class SequenceChild extends NucleotideSequences {
       spriteBounds.y > this.game.stage.height() || 
       spriteBounds.y + spriteBounds.height < 0
     ) {
-      console.log("hi")
       this.game.removeChild(this); // Remove the sprite
     }
 
@@ -126,6 +126,7 @@ class SequenceChild extends NucleotideSequences {
         continue;
       }
       if (isColliding(this.sprite, child)) {
+        playClick();
         const newPosition = {
           x: child.position().x,
           y: child.position().y,
@@ -234,7 +235,7 @@ class RNAGame {
   }
 
   checkClicked() {
-    this.checkProtein();
+    return this.checkProtein();
   }
 
   resize(actualWidth) {
@@ -274,7 +275,7 @@ class RNAGame {
 
     if (allGroupsByXPos.length === 0) {
       this.showAlert("You haven't created a protein!");
-      return;
+      return false;
     }
 
     let errors = new Set();
@@ -303,14 +304,17 @@ class RNAGame {
 
     if (errors.size > 0) {
       const output = Array.from(errors).join("\n");
+      incorrectClick();
       this.showAlert("There are errors in your protein: \n" + output);
-      return;
+      return false;
     }
-    this.showAlert("Congratulations! The challenge is completed :)");
+      victoryClick();
+      this.showAlert("Congratulations! The challenge is completed :)");
+    return true;
   } // end create protien
 }
 
-function Easy({ className = "" }) {
+function Easy({ onComplete }) {
   const divRef = useRef(null);
   const resizeRef = useRef(null);
   const gameRef = useRef(null);
@@ -362,7 +366,7 @@ function Easy({ className = "" }) {
   }, []);
 
   return (
-    <div className={className}>
+    <div className={"w-full h-full"}>
       {alertShowing && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col justify-center items-center border-2 border-red-600 w-80">
@@ -396,7 +400,9 @@ function Easy({ className = "" }) {
           className={`bg-black px-7 py-2 m-2 text-white ${buttonStyles.blackButton}`}
           onClick={() => {
             if (gameRef.current) {
-              gameRef.current.checkClicked();
+              if (gameRef.current.checkClicked()) {
+                onComplete();
+              }
             }
           }}
         >

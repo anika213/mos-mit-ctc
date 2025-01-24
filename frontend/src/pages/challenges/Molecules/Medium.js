@@ -1,5 +1,6 @@
 import Konva from "konva";
 import { useCallback, useEffect, useRef, useState } from "react";
+import {playClick, victoryClick, incorrectClick} from '../../../components/ChallengesSound'
 import { isColliding } from '../../../utils/utils';
 import buttonStyles from '../../Buttons.module.css'
 import mainprotein from '../../../assets/mainprotein.png';
@@ -28,14 +29,16 @@ class RNAMedGame {
   mainProtein;
 
   showAlert;
+  onComplete;
 
   children = [];
   bindingsites = [0, 0];
   proteinsBonded = [];
   //set up variables
 
-  constructor(showAlert, div, size) {
+  constructor(showAlert, div, size, onComplete) {
     this.showAlert = showAlert;
+    this.onComplete = onComplete;
 
     this.stage = new Konva.Stage({
       container: div,
@@ -250,6 +253,7 @@ class RNAMedGame {
    let shape = false;
 
     if (playerSequence.length !== 2) {
+      incorrectClick();
       this.showAlert("One or more of your binding sites doesn't have a drug attached!")
     }
     else {
@@ -291,8 +295,18 @@ class RNAMedGame {
       }
     }
     else {
-      error = "Congratulations! You've completed this challenge."
+      error = "win"
     }
+
+    if (error === "win") { // WIN
+      victoryClick();
+      error = "Congratulations! You've completed this challenge."
+      this.onComplete();
+    }
+    else {
+      incorrectClick();
+    }
+
     this.showAlert(error)
       
     }    
@@ -400,6 +414,8 @@ class PlayerDrug extends DrugComponent {
             });
 
                 if (validSite) {
+                  playClick();
+                  
                     const newPosition = {
                         x: site.x(),
                         y: site.y(),
@@ -437,7 +453,7 @@ class PlayerDrug extends DrugComponent {
 
 
 
-function Medium() {
+function Medium({ onComplete }) {
 
   const divRef = useRef(null);
   const resizeRef = useRef(null);
@@ -464,10 +480,10 @@ function Medium() {
     const game = new RNAMedGame(showAlert, divRef.current, {
       width: resizeRef.current.clientWidth,
       height: resizeRef.current.clientHeight,
-    });
+    }, onComplete);
 
     gameRef.current = game;
-  }, [showAlert, destroyGame]);
+  }, [showAlert, destroyGame, onComplete]);
 
   // Create stage on mount
   useEffect(() => {

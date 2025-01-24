@@ -100,7 +100,8 @@
   @media (max-width: 768px) {
     .content {
         flex-direction: column; /* Stack content vertically */
-        align-items: center; /* Center align for better mobile experience */
+        
+        /* align-items: center; Center align for better mobile experience */
     }
   
     .heading {
@@ -123,8 +124,26 @@
     }
 
     .logos {
-      max-width: 20px;
-      height: auto;
+      max-height: 3vh;
+      width: auto;
     }
+  }
+
+    
+  .levelSelector {
+    margin-bottom: 20px;
+    text-align: center; /* Align the level selector to the center */
+  }
+  
+  .levelSelector label {
+    font-size: 1rem;
+    margin-right: 10px;
+  }
+  
+  .levelSelector select {
+    padding: 5px 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
   }
   

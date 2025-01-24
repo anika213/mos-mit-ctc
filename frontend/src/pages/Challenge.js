@@ -1,9 +1,9 @@
 // Challenge.js
-import React, { useState, Suspense, useEffect } from "react";
-import { useParams } from 'react-router-dom';
+import React, { useState, Suspense, useEffect, useCallback } from "react";
+import { useParams } from "react-router-dom";
 import ChallengeNavbar from "../components/ChallengesNavbar.js";
-import styles from "./Challenge.module.css";
 import Navbar from "./Navbar.js";
+import styles from "./Challenge.module.css";
 
 const challengeData = {
   RNA: {
@@ -39,21 +39,49 @@ const challengeData = {
 };
 
 function Challenge() {
-
   let { challengeName } = useParams();
   // const [selectedChallenge, setSelectedChallenge] = useState(challengeName);
+  const [startTime, setStartTime] = useState(Date.now());
   const [selectedLevel, setSelectedLevel] = useState("Easy");
 
+  const updateLevelAndStartTime = useCallback((level) => {
+    setSelectedLevel(level);  
+    setStartTime(Date.now());
+  }, []);
+
   const handleLevelChange = (event) => {
-    setSelectedLevel(event.target.value);
+    updateLevelAndStartTime(event.target.value);
   };
 
   useEffect(() => {
     // Reset to Easy level whenever the challenge changes
-    setSelectedLevel("Easy");
+    updateLevelAndStartTime("Easy");
   }, [challengeName]);
 
   const { title, description } = challengeData[challengeName][selectedLevel];
+
+  const onComplete = useCallback(() => {
+    // mark challenge as complete in the backend
+    const endTime = Date.now();
+    fetch("http://localhost:8080/users/challenges", {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      credentials: "include",
+      body: JSON.stringify({
+        challenge: `${challengeName}-${selectedLevel}`,
+        time: endTime - startTime,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error("Error updating challenges:", error);
+      });
+  }, [challengeName, selectedLevel]);
 
   const DynamicChallengeComponent = React.lazy(() =>
     import(`./challenges/${challengeName}/${selectedLevel}.js`).catch(() =>
@@ -84,7 +112,7 @@ function Challenge() {
         </div>
         <div className={styles.challengeContent}>
           <Suspense fallback={<p>Loading challenge...</p>}>
-            <DynamicChallengeComponent />
+            <DynamicChallengeComponent onComplete={onComplete} />
           </Suspense>
         </div>
       </div>

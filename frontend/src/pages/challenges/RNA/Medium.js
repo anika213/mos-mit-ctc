@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import buttonStyles from "../../Buttons.module.css"
 import styles from "./Medium.module.css";
 import Popup from "../../../components/Popup";
+import {playClick, victoryClick, incorrectClick} from '../../../components/ChallengesSound';
 
 
 // TODO: Make more specific feedback for incorrect answers
@@ -12,7 +13,7 @@ import Popup from "../../../components/Popup";
 const sequence =
   "AUGCGCUAAGGUGGGAGGCAUGGAAUAGGCUAUGGGUAAUAGGGUAUGGUCAAAAGCAUGGGCUAAGUCGAAUACAGCUAUGA";
 
-const Medium = () => {
+const Medium = ({onComplete}) => {
     const gridSize = 12; // Adjust grid size (12x7 for this sequence)
     const gridLetters = Array.from({ length: Math.ceil(sequence.length / gridSize) }, (_, rowIndex) =>
         sequence.slice(rowIndex * gridSize, (rowIndex + 1) * gridSize).split("")
@@ -24,6 +25,7 @@ const Medium = () => {
     const [clickedCells, setClickedCells] = useState([]);
 
     const handleCellClick = (rowIndex, colIndex) => {
+        playClick();
         setGrid((prevGrid) =>
             prevGrid.map((row, rIdx) =>
                 rIdx === rowIndex
@@ -96,10 +98,12 @@ const Medium = () => {
             }
         }
         if (correct) {
+            victoryClick();
             setAlertShowing(true);
             setAlertText("Congratulations! You have successfully completed the challenge.");
-            
+            onComplete();
         } else {
+            incorrectClick();
             setAlertShowing(true);
             setAlertText("Incorrect. Please try again.")
         }

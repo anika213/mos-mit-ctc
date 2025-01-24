@@ -74,10 +74,84 @@ exports.status = (req, res) => {
 // Leaderboard
 exports.leaderboard = async (req, res) => {
     try {
-        const users = await User.find({}).sort({ score: -1 }); // Sort by score descending
+        const users = await User.find({}).sort({ score: -1 }).limit(100).select('username score'); // Sort by score descending
         return res.json(users);
     } catch (err) {
         console.error('Error fetching leaderboard:', err);
+        return res.status(500).send('Internal Server Error');
+    }
+}
+
+exports.challenge_leaderboard = async (req, res) => {
+    try {
+        const { challenge } = req.params;
+        if (!challenge_list.includes(challenge)) {
+            return res.status(400).json({ message: 'Invalid challenge' });
+        }
+        const users = await User.find({ [`challenges.${challenge}`]: { $exists: true } })
+            .sort({ [`challenges.${challenge}`]: 1 })
+            .limit(100)
+            .select(`username challenges`); // Sort by score descending
+
+        const userJson = users.map(user => ({
+            username: user.username,
+            score: user.challenges ? user.challenges.get(challenge) : null
+        }));
+        return res.json(userJson);
+    } catch (err) {
+        console.error('Error fetching leaderboard:', err);
+        return res.status(500).send('Internal Server Error');
+    }
+}
+
+
+const challenge_list = [
+    "RNA-Easy",
+    "RNA-Medium",
+    "Molecules-Easy",
+    "Molecules-Medium",
+    "Wireless-Easy",
+    "Wireless-Medium"
+];
+
+exports.challenges = async (req, res) => {
+    try {
+        if (!req.isAuthenticated()) {
+            return res.status(401).json({ message: 'Not authenticated' });
+        }
+        const user = await User.findById(req.user._id).select('challenges');
+        return res.json(user.challenges);
+    } catch (err) {
+        console.error('Error fetching challenges:', err);
+        return res.status(500).send('Internal Server Error');
+    }
+}
+
+exports.updateChallenges = async (req, res) => {
+    try {
+        if (!req.isAuthenticated()) {
+            return res.status(401).json({ message: 'Not authenticated' });
+        }
+        // get the challenge the user completed, and mark it as such
+        const { challenge, time } = req.body;
+        if (!challenge_list.includes(challenge)) {
+            return res.status(400).json({ message: 'Invalid challenge' });
+        }
+        if (!time || isNaN(time) || time < 0) {
+            return res.status(400).json({ message: 'Invalid time' });
+        }
+        const user = await User.findById(req.user._id);
+        if (!user.challenges.has(challenge)) {
+            user.challenges.set(challenge, time);
+            user.score += 1;
+        } else {
+            user.challenges.set(challenge, Math.min(user.challenges.get(challenge), time));
+        }
+
+        await user.save();
+        return res.json(user.challenges);
+    } catch (err) {
+        console.error('Error updating challenges:', err);
         return res.status(500).send('Internal Server Error');
     }
 }

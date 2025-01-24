@@ -1,5 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import Popup from "../../../components/Popup";
+import {dingClick, victoryClick, incorrectClick} from '../../../components/ChallengesSound';
+
 import {
   generateLightSleep,
   generateDeepSleep,
@@ -63,7 +65,7 @@ function getPlots() {
   return duplicatedPlots;
 }
 
-function Medium() {
+function Medium({ onComplete }) {
   const [currentPlot, setCurrentImage] = useState(0);
   const [alertShowing, setAlertShowing] = useState(false);
   const [alertText, setAlertText] = useState("");
@@ -73,22 +75,27 @@ function Medium() {
   const handleCategorization = useCallback(
     (category) => {
       if (category !== plots[currentPlot].category) {
+        incorrectClick();
         setAlertText("Incorrect!");
         setAlertShowing(true);
         return;
-      } else {
+      } 
+
+      if (currentPlot === plots.length - 1) {
+        victoryClick();
+        setAlertText("You have completed the challenge!");
+        setAlertShowing(true);
+        onComplete();
+        return;
+      }
+      else {
+        dingClick();
         setAlertText("Correct!");
         setAlertShowing(true);
       }
-
-      if (currentPlot === plots.length - 1) {
-        setAlertText("You have completed the challenge!");
-        setAlertShowing(true);
-        return;
-      }
       setCurrentImage(currentPlot + 1);
     },
-    [currentPlot, plots, setAlertText, setAlertShowing, setCurrentImage]
+    [currentPlot, plots, setAlertText, setAlertShowing, setCurrentImage, onComplete ]
   );
 
   return (

@@ -7,23 +7,20 @@ const User = require('../models/user.js');
 // Do we require username, email, or password to sign in? Or any of the above?
 // We probably want a strategies folder if we plan to add oauth in addition to local.
 passport.use(new LocalStrategy(async (username, password, done) => {
-    console.log(`Username: ${username}`);
-    console.log(`Username: ${password}`);
-
     try {
-        const user = await  User.findOne({ username } );
-        if (!user) throw new Error("User not found.");
+        const user = await User.findOne({ username }).select('username password');
+        if (!user) return done(null, false, {
+            message: "Username or password is incorrect"
+        });
 
-        bcrypt.compare(password, user.password, (err, isMatch) => {
-            // If there is an error, pass it to the done callback
-            if (err) throw new Error("Incorrect password.");
-            // If passwords don't match, there is no error and the authentication is false
-            if (!isMatch) return done(null, false, { message: 'Incorrect password' });
-            // No error; User object from database
-            return done(null, user); 
-        })
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) return done(null, false, {
+            message: "Username or password is incorrect"
+        });
+        // No error; User object from database
+        return done(null, user);
     } catch(err) {
-        done(err, null);
+        done(err, false);
     }
 }))
 
