@@ -18,7 +18,7 @@ function ChallengeNavbar({ selectedChallenge, onChallengeSelect }) {
 }
 
 export function LeaderboardNavbar({ selectedLeaderboard, onLeaderboardSelect }) {
-  const challenges = ["Overall", "RNA", "Molecules", "Wireless"];
+  const challenges = {Overall: "Overall", RNA: "RNA", Molecules: "Molecules", Wireless: "Wireless"};
   
   return (
     <NavBar
