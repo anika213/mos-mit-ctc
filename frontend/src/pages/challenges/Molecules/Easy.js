@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import {dingClick, victoryClick, incorrectClick} from '../../../components/ChallengesSound';
 import Konva from "konva";
 import protein1 from "../../../assets/protein1.png";
@@ -36,12 +36,19 @@ function MolecularDockingEasy({ onComplete }) {
 
       stage.width(width);
       stage.height(height);
-      stage.scale({
-        x: width / 1000,
-        y: height / 600,
-      });
+      // stage.scale({
+      //   x: width / 1000,
+      //   y: height / 600,
+      // });
+      const scale = width / 1000;
+      stage.scale({ x: scale, y: scale });
+      stage.batchDraw();
     }
   };
+
+  useLayoutEffect(() => {
+    resizeCanvas(); // Ensure correct initial sizing
+  }, []);
 
   useEffect(() => {
     const stage = new Konva.Stage({
@@ -56,42 +63,42 @@ function MolecularDockingEasy({ onComplete }) {
     layerRef.current = layer;
 
     const proteins = [
-        {
-            id: "1",
-            imagePath: protein1,
-            position: { x: 325, y: 100 },
-            bindingSites: [
-                { x: 475, y: 100, correct: true },
-                { x: 445, y: 190, correct: false },
-                { x: 372, y: 170, correct: false },
-            ],
-        },
-        {
-            id: "2",
-            imagePath: protein2,
-            position: { x: 525, y: 100 },
-            bindingSites: [
-                { x: 590, y: 220, correct: false },
-                { x: 640, y: 180, correct: true },
-            ],
-        },
-        {
-            id: "3",
-            imagePath: protein3,
-            position: { x: 325, y: 300 },
-            bindingSites: [
-                { x: 460, y: 385, correct: true },
-            ],
-        },
-        {
-            id: "4",
-            imagePath: protein4,
-            position: { x: 525, y: 300 },
-            bindingSites: [
-                { x: 615, y: 345, correct: true },
-            ],
-        },
-    ];
+      {
+          id: "1",
+          imagePath: protein1,
+          position: { x: 325, y: 100 },
+          bindingSites: [
+              { x: 0.85, y: 0, correct: true},//{ x: 475, y: 100, correct: true },
+              { x: 0.7, y: 0.5, correct: false },//{ x: 445, y: 190, correct: false },
+              { x: 0.2, y: 0.45, correct: false },//{ x: 372, y: 170, correct: false },
+          ],
+      },
+      {
+          id: "2",
+          imagePath: protein2,
+          position: { x: 525, y: 100 },
+          bindingSites: [
+              { x: 0.35, y: 0.8, correct: false },//{ x: 590, y: 220, correct: false },
+              { x: 0.65, y: 0.5, correct: true },//{ x: 640, y: 180, correct: true },
+          ],
+      },
+      {
+          id: "3",
+          imagePath: protein3,
+          position: { x: 325, y: 300 },
+          bindingSites: [
+            { x: 0.75, y: 0.5, correct: true },//{ x: 460, y: 385, correct: true },
+          ],
+      },
+      {
+          id: "4",
+          imagePath: protein4,
+          position: { x: 525, y: 300 },
+          bindingSites: [
+              { x: 0.55, y: 0.25, correct: true },//{ x: 615, y: 345, correct: true },
+          ],
+      },
+  ];
 
     const molecules = [
         { id: "1", imagePath: molecule1, initialPosition: { x: 525, y: 500 }, targetProtein: "1", W: 89, H: 96 },
@@ -104,8 +111,8 @@ function MolecularDockingEasy({ onComplete }) {
       proteinImage.src = protein.imagePath;
       proteinImage.onload = () => {
         const proteinNode = new Konva.Image({
-          x: protein.position.x,
-          y: protein.position.y,
+          x: protein.position.x * stage.scaleX(),
+          y: protein.position.y * stage.scaleY(),
           image: proteinImage,
           width: 150 * stage.scaleX(),
           height: 150 * stage.scaleY(),
@@ -114,12 +121,11 @@ function MolecularDockingEasy({ onComplete }) {
 
         protein.bindingSites.forEach((site, index) => {
           const bindingSite = new Konva.Circle({
-            x: site.x,
-            y: site.y,
-            radius: 20,
-            fill: "rgba(252, 245, 199, 0.3)",
-            stroke: "yellow",
-            strokeWidth: 1,
+            x: proteinNode.x() + site.x * proteinNode.width(),
+            y: proteinNode.y() + site.y * proteinNode.height(),
+            radius: 20 * stage.scaleX(),
+            fill: "rgba(252, 245, 199, 0)",
+            stroke: null,
             name: `${protein.id}-bindingSite-${index}`,
           });
           // Set the correct property explicitly
@@ -137,8 +143,8 @@ function MolecularDockingEasy({ onComplete }) {
       moleculeImage.src = molecule.imagePath;
       moleculeImage.onload = () => {
         const moleculeNode = new Konva.Image({
-          x: molecule.initialPosition.x,
-          y: molecule.initialPosition.y,
+          x: molecule.initialPosition.x * stage.scaleX(),
+          y: molecule.initialPosition.y * stage.scaleY(),
           image: moleculeImage,
           width: Math.round(molecule.W * 0.4) * stage.scaleX(),
           height: Math.round(molecule.H * 0.4) * stage.scaleY(),
@@ -203,6 +209,7 @@ function MolecularDockingEasy({ onComplete }) {
 
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
+    window.addEventListener("load", resizeCanvas);
 
     return () => {
       stage.destroy();
