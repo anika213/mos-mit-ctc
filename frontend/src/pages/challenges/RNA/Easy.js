@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Konva from "konva";
 import { shuffleArray, isColliding, toAlphabetBase26 } from "../../../utils/utils";
+import {playClick, victoryClick, incorrectClick} from '../../../components/ChallengesSound';
 import buttonStyles from "../../Buttons.module.css"
 
 class NucleotideSequences {
@@ -115,7 +116,6 @@ class SequenceChild extends NucleotideSequences {
       spriteBounds.y > this.game.stage.height() || 
       spriteBounds.y + spriteBounds.height < 0
     ) {
-      console.log("hi")
       this.game.removeChild(this); // Remove the sprite
     }
 
@@ -126,6 +126,7 @@ class SequenceChild extends NucleotideSequences {
         continue;
       }
       if (isColliding(this.sprite, child)) {
+        playClick();
         const newPosition = {
           x: child.position().x,
           y: child.position().y,
@@ -303,10 +304,17 @@ class RNAGame {
 
     if (errors.size > 0) {
       const output = Array.from(errors).join("\n");
+      incorrectClick();
       this.showAlert("There are errors in your protein: \n" + output);
       return;
     }
-    this.showAlert("Congratulations! The challenge is completed :)");
+    else {
+      victoryClick();
+      this.showAlert("Congratulations! The challenge is completed :)");
+
+    }
+
+   
   } // end create protien
 }
 

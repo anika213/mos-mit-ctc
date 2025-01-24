@@ -1,5 +1,6 @@
 import Konva from "konva";
 import { useCallback, useEffect, useRef, useState } from "react";
+import {playClick, victoryClick, incorrectClick} from '../../../components/ChallengesSound'
 import { isColliding } from '../../../utils/utils';
 import buttonStyles from '../../Buttons.module.css'
 import mainprotein from '../../../assets/mainprotein.png';
@@ -250,6 +251,7 @@ class RNAMedGame {
    let shape = false;
 
     if (playerSequence.length !== 2) {
+      incorrectClick();
       this.showAlert("One or more of your binding sites doesn't have a drug attached!")
     }
     else {
@@ -291,8 +293,17 @@ class RNAMedGame {
       }
     }
     else {
+      error = "win"
+    }
+
+    if (error === "win") { // WIN
+      victoryClick();
       error = "Congratulations! You've completed this challenge."
     }
+    else {
+      incorrectClick();
+    }
+
     this.showAlert(error)
       
     }    
@@ -400,6 +411,8 @@ class PlayerDrug extends DrugComponent {
             });
 
                 if (validSite) {
+                  playClick();
+                  
                     const newPosition = {
                         x: site.x(),
                         y: site.y(),

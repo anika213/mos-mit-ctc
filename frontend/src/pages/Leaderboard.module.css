@@ -100,7 +100,8 @@
   @media (max-width: 768px) {
     .content {
         flex-direction: column; /* Stack content vertically */
-        align-items: center; /* Center align for better mobile experience */
+        
+        /* align-items: center; Center align for better mobile experience */
     }
   
     .heading {
@@ -123,8 +124,8 @@
     }
 
     .logos {
-      max-width: 20px;
-      height: auto;
+      max-height: 3vh;
+      width: auto;
     }
   }
   
