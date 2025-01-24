@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import buttonStyles from "../../Buttons.module.css"
 import styles from "./Medium.module.css";
 import Popup from "../../../components/Popup";
+import {playClick, victoryClick, incorrectClick} from '../../../components/ChallengesSound';
 
 
 // TODO: Make more specific feedback for incorrect answers
@@ -24,6 +25,7 @@ const Medium = ({onComplete}) => {
     const [clickedCells, setClickedCells] = useState([]);
 
     const handleCellClick = (rowIndex, colIndex) => {
+        playClick();
         setGrid((prevGrid) =>
             prevGrid.map((row, rIdx) =>
                 rIdx === rowIndex
@@ -96,10 +98,12 @@ const Medium = ({onComplete}) => {
             }
         }
         if (correct) {
+            victoryClick();
             setAlertShowing(true);
             setAlertText("Congratulations! You have successfully completed the challenge.");
             onComplete();
         } else {
+            incorrectClick();
             setAlertShowing(true);
             setAlertText("Incorrect. Please try again.")
         }

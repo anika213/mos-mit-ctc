@@ -45,9 +45,8 @@ const Navbar = () => {
           <div  onClick={toggleDropdown}
                 onMouseEnter={() => toggleDropdown(true)}
                 onMouseLeave={() => toggleDropdown(false)}
-                // onMouseLeave={isDropdownOpen ? toggleDropdown : null}
                 >
-            <li className="relative group duration-500" >
+            <li className="relative group duration-500 md:list-item flex flex-col items-center" >
                 <span 
                 className="cursor-pointer hover:text-gray-400 duration-500 pb-2" 
                
@@ -55,12 +54,12 @@ const Navbar = () => {
                   Challenges ▼
                 </span>
                 {isDropdownOpen && (
-                <ul className="absolute left-0 p-4 bg-black text-white shadow-lg rounded-md w-40"
+                <ul className="md:absolute static left-0 md:p-4 p-0 bg-black text-white shadow-lg rounded-md w-48 "
                 
                 >
-                  <li className="p-2 hover:bg-gray-700 duration-300 rounded-md"><button onClick={() => handleChallengeClick('/challenge/RNA')}>RNA Challenge</button></li>
-                  <li className="p-2 hover:bg-gray-700 duration-300 rounded-md"><button onClick={() => handleChallengeClick('/challenge/Molecules')}>Molecular Docking</button></li>
-                  <li className="p-2 hover:bg-gray-700 duration-300 rounded-md"><button onClick={() => handleChallengeClick('/challenge/Wireless')}>Wireless Detection</button></li>
+                  <li className="p-2 hover:bg-gray-700 duration-300 rounded-md"><button className="md:block w-full inline md:w-auto" onClick={() => handleChallengeClick('/challenge/RNA')}>RNA Challenge</button></li>
+                  <li className="p-2 hover:bg-gray-700 duration-300 rounded-md"><button className="block w-full md:inline md:w-auto" onClick={() => handleChallengeClick('/challenge/Molecules')}>Molecular Docking</button></li>
+                  <li className="p-2 hover:bg-gray-700 duration-300 rounded-md"><button className="block w-full md:inline md:w-auto" onClick={() => handleChallengeClick('/challenge/Wireless')}>Wireless Detection</button></li>
                 </ul>
               )}
             </li>

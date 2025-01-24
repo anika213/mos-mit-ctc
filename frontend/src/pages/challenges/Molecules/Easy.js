@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import {dingClick, victoryClick, incorrectClick} from '../../../components/ChallengesSound';
 import Konva from "konva";
 import protein1 from "../../../assets/protein1.png";
 import protein2 from "../../../assets/protein2.png";
@@ -158,6 +159,7 @@ function MolecularDockingEasy({ onComplete }) {
                 const moleculeBounds = moleculeNode.getClientRect();
 
                 if (Konva.Util.haveIntersection(siteBounds, moleculeBounds) && !snapped) {
+
                   moleculeNode.position({
                     x: site.x() - Math.round(moleculeNode.width() / 2),
                     y: site.y() - Math.round(moleculeNode.height() / 2),
@@ -169,12 +171,15 @@ function MolecularDockingEasy({ onComplete }) {
                   if (site.getAttr("correct")) {
                     moleculesCorrect++;
                     if(moleculesCorrect === 4){
+                        victoryClick();
                         showAlert("Great job! You have completed the challenge!");
                         onComplete();
                     } else {
+                        dingClick();
                         showAlert("Great job! You attached the molecule to the correct binding site!");
                     }
                   } else {
+                    incorrectClick();
                     showAlert("You attached the molecule to one of the binding sites, but there's a better option. Try again!");
                     moleculeNode.position(molecule.initialPosition); // Reset to initial position
                   }

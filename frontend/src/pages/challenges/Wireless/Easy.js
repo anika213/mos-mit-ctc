@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from "react";
 import Popup from "../../../components/Popup";
 import { generateLightSleep, generateDeepSleep, generateObstructiveSleepApnea, generateCentralSleepApnea } from "./generator";
 import { WirelessDetectionPlot, WirelessDetectionButton } from "./common";
+import {dingClick, victoryClick, incorrectClick} from '../../../components/ChallengesSound';
 
 function getPlots() {
   const plots = [
@@ -41,20 +42,24 @@ function Easy({ onComplete }) {
   const handleCategorization = useCallback(
     (category) => {
       if (category !== plots[currentPlot].category) {
+        incorrectClick();
         setAlertText("Incorrect!");
         setAlertShowing(true);
         return;
       }
-      else {
-        setAlertText("Correct!");
-        setAlertShowing(true);
-      }
+      
 
       if (currentPlot === plots.length - 1) {
+        victoryClick();
         setAlertText("You have completed the challenge!");
         setAlertShowing(true);
         onComplete();
         return;
+      }
+      else {
+        dingClick();
+        setAlertText("Correct!");
+        setAlertShowing(true);
       }
       setCurrentImage(currentPlot + 1);
     },
