@@ -1,28 +1,33 @@
 .navbar {
-    display: flex;
-    justify-content: space-around;
-    background-color: #333;
-    color: #fff;
-    padding: 10px 0;
-    padding: 10px 20px;
-  }
-  
-  .navButton {
-    padding: 10px 20px;
-    font-size: 1rem;
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-    transition: background 0.3s;
-  }
-  
-  .navButton:hover {
-    background-color: #555;
-  }
-  
-  .active {
-    background-color:#eb5353;
-    border-radius: 3px;
-  }
-  
+  display: flex;
+  justify-content: space-around; /* Even spacing between buttons */
+  background-color: #333;
+  color: #fff;
+  padding: 10px 20px;
+  width: 100%; /* Take up full width of the wrapper */
+  max-width: 600px; /* Limit maximum width */
+  box-sizing: border-box;
+  border-radius: 10px; /* Rounded corners for better aesthetics */
+}
+
+.navButton {
+  padding: 10px 20px;
+  font-size: 1rem;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s;
+  flex: 1; /* Buttons share equal space */
+  text-align: center; /* Center the text */
+  max-width: 150px; /* Prevent buttons from growing too large */
+}
+
+.navButton:hover {
+  background-color: #555;
+}
+
+.active {
+  background-color: #ff4343;
+  border-radius: 3px;
+}

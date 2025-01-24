@@ -19,25 +19,21 @@ const challengeData = {
   Molecules: {
     Easy: {
       title: "Molecules Easy Challenge",
-      description:
-        "Learn how molecules interact with each other in this beginner challenge.",
+      description: "Connect each molecule to its corresponding binding site",
     },
     Medium: {
       title: "Molecules Medium Challenge",
-      description:
-        "Test your knowledge of molecular interactions at an intermediate level.",
+      description: "Connect each molecule to its corresponding binding site",
     },
   },
   Wireless: {
     Easy: {
       title: "Wireless Easy Challenge",
-      description:
-        "Understand the basics of wireless communication in this easy challenge.",
+      description: "Classify each breathing pattern as regular or irregular.",
     },
     Medium: {
       title: "Wireless Medium Challenge",
-      description:
-        "Enhance your knowledge of wireless networks with this medium-level task.",
+      description: "Classify each breathing pattern",
     },
   },
 };
@@ -92,30 +88,28 @@ function Challenge() {
       import("../components/ChallengeFallback.js")
     )
   );
-
   return (
     <div>
       <Navbar />
-
+  
       <div className={styles.challengeBox} key={challengeName}>
-        <h1 className={styles.heading}>{title}</h1>
-
-        <p className={styles.description}>{description}</p>
-        <div className={styles.levelSelector}>
+        <div className={styles.navbarWrapper}>
           <ChallengeNavbar
             selectedChallenge={challengeName}
             onChallengeSelect={(newChallenge) =>
               (window.location.href = `/challenge/${newChallenge}`)
             }
           />
-          <br></br>
+        </div>
+        <h1 className={styles.heading}>{title}</h1>
+        <p className={styles.description}>{description}</p>
+        <div className={styles.levelSelector}>
           <label>Select Level:</label>
           <select value={selectedLevel} onChange={handleLevelChange}>
             <option value="Easy">Easy</option>
             <option value="Medium">Medium</option>
           </select>
         </div>
-
         <div className={styles.challengeContent}>
           <Suspense fallback={<p>Loading challenge...</p>}>
             <DynamicChallengeComponent onComplete={onComplete} />
@@ -124,6 +118,7 @@ function Challenge() {
       </div>
     </div>
   );
+  
 }
 
 export default Challenge;

@@ -1,13 +1,16 @@
-// ChallengeNavbar.js
 import React from "react";
 import styles from "./ChallengesNavbar.module.css";
 
 function ChallengeNavbar({ selectedChallenge, onChallengeSelect }) {
-  const challenges = ["RNA", "Molecules", "Wireless"];
-  
+  const challengeData = {
+    RNA: "RNA Splicing",
+    Molecules: "Molecular Docking",
+    Wireless: "Wireless Detection",
+  };
+
   return (
     <NavBar
-      list={challenges}
+      list={challengeData}
       selected={selectedChallenge}
       onSelect={onChallengeSelect}
     />
@@ -29,15 +32,15 @@ export function LeaderboardNavbar({ selectedLeaderboard, onLeaderboardSelect }) 
 function NavBar({ list, selected, onSelect }) {
   return (
     <div className={styles.navbar}>
-      {list.map((current) => (
+      {Object.entries(list).map(([key, fullName]) => (
         <button
-          key={current}
+          key={key}
           className={`${styles.navButton} ${
-            selected === current ? styles.active : ""
+            selected === key ? styles.active : ""
           }`}
-          onClick={() => onSelect(current)}
+          onClick={() => onSelect(key)}
         >
-          {current}
+          {fullName}
         </button>
       ))}
     </div>
