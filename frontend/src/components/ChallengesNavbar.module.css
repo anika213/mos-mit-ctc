@@ -1,5 +1,6 @@
 .navbar {
   display: flex;
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
   justify-content: space-around; /* Even spacing between buttons */
   background-color: #333;
   color: #fff;
@@ -30,4 +31,22 @@
 .active {
   background-color: #ff4343;
   border-radius: 3px;
+}
+
+/* Responsive styles */
+@media (max-width: 480px) {
+  .navbar {
+    flex-direction: column; /* Stack buttons vertically */
+    padding: 10px; /* Reduce padding */
+  }
+
+  .navButton {
+    font-size: 0.9rem; /* Smaller font size for smaller screens */
+    max-width: 100%; /* Allow buttons to grow to full width */
+    margin-bottom: 10px; /* Add spacing between buttons */
+  }
+
+  .navButton:last-child {
+    margin-bottom: 0; /* Remove spacing after the last button */
+  }
 }
