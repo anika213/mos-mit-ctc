@@ -8,33 +8,45 @@ import styles from "./Challenge.module.css";
 const challengeData = {
   RNA: {
     Easy: {
-      title: "RNA Splicing Easy Challenge",
+      title: "RNA Splicing",
       description: "Drag each block of RNA to form a complete protein!",
     },
     Medium: {
-      title: "RNA Splicing Medium Challenge",
+      title: "RNA Splicing",
       description: "Select all the introns in the given RNA sequence.",
     },
+    Hard:{
+      title: "RNA Splicing",
+      description: "Hard description"
+    }
   },
   Molecules: {
     Easy: {
-      title: "Molecules Easy Challenge",
+      title: "Molular docking",
       description: "Connect each molecule to its corresponding binding site",
     },
     Medium: {
-      title: "Molecules Medium Challenge",
+      title: "Molular docking",
       description: "Connect each molecule to its corresponding binding site",
     },
+    Hard:{
+      title: "Molecular Docking",
+      description: "Hard Description."
+    }
   },
   Wireless: {
     Easy: {
-      title: "Wireless Easy Challenge",
+      title: "Wireless Detection",
       description: "Classify each breathing pattern as regular or irregular.",
     },
     Medium: {
-      title: "Wireless Medium Challenge",
+      title: "Wireless Detection",
       description: "Classify each breathing pattern",
     },
+    Hard:{
+      title: "Wireless Detection",
+      description: "Hard Description."
+    }
   },
 };
 
@@ -107,7 +119,9 @@ function Challenge() {
           <label>Select Level:</label>
           <select value={selectedLevel} onChange={handleLevelChange}>
             <option value="Easy">Easy</option>
-            <option value="Medium">Medium</option>
+            <option value="Medium">Medium</option> 
+           <option value="Hard">Hard</option>
+
           </select>
         </div>
         <div className={styles.challengeContent}>

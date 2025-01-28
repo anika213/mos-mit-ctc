@@ -41,7 +41,6 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
-
 app.use(routes); 
 
 app.listen(PORT, () => 
@@ -49,4 +48,4 @@ app.listen(PORT, () =>
     console.log(`REST API listening on port ${PORT}`);
 });
 
-console.log(require('crypto').randomBytes(64).toString('hex'))
+// console.log(require('crypto').randomBytes(64).toString('hex'))
