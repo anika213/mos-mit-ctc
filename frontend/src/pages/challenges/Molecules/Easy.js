@@ -46,9 +46,9 @@ function MolecularDockingEasy({ onComplete }) {
     }
   };
 
-  useLayoutEffect(() => {
-    resizeCanvas(); // Ensure correct initial sizing
-  }, []);
+  // useLayoutEffect(() => {
+  //   resizeCanvas(); // Ensure correct initial sizing
+  // }, []);
 
   useEffect(() => {
     const stage = new Konva.Stage({
@@ -56,6 +56,10 @@ function MolecularDockingEasy({ onComplete }) {
       width: 1000,
       height: 600,
     });
+
+    const stageWidth = stage.width();
+    const stageHeight = stage.height();
+
     const layer = new Konva.Layer();
     stage.add(layer);
 
@@ -66,7 +70,7 @@ function MolecularDockingEasy({ onComplete }) {
       {
           id: "1",
           imagePath: protein1,
-          position: { x: 325, y: 100 },
+          position: { x: (325)/1000 * stageWidth, y: (1/10) * stageHeight },
           bindingSites: [
               { x: 0.85, y: 0, correct: true},//{ x: 475, y: 100, correct: true },
               { x: 0.7, y: 0.5, correct: false },//{ x: 445, y: 190, correct: false },
@@ -111,11 +115,15 @@ function MolecularDockingEasy({ onComplete }) {
       proteinImage.src = protein.imagePath;
       proteinImage.onload = () => {
         const proteinNode = new Konva.Image({
-          x: protein.position.x * stage.scaleX(),
-          y: protein.position.y * stage.scaleY(),
+          x: protein.position.x ,
+          y: protein.position.y,
+          // x: protein.position.x * stage.scaleX(),
+          // y: protein.position.y * stage.scaleY(),
           image: proteinImage,
-          width: 150 * stage.scaleX(),
-          height: 150 * stage.scaleY(),
+          width: (15/100) * stageWidth,
+          height: (15/100) * stageWidth,
+          // width: 150 * stage.scaleX(),
+          // height: 150 * stage.scaleY(),
         });
         layer.add(proteinNode);
 
@@ -143,11 +151,11 @@ function MolecularDockingEasy({ onComplete }) {
       moleculeImage.src = molecule.imagePath;
       moleculeImage.onload = () => {
         const moleculeNode = new Konva.Image({
-          x: molecule.initialPosition.x * stage.scaleX(),
-          y: molecule.initialPosition.y * stage.scaleY(),
+          x: molecule.initialPosition.x ,
+          y: molecule.initialPosition.y ,
           image: moleculeImage,
-          width: Math.round(molecule.W * 0.4) * stage.scaleX(),
-          height: Math.round(molecule.H * 0.4) * stage.scaleY(),
+          width: Math.round(molecule.W * 0.4) ,
+          height: Math.round(molecule.H * 0.4) ,
           draggable: true,
         });
 
@@ -232,7 +240,7 @@ function MolecularDockingEasy({ onComplete }) {
           </div>
         </div>
       )}
-      <div id="container" style={{ width: "100%", height: "100vh" }} />
+      <div id="container" style={{ width: "100%", height: "60%" }} />
     </div>
   );
 }

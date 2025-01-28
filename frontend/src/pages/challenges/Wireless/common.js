@@ -68,7 +68,7 @@ export function WirelessDetectionButton({ children, onClick, isIrregular }) {
   return (
     <button
       className={
-        "mx-2 px-4 py-2 text-white " +
+        "mx-2 mb-2 md:my-0 px-4 py-2 text-white " +
         (isIrregular
           ? `${buttonStyles.redButton}`
           : `${buttonStyles.blackButton}`)

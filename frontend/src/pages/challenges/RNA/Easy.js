@@ -197,8 +197,8 @@ class RNAGame {
     const proportions = Array.from({ length: rnaLength }, () => Math.random());
     const totalProportion = proportions.reduce((sum, value) => sum + value, 0);
     const normalizedProportions = proportions.map(value => value / totalProportion);
-    const minWidth = this.sceneWidth / 20 
-    const remainingWidth = this.sceneWidth - (minWidth * rnaLength)
+    const minWidth = this.sceneWidth / 20 ;
+    const remainingWidth = this.sceneWidth - (minWidth * rnaLength);
     const randomWidth = normalizedProportions.map(  proportion => proportion * remainingWidth + minWidth);
 
 
