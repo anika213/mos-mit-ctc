@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 
+
 const Navbar = () => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -41,6 +42,7 @@ const Navbar = () => {
         {/* <ul className={`md:flex md:items-center md:space-x-6 ${isMobileMenuOpen ? 'block' : 'hidden'} md:block`}> */}
         <ul className={`md:flex flex flex-col md:flex-row items-center justify-center md:gap-x-6 gap-y-8 md:pb-0 pb-16 absolute md:static md:z-auto bg-black left-0 w-full md:w-auto ml-0 duration-200 ease-in ${isMobileMenuOpen ? 'top-16 ':'top-[-490px]'}`}>
           <li><Link to="/" className="hover:text-gray-400 duration-500 md:mb-0 mb-7">Home</Link></li>
+          <li><Link to="/newchallenge" className="hover:text-gray-400 duration-500 md:mb-0 mb-7" >Suggestions</Link></li>
           <li><Link to="/leaderboard" className="hover:text-gray-400 duration-500 md:mb-0 mb-7" >Leaderboard</Link></li>
           <div  onClick={() => toggleDropdown(!isDropdownOpen)}
                 onMouseEnter={() => toggleDropdown(true)}

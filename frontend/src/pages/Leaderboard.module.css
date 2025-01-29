@@ -71,21 +71,22 @@
   tr:hover {
     background-color: #f9f9f9; /* Subtle hover effect */
   }
-  
   /* Image container for logos */
-  .imageContainer {
-    display: flex;
-    justify-content: center;
-    gap: 20px; /* Add space between logos */
-    margin-top: 20px;
-  }
-  
-  /* Logo images styling */
-  .logos {
-    height: 40px;
-    width: auto; 
-    margin: 5px;
-  }
+.imageContainer {
+  display: flex;
+  justify-content: center;
+  gap: 20px; /* Add space between logos */
+  margin-top: 20px;
+}
+
+/* Logo images styling */
+.logos {
+  height: 70px; /* Set a fixed height for the square */
+  width: 60px; /* Set the same width to make it a square */
+  object-fit: contain; /* Ensures the image fits inside without being cut off */
+  margin: 5px;
+}
+
 
   .tableContainer {
     max-height: 500px; /* Set the height of the scrollable area */
