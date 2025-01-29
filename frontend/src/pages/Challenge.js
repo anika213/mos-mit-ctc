@@ -68,7 +68,7 @@ function Challenge() {
   useEffect(() => {
     // Reset to Easy level whenever the challenge changes
     updateLevelAndStartTime("Easy");
-  }, [challengeName]);
+  }, [challengeName, updateLevelAndStartTime]);
 
   const { title, description } = challengeData[challengeName][selectedLevel];
 
@@ -93,7 +93,7 @@ function Challenge() {
       .catch((error) => {
         console.error("Error updating challenges:", error);
       });
-  }, [challengeName, selectedLevel]);
+  }, [challengeName, selectedLevel, startTime]);
 
   const DynamicChallengeComponent = React.lazy(() =>
     import(`./challenges/${challengeName}/${selectedLevel}.js`).catch(() =>
