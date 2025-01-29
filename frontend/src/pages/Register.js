@@ -4,6 +4,8 @@ import dna from '../assets/dna.jpg';
 import Navbar from './Navbar.js'
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { InputAdornment, IconButton, Input } from '@mui/material';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 // TODO: whne the screen size is smaller, the side image shld be above the form, rn its below..
 // TODO: impelement all the functionality.
@@ -12,6 +14,8 @@ function Register() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [passwordConfirmation, setPasswordConfirmation] = useState('');
+    const [passwordVisible, setPasswordVisible] = useState(false);
+    const [passwordConfirmationVisible, setPasswordConfirmationVisible] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
@@ -55,6 +59,14 @@ function Register() {
     }
     }
 
+    const togglePasswordVisibility = () => {
+        setPasswordVisible(!passwordVisible);
+    };
+    
+    const togglePasswordConfirmationVisibility = () => {
+        setPasswordConfirmationVisible(!passwordConfirmationVisible);
+    };
+
     return (
     <div className={styles.mainContainer}>
         <Navbar />
@@ -63,32 +75,52 @@ function Register() {
             <p className={styles.heading}>Register</p>
             <p className={styles.subheading}>Please register to store your challenge progress and view your rank on our leaderboard.</p>
             <form className={styles.form} onSubmit={handleRegistration}>
-            <input 
+            <Input 
             className={styles.input} 
             type="text" 
             id="username" 
             name="username" 
             placeholder='Username'
             value={username}
-            onChange={(e) => setUsername(e.target.value)} />
+            onChange={(e) => setUsername(e.target.value)} 
+            disableUnderline={true} 
+            autoComplete="username"/>
 
-            <input 
+            <Input 
             className={styles.input} 
-            type="password" 
+            type={passwordVisible ? 'text' : 'password'}
             id="password" 
             name="password" 
             placeholder='Password' 
             value={password}
-            onChange={(e) => setPassword(e.target.value)} />
+            onChange={(e) => setPassword(e.target.value)} 
+            disableUnderline={true} 
+            autoComplete="new-password"
+            endAdornment={
+                <InputAdornment position="end">
+                  <IconButton onClick={togglePasswordVisibility} edge="end">
+                    {passwordVisible ? <FaEyeSlash /> : <FaEye />}
+                  </IconButton>
+                </InputAdornment>
+            }/>
 
-            <input 
+            <Input 
             className={styles.input} 
-            type="password" 
+            type={passwordConfirmationVisible ? 'text' : 'password'} 
             id="passwordConfirmation" 
             name="passwordConfirmation" 
             placeholder='Confirm password' 
             value={passwordConfirmation}
-            onChange={(e) => setPasswordConfirmation(e.target.value)} />
+            onChange={(e) => setPasswordConfirmation(e.target.value)} 
+            disableUnderline={true} 
+            autoComplete="new-password"
+            endAdornment={
+                <InputAdornment position="end">
+                  <IconButton onClick={togglePasswordConfirmationVisibility} edge="end">
+                    {passwordConfirmationVisible ? <FaEyeSlash /> : <FaEye />}
+                  </IconButton>
+                </InputAdornment>
+            }/>
 
             <button className={styles.button} type="submit">Register</button>
             </form>

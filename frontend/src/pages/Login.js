@@ -6,12 +6,15 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext.js';
+import { InputAdornment, IconButton, Input } from '@mui/material';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 // TODO: whne the screen size is smaller, the side image shld be above the form, rn its below..
 // TODO: impelement all the functionality.
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const { login } = useContext(AuthContext); 
@@ -46,6 +49,9 @@ function Login() {
     }
   }
 
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
 
   return (
     <div className={styles.mainContainer}>
@@ -55,23 +61,35 @@ function Login() {
           <p className={styles.heading}>Login</p>
           <p className={styles.subheading}>Please login to access your challenge progress, save your work, and rank on our leaderboard.</p>
           <form className={styles.form} onSubmit={handleLogin}>
-            <input 
+            <Input 
             className={styles.input} 
             type="text" 
             id="username" 
             name="username" 
             placeholder='Username'
             value={username}
-            onChange={(e) => setUsername(e.target.value)} />
+            onChange={(e) => setUsername(e.target.value)} 
+            disableUnderline={true} 
+            autoComplete="username"/>
 
-            <input 
-            className={styles.input} 
-            type="password" 
-            id="password" 
-            name="password" 
-            placeholder='Password' 
-            value={password}
-            onChange={(e) => setPassword(e.target.value)} />
+            <Input
+              className={styles.input}
+              type={passwordVisible ? 'text' : 'password'}
+              id="password"
+              name="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              disableUnderline={true}
+              autoComplete="current-password"
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton onClick={togglePasswordVisibility} edge="end">
+                    {passwordVisible ? <FaEyeSlash /> : <FaEye />}
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
 
             <button  type="submit" className={`${styles.button} ${buttonStyles.redButton}`}>Login</button>
           </form>
