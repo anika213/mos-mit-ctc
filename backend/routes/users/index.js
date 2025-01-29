@@ -21,6 +21,22 @@ router.get('/leaderboard', controller.leaderboard);
 
 router.get('/leaderboard/:challenge', controller.challenge_leaderboard);
 
+// Change username or password
+router.put('/change-username', userValidationSchema, controller.changeUsername);
+router.put('/change-password', userValidationSchema, controller.changePassword);
+
+// Report user
+// router.post('/report', controller.XXX)
+
+// Delete user
+router.delete('/delete-user', controller.deleteUser);
+
+
+
+
+
+
+
 // Challenges route
 router.get('/challenges', controller.challenges);
 

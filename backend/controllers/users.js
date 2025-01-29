@@ -5,7 +5,6 @@ const User = require('../models/user.js');
 const { validationResult } = require('express-validator');
 
 // Register user
-// Should probably run a schema validator before continuing the registration process
 exports.registerUser = async (req, res) => {
     const validationErrors = validationResult(req);
 
@@ -18,7 +17,7 @@ exports.registerUser = async (req, res) => {
     const newUser = new User(body);
 
     try {
-        const savedUser = await newUser.save();
+        await newUser.save();
         res.status(201).json({ message: 'User registered successfully!' });
     } catch (err) {
         console.log(err);
@@ -55,7 +54,12 @@ exports.logoutUser = (req, res) => {
             if (err) {
                 return res.status(500).json({ message: 'Error logging out' });
             }
-            res.status(200).json({ message: 'Logout successful' });
+            req.session.destroy((err) => {
+                if (err) {
+                    return res.status(500).json({ message: 'Error destroying session' });
+                }
+                res.status(200).json({ message: 'Logout successful' });  
+            });
         });
     } else {
         return res.status(400).json({ message: 'No user is logged in' });
@@ -70,6 +74,111 @@ exports.status = (req, res) => {
         res.status(401).json({ message: 'Not authenticated' });
     }
 };
+
+// Change username
+exports.changeUsername = async (req, res) => {
+    const validationErrors = validationResult(req);
+
+    if (!validationErrors.isEmpty()) {
+        return res.status(400).json({ errors: validationErrors.array() });
+    }
+
+    const { username } = req.body;
+
+    if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: 'User not authenticated' });
+    }
+
+    try {
+        const user = await User.findById(req.user._id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        user.username = username;
+
+        await user.save();
+
+        return res.status(200).json({ message: 'Username updated successfully'});
+    } catch (err) {
+        if (err.code === 11000) {
+            return res.status(400).json({ message: 'Username is already taken' });
+        }
+
+        console.log(err) // Needs to be sent to frontend eventually
+        return res.status(500).json({ message: 'Error updating username' });
+    }
+}
+
+// Change password
+exports.changePassword = async (req, res) => {
+    const validationErrors = validationResult(req);
+
+    if (!validationErrors.isEmpty()) {
+        return res.status(400).json({ errors: validationErrors.array() });
+    }
+
+    const { password } = req.body;
+
+    if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: 'User not authenticated' });
+    }
+
+    try {
+        const user = await User.findById(req.user._id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        user.password = hashPassword(password);
+
+        await user.save();
+
+        return res.status(200).json({ message: 'Password updated successfully'});
+    } catch (err) {
+        console.log(err) // Needs to be sent to frontend eventually
+        return res.status(500).json({ message: 'Error updating password' });
+    }
+}
+
+// Delete user
+exports.deleteUser = async (req, res) => {
+    if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: 'User not authenticated' });
+    }
+
+    try {
+        const user = await User.findByIdAndDelete(req.user._id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        req.session.destroy((err) => {
+            if (err) {
+                return res.status(500).json({ message: 'Error deleting session' });
+            }
+            req.logout(() => {
+                return res.status(200).json({ message: 'User deleted and logged out successfully' });
+            });
+        });
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ message: 'Error deleting user' });
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+// CHALLENGES STUFF
+
 
 // Leaderboard
 exports.leaderboard = async (req, res) => {
@@ -103,7 +212,6 @@ exports.challenge_leaderboard = async (req, res) => {
         return res.status(500).send('Internal Server Error');
     }
 }
-
 
 const challenge_list = [
     "RNA-Easy",

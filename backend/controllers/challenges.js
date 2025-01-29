@@ -14,6 +14,4 @@ exports.addChallenge = async (req, res) => {
         console.log(err);
         return res.status(500).json({ message: 'Error adding challenge' });
     }
-    
-
 };
