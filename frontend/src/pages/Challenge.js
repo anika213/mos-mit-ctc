@@ -72,6 +72,24 @@ function Challenge() {
   }, [challengeName, updateLevelAndStartTime]);
 
   const { title, description } = challengeData[challengeName][selectedLevel];
+  
+  const [showPopup, setShowPopup] = useState(false);
+
+  const handleOrientationChange = () => {
+    const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+    setShowPopup(isPortrait);
+  };
+  window.addEventListener("resize", handleOrientationChange);
+
+  useEffect(() => {
+    window.addEventListener("resize", handleOrientationChange);
+    // Initial check in case the page loads in landscape mode
+    handleOrientationChange();
+    return () => window.removeEventListener("resize", handleOrientationChange);
+  }, []);
+
+  
+  
 
   const onStart = () => {
     setStartTime(Date.now());
@@ -112,6 +130,10 @@ function Challenge() {
       <Navbar />
 
       <div className={styles.challengeBox} key={challengeName}>
+        {showPopup && <div className={styles.rotateWarning} >
+          <h1>Please rotate your mobile device</h1>
+          <p>For the best experience, rotate your phone to landscape mode.</p>
+        </div>}
         <div className={styles.navbarWrapper}>
           <ChallengeNavbar
             selectedChallenge={challengeName}
