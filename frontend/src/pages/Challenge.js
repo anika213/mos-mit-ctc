@@ -15,10 +15,10 @@ const challengeData = {
       title: "RNA Splicing",
       description: "Select all the introns in the given RNA sequence.",
     },
-    Hard:{
+    Hard: {
       title: "RNA Splicing",
-      description: "Hard description"
-    }
+      description: "Hard description",
+    },
   },
   Molecules: {
     Easy: {
@@ -29,10 +29,10 @@ const challengeData = {
       title: "Molular docking",
       description: "Connect each molecule to its corresponding binding site",
     },
-    Hard:{
+    Hard: {
       title: "Molecular Docking",
-      description: "Hard Description."
-    }
+      description: "Hard Description.",
+    },
   },
   Wireless: {
     Easy: {
@@ -43,10 +43,10 @@ const challengeData = {
       title: "Wireless Detection",
       description: "Classify each breathing pattern",
     },
-    Hard:{
+    Hard: {
       title: "Wireless Detection",
-      description: "Hard Description."
-    }
+      description: "Hard Description.",
+    },
   },
 };
 
@@ -55,10 +55,11 @@ function Challenge() {
   // const [selectedChallenge, setSelectedChallenge] = useState(challengeName);
   const [startTime, setStartTime] = useState(Date.now());
   const [selectedLevel, setSelectedLevel] = useState("Easy");
+  const [hasStarted, setHasStarted] = useState(false);
 
   const updateLevelAndStartTime = useCallback((level) => {
-    setSelectedLevel(level);  
-    setStartTime(Date.now());
+    setSelectedLevel(level);
+    setHasStarted(false);
   }, []);
 
   const handleLevelChange = (event) => {
@@ -90,6 +91,10 @@ function Challenge() {
   
   
 
+  const onStart = () => {
+    setStartTime(Date.now());
+  };
+
   const onComplete = useCallback(() => {
     // mark challenge as complete in the backend
     const endTime = Date.now();
@@ -113,15 +118,17 @@ function Challenge() {
       });
   }, [challengeName, selectedLevel, startTime]);
 
+
   const DynamicChallengeComponent = React.lazy(() =>
     import(`./challenges/${challengeName}/${selectedLevel}.js`).catch(() =>
       import("../components/ChallengeFallback.js")
     )
   );
+
   return (
     <div>
       <Navbar />
-  
+
       <div className={styles.challengeBox} key={challengeName}>
         {showPopup && <div className={styles.rotateWarning} >
           <h1>Please rotate your mobile device</h1>
@@ -141,20 +148,32 @@ function Challenge() {
           <label>Select Level:</label>
           <select value={selectedLevel} onChange={handleLevelChange}>
             <option value="Easy">Easy</option>
-            <option value="Medium">Medium</option> 
-           <option value="Hard">Hard</option>
-
+            <option value="Medium">Medium</option>
+            <option value="Hard">Hard</option>
           </select>
         </div>
         <div className={styles.challengeContent}>
-          <Suspense fallback={<p>Loading challenge...</p>}>
-            <DynamicChallengeComponent onComplete={onComplete} />
-          </Suspense>
+          {hasStarted ? (
+            <Suspense fallback={<p>Loading challenge...</p>}>
+              <DynamicChallengeComponent onComplete={onComplete} />
+            </Suspense>
+          ) : (
+            <div className={styles.overlay}>
+              <button
+                className={styles.startButton}
+                onClick={() => {
+                  onStart();
+                  setHasStarted(true);
+                }}
+              >
+                Start
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
-  
 }
 
 export default Challenge;
