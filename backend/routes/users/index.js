@@ -31,12 +31,6 @@ router.put('/change-password', userValidationSchema, controller.changePassword);
 // Delete user
 router.delete('/delete-user', controller.deleteUser);
 
-
-
-
-
-
-
 // Challenges route
 router.get('/challenges', controller.challenges);
 

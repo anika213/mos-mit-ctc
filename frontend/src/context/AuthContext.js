@@ -16,12 +16,14 @@ export const AuthProvider = ({ children }) => {
           });
           if (response.ok) {
             const userData = await response.json();
-            setUser(userData);
-            setIsAuthenticated(true);
-          } else {
+            if (!userData.anonymous) {
+              setUser(userData);
+              setIsAuthenticated(true);
+              return;
+            }
+          } 
             setUser(null);
             setIsAuthenticated(false); 
-          }
         } catch (error) {
           console.error('Error fetching user: ', error);
           setUser(null);

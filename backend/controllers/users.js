@@ -4,32 +4,56 @@ const hashPassword = require('../utils/bcryptHash.js');
 const User = require('../models/user.js');
 const { validationResult } = require('express-validator');
 
-// Register user
+function mergeChallenges(anonChallenges, realChallenges) {
+    for (const [challenge, time] of Object.entries(anonChallenges || {})) {
+      // If the challenge exists, keep the best (minimal) time,
+      // or simply add the challenge if it doesn’t exist
+      if (realChallenges[challenge]) {
+        realChallenges[challenge] = Math.min(realChallenges[challenge], time);
+      } else {
+        realChallenges[challenge] = time;
+      }
+    }
+    return realChallenges;
+}
+
 exports.registerUser = async (req, res) => {
-    const validationErrors = validationResult(req);
-
-    if (!validationErrors.isEmpty()) {
-        return res.status(400).json({ errors: validationErrors.array() });
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
     }
-
-    const { body } = req;
-    body.password = hashPassword(body.password);
-    const newUser = new User(body);
-
+  
+    const { username, password, ...rest } = req.body;
+    const hashedPassword = hashPassword(password);
+    const newUser = new User({ username, password: hashedPassword, ...rest, anonymous: false });
+  
     try {
+      await newUser.save();
+  
+      // If req.user exists and is anonymous, merge its data
+      if (req.user && req.user.anonymous) {
+        // Merge challenge data if any
+        newUser.challenges = mergeChallenges(req.user.challenges, newUser.challenges || {});
+        // Example: add anonymous score into new score
+        newUser.score += req.user.score;
         await newUser.save();
-        res.status(201).json({ message: 'User registered successfully!' });
+  
+        // Optionally remove the anonymous user from the database
+        await User.findByIdAndDelete(req.user._id);
+  
+        // Clean up anonymous user id from session
+        delete req.session.anonymousUserId;
+      }
+  
+      res.status(201).json({ message: 'User registered successfully!', user: newUser });
     } catch (err) {
-        console.log(err);
-
-        // Check if it's a duplicate key error
-        if (err.code === 11000) {
-            return res.status(400).json({ message: 'Username is already taken.' });
-        }
-
-        return res.status(500).json({ message: 'Error registering user' });
+      console.error(err);
+      if (err.code === 11000) {
+        return res.status(400).json({ message: 'Username is already taken.' });
+      }
+      res.status(500).json({ message: 'Error registering user' });
     }
-};
+  };
 
 // Login user
 exports.loginUser = (req, res, next) => {
@@ -69,9 +93,9 @@ exports.logoutUser = (req, res) => {
 // Status
 exports.status = (req, res) => {
     if (req.isAuthenticated()) {
-        res.json(req.user);
+        return res.json(req.user);
     } else {
-        res.status(401).json({ message: 'Not authenticated' });
+        return res.status(401).json({ message: 'Not authenticated' });
     }
 };
 
@@ -87,6 +111,10 @@ exports.changeUsername = async (req, res) => {
 
     if (!req.isAuthenticated()) {
         return res.status(401).json({ message: 'User not authenticated' });
+    }
+
+    if (req.user.anonymous) {
+        return res.status(403).json({ message: 'Cannot change username of anonymous user' });
     }
 
     try {
@@ -122,6 +150,10 @@ exports.changePassword = async (req, res) => {
 
     if (!req.isAuthenticated()) {
         return res.status(401).json({ message: 'User not authenticated' });
+    }
+
+    if (req.user.anonymous) {
+        return res.status(403).json({ message: 'Cannot change password of anonymous user' });
     }
 
     try {
@@ -222,25 +254,37 @@ const challenge_list = [
     "Wireless-Medium"
 ];
 
-exports.challenges = async (req, res) => {
-    try {
-        if (!req.isAuthenticated()) {
-            return res.status(401).json({ message: 'Not authenticated' });
-        }
-        const user = await User.findById(req.user._id).select('challenges');
-        return res.json(user.challenges);
-    } catch (err) {
-        console.error('Error fetching challenges:', err);
-        return res.status(500).send('Internal Server Error');
+exports.challenges = (req, res, next) => {
+    if (req.isAuthenticated()) {
+        User.findById(req.user._id).select('challenges')
+            .then(user => res.json(user.challenges))
+            .catch(err => {
+                console.error('Error fetching challenges:', err);
+                res.status(500).send('Internal Server Error');
+            });
+    } else {
+        // Authenticate as anonymous if not logged in
+        passport.authenticate('anonymous', (err, user, info) => {
+            if (err) {
+                console.error('Error during anonymous authentication:', err);
+                return res.status(500).send('Internal Server Error');
+            }
+            if (!user) {
+                return res.status(401).json({ message: info ? info.message : 'Could not authenticate as anonymous user' });
+            }
+            req.login(user, (loginErr) => {
+                if (loginErr) {
+                    console.error('Login error for anonymous user:', loginErr);
+                    return res.status(500).send('Internal Server Error');
+                }
+                return res.json(user.challenges);
+            });
+        })(req, res, next);
     }
 }
 
-exports.updateChallenges = async (req, res) => {
-    try {
-        if (!req.isAuthenticated()) {
-            return res.status(401).json({ message: 'Not authenticated' });
-        }
-        // get the challenge the user completed, and mark it as such
+exports.updateChallenges = async (req, res, next) => {
+    const updateChallenge = async (user) => {
         const { challenge, time } = req.body;
         if (!challenge_list.includes(challenge)) {
             return res.status(400).json({ message: 'Invalid challenge' });
@@ -248,18 +292,43 @@ exports.updateChallenges = async (req, res) => {
         if (!time || isNaN(time) || time < 0) {
             return res.status(400).json({ message: 'Invalid time' });
         }
-        const user = await User.findById(req.user._id);
         if (!user.challenges.has(challenge)) {
             user.challenges.set(challenge, time);
             user.score += 1;
         } else {
             user.challenges.set(challenge, Math.min(user.challenges.get(challenge), time));
         }
-
         await user.save();
         return res.json(user.challenges);
-    } catch (err) {
-        console.error('Error updating challenges:', err);
-        return res.status(500).send('Internal Server Error');
+    };
+
+    if (!req.isAuthenticated()) {
+        return passport.authenticate('anonymous', (err, user, info) => {
+            if (err) {
+                console.error('Error during anonymous authentication:', err);
+                return res.status(500).send('Internal Server Error');
+            }
+            if (!user) {
+                return res.status(401).json({ message: info ? info.message : 'Could not authenticate as anonymous user' });
+            }
+            req.login(user, (loginErr) => {
+                if (loginErr) {
+                    console.error('Login error for anonymous user:', loginErr);
+                    return res.status(500).send('Internal Server Error');
+                }
+                return updateChallenge(user);
+            });
+        })(req, res, next);
+    } else {
+        try {
+            const user = await User.findById(req.user._id);
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+            return updateChallenge(user);
+        } catch (err) {
+            console.error('Error updating challenges:', err);
+            return res.status(500).send('Internal Server Error');
+        }
     }
-}
+};
