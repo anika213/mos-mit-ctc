@@ -3,7 +3,7 @@ import buttonStyles from './Buttons.module.css'
 import dna from '../assets/dna.jpg';
 import Navbar from './Navbar.js'
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext.js';
 import { InputAdornment, IconButton, Input } from '@mui/material';
@@ -18,6 +18,9 @@ function Login() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const { login } = useContext(AuthContext); 
+  const location = useLocation();
+  const challengeProgress = location.state?.challengeProgress || null;
+
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -31,6 +34,7 @@ function Login() {
         body: JSON.stringify({
           username,
           password,
+          challengeProgress
         }),
         credentials: 'include'
       });

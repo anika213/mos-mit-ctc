@@ -7,7 +7,9 @@ import jameel from '../assets/jameel.jpg';
 import mit from '../assets/mit.png';
 import mos from '../assets/mos.jpg';
 import dna from '../assets/dna.jpg';
-import { useNavigate } from 'react-router-dom';
+import AchievementsModal from './Achievements.js'
+import { useNavigate, useDisclosure } from 'react-router-dom';
+
 
 
 const challenges = [
@@ -31,6 +33,11 @@ function Landing() {
     setActiveChallenge(activeChallenge === id ? null : id);
   };
 
+  const [achievmentsIsOpen, setAchievementsIsOpen] = useState(false);
+  const toggleAchievements = () => {
+    setAchievementsIsOpen(!achievmentsIsOpen);
+  };
+
   return (
     <div className={styles.mainContainer}>
       <Navbar />
@@ -40,6 +47,7 @@ function Landing() {
           <p className={styles.heading}>Exploring Clinical AI</p>
           <br></br>
           <button className={`${styles.button} ${buttonStyles.redButton}`} onClick={() => handleChallengeClick("/challenge/RNA")}>Get Started</button>
+          <button className={`${styles.button} ${buttonStyles.redButton}`} onClick={() => toggleAchievements()}>Achievements</button>
           <br></br>
           <div className={styles.imageContainer}>
             <img src={mos} alt="MOS" className={styles.logos} />
@@ -83,7 +91,11 @@ function Landing() {
           </div>
         ))}
       </div>
+
+      <AchievementsModal isOpen={achievmentsIsOpen} onClose={() => toggleAchievements()} />
     </div>
+
+        
   );
 }
 

@@ -37,6 +37,9 @@ router.get('/challenges', controller.challenges);
 // Update challenges route
 router.post('/challenges', controller.updateChallenges);
 
+//getting achievements
+router.get('/achievements', controller.getAchievements);
+
 router.post('/start', controller.startHardChallenge);
 
 module.exports = router; 

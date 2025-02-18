@@ -108,9 +108,9 @@ function Medium({ onComplete }) {
         <p>
           Breathing Pattern {currentPlot + 1} / {plots.length}
         </p>
-
-        <WirelessDetectionPlot data={plots[currentPlot].data} />
-
+        <div className='flex justify-center'>
+          <WirelessDetectionPlot data={plots[currentPlot].data} />
+        </div>
         <div className="pt-2">
           <WirelessDetectionButton
             isIrregular={false}

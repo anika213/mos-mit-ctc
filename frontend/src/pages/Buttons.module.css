@@ -1,9 +1,12 @@
 .redButton {
     background-color: #ff4343;
+    color: white;
+    font-family: 'Roboto', sans-serif;
 }
 .redButton:hover {
     background-color: #dc2625;
     transition: 0.3s;
+    font-family: 'Roboto', sans-serif;
 }
 
 .blackButton {

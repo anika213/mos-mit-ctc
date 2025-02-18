@@ -1,6 +1,6 @@
 // Challenge.js
 import React, { useState, Suspense, useEffect, useCallback } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ChallengeNavbar from "../components/ChallengesNavbar.js";
 import Navbar from "./Navbar.js";
 import styles from "./Challenge.module.css";
@@ -55,6 +55,7 @@ function Challenge() {
   // const [selectedChallenge, setSelectedChallenge] = useState(challengeName);
   const [startTime, setStartTime] = useState(Date.now());
   const [selectedLevel, setSelectedLevel] = useState("Easy");
+  const navigate = useNavigate();
   const [hasStarted, setHasStarted] = useState(false);
 
   const updateLevelAndStartTime = useCallback((level) => {
