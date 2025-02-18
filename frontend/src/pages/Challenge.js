@@ -72,7 +72,7 @@ function Challenge() {
   }, [challengeName, updateLevelAndStartTime]);
 
   const { title, description } = challengeData[challengeName][selectedLevel];
-  
+
   const [showPopup, setShowPopup] = useState(false);
 
   const handleOrientationChange = () => {
@@ -88,11 +88,28 @@ function Challenge() {
     return () => window.removeEventListener("resize", handleOrientationChange);
   }, []);
 
-  
-  
-
   const onStart = () => {
     setStartTime(Date.now());
+
+    if (selectedLevel == "Hard") {
+      fetch("http://localhost:8080/users/start", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        credentials: "include",
+        body: JSON.stringify({
+          challenge: `${challengeName}-${selectedLevel}`,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((error) => {
+          console.error("Error starting challenge:", error);
+        });
+    }
   };
 
   const onComplete = useCallback(() => {
@@ -118,7 +135,6 @@ function Challenge() {
       });
   }, [challengeName, selectedLevel, startTime]);
 
-
   const DynamicChallengeComponent = React.lazy(() =>
     import(`./challenges/${challengeName}/${selectedLevel}.js`).catch(() =>
       import("../components/ChallengeFallback.js")
@@ -130,10 +146,12 @@ function Challenge() {
       <Navbar />
 
       <div className={styles.challengeBox} key={challengeName}>
-        {showPopup && <div className={styles.rotateWarning} >
-          <h1>Please rotate your mobile device</h1>
-          <p>For the best experience, rotate your phone to landscape mode.</p>
-        </div>}
+        {showPopup && (
+          <div className={styles.rotateWarning}>
+            <h1>Please rotate your mobile device</h1>
+            <p>For the best experience, rotate your phone to landscape mode.</p>
+          </div>
+        )}
         <div className={styles.navbarWrapper}>
           <ChallengeNavbar
             selectedChallenge={challengeName}

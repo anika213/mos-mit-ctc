@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "./Hard.module.css";
 
-const Hard = () => {
+const Hard = ({onComplete}) => {
     const [inputValue, setInputValue] = useState("");
 
     const handleInputChange = (event) => {
@@ -10,6 +10,8 @@ const Hard = () => {
 
     const handleDone = () => {
         console.log("Input value:", inputValue);
+
+        onComplete();
     };
 
     return (

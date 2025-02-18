@@ -26,6 +26,11 @@ const schema = new Schema({
     of: Number,
     default: {},
   },
+  startTimes: {
+    type: Map,
+    of: Date,
+    default: {},
+  },
 });
 
 module.exports = mongoose.model("users", schema);
