@@ -7025,11 +7025,6 @@ node-releases@^2.0.19:
   resolved "https://registry.yarnpkg.com/node-releases/-/node-releases-2.0.19.tgz#9e445a52950951ec4d177d843af370b411caf314"
   integrity sha512-xxOWJsBKtzAq7DY0J+DTzuz58K8e7sJbdgwkbMWQe8UYB6ekmsQ45q0M/tJDsGaZmbC+l7n57UV8Hl5tHxO9uw==
 
-node-uuid@^1.4.7:
-  version "1.4.8"
-  resolved "https://registry.yarnpkg.com/node-uuid/-/node-uuid-1.4.8.tgz#b040eb0923968afabf8d32fb1f17f1167fdab907"
-  integrity sha512-TkCET/3rr9mUuRp+CpO7qfgT++aAxfDRaalQhwPFzI9BY/2rCDn6OfpZOVggi1AXfTPpfkTrg5f5WQx5G1uLxA==
-
 normalize-path@^3.0.0, normalize-path@~3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/normalize-path/-/normalize-path-3.0.0.tgz#0dcd69ff23a1c9b11fd0978316644a0388216a65"
@@ -7322,21 +7317,6 @@ pascal-case@^3.1.2:
   dependencies:
     no-case "^3.0.4"
     tslib "^2.0.3"
-
-passport-anonym-uuid@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/passport-anonym-uuid/-/passport-anonym-uuid-1.0.3.tgz#34225369fe1b71e2db24fac41e8b82c90186c4e6"
-  integrity sha512-bsu59r5hyU0zwqJ3EMdbN0O7O4oZmcjFNhVKXF2PAgPlm1TTJUizJnrkErj4mjOM/mtNE4FwbW4TusrXZJ4lLQ==
-  dependencies:
-    node-uuid "^1.4.7"
-    passport-strategy "1.x.x"
-
-passport-anonymous@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/passport-anonymous/-/passport-anonymous-1.0.1.tgz#241e37274ec44dfb7f6cad234b41c438386bc117"
-  integrity sha512-Mk2dls97nLTzHpsWCYQ54IVGucWaiWSHHr3+IhWYAebg4dRgRQIfyoeYrixoxB2z2z4+EM7p9yjC+a3yMB5z5A==
-  dependencies:
-    passport-strategy "1.x.x"
 
 passport-custom@^1.1.1:
   version "1.1.1"
