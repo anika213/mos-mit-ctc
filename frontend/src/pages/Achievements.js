@@ -35,7 +35,7 @@ function AchievementsModal(props) {
     })
 
     const changeAchievements = async () => {
-        const response = await fetch('http://localhost:8080/users/challenges', {
+        const response = await fetch(process.env.REACT_APP_API_URL + '/users/challenges', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'

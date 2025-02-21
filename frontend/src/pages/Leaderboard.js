@@ -14,14 +14,14 @@ const Leaderboard = () => {
 
   useEffect(() => {
     if (selectedLeaderboard === "Overall") {
-      fetch("http://localhost:8080/users/leaderboard")
+      fetch(process.env.REACT_APP_API_URL + "/users/leaderboard")
         .then((response) => response.json())
         .then((data) => setUsers(data))
         .catch((error) => console.error("Error fetching leaderboard:", error));
     } else {
       const full_leaderboard = `${selectedLeaderboard}-${selectedLevel}`;
       fetch(
-        `http://localhost:8080/users/leaderboard/${full_leaderboard}`
+        `process.env.REACT_APP_API_URL/users/leaderboard/${full_leaderboard}`
       )
         .then((response) => response.json())
         .then((data) => setUsers(data))

@@ -93,7 +93,7 @@ function Challenge() {
     setStartTime(Date.now());
 
     if (selectedLevel == "Hard") {
-      fetch("http://localhost:8080/users/start", {
+      fetch(process.env.REACT_APP_API_URL + "/users/start", {
         headers: {
           "Content-Type": "application/json",
         },
@@ -116,7 +116,7 @@ function Challenge() {
   const onComplete = useCallback(() => {
     // mark challenge as complete in the backend
     const endTime = Date.now();
-    fetch("http://localhost:8080/users/challenges", {
+    fetch(process.env.REACT_APP_API_URL + "/users/challenges", {
       headers: {
         "Content-Type": "application/json",
       },

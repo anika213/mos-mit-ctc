@@ -1,21 +1,8 @@
-const passport = require("../utils/passportConfig");
+const passport = require("../utils/passportConfig.js");
 const hashPassword = require("../utils/bcryptHash.js");
 
 const User = require("../models/user.js");
 const { validationResult } = require("express-validator");
-
-function mergeChallenges(anonChallenges, realChallenges) {
-  for (const [challenge, time] of Object.entries(anonChallenges || {})) {
-    // If the challenge exists, keep the best (minimal) time,
-    // or simply add the challenge if it doesn’t exist
-    if (realChallenges[challenge]) {
-      realChallenges[challenge] = Math.min(realChallenges[challenge], time);
-    } else {
-      realChallenges[challenge] = time;
-    }
-  }
-  return realChallenges;
-}
 
 exports.registerUser = async (req, res) => {
   const errors = validationResult(req);
@@ -29,29 +16,23 @@ exports.registerUser = async (req, res) => {
     username,
     password: hashedPassword,
     ...rest,
-    anonymous: false,
   });
 
   try {
-    await newUser.save();
+    if (req.session.challenges) {
+      newUser.challenges = req.session.challenges;
+      newUser.score = Object.keys(req.session.challenges).length;
 
-    // If req.user exists and is anonymous, merge its data
-    if (req.user && req.user.anonymous) {
-      // Merge challenge data if any
-      newUser.challenges = mergeChallenges(
-        req.user.challenges,
-        newUser.challenges || {}
-      );
-      // Example: add anonymous score into new score
-      newUser.score += req.user.score;
-      await newUser.save();
-
-      // Optionally remove the anonymous user from the database
-      await User.findByIdAndDelete(req.user._id);
-
-      // Clean up anonymous user id from session
-      delete req.session.anonymousUserId;
+      delete req.session.challenges;
     }
+
+    if (req.session.startTimes) {
+      newUser.startTimes = req.session.startTimes;
+
+      delete req.session.startTimes;
+    }
+
+    await newUser.save();
 
     res
       .status(201)
@@ -70,6 +51,14 @@ exports.loginUser = (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     if (err) return next(err); // If there's an error, pass it to the next middleware (error handler)
     if (!user) return res.status(401).json({ message: info.message }); // Failed login, send error message
+
+    // clear session stored challenges and start times
+    if (req.session.challenges) {
+      delete req.session.challenges;
+    }
+    if (req.session.startTimes) {
+      delete req.session.startTimes;
+    }
 
     // Successfully authenticated, log the user in
     req.login(user, (err) => {
@@ -123,12 +112,6 @@ exports.changeUsername = async (req, res) => {
     return res.status(401).json({ message: "User not authenticated" });
   }
 
-  if (req.user.anonymous) {
-    return res
-      .status(403)
-      .json({ message: "Cannot change username of anonymous user" });
-  }
-
   try {
     const user = await User.findById(req.user._id);
     if (!user) {
@@ -162,12 +145,6 @@ exports.changePassword = async (req, res) => {
 
   if (!req.isAuthenticated()) {
     return res.status(401).json({ message: "User not authenticated" });
-  }
-
-  if (req.user.anonymous) {
-    return res
-      .status(403)
-      .json({ message: "Cannot change password of anonymous user" });
   }
 
   try {
@@ -269,28 +246,6 @@ const challenge_list = [
 
 const hard_list = ["RNA-Hard", "Molecules-Hard", "Wireless-Hard"];
 
-const authAnon = (callback, req, res, next) =>
-  passport.authenticate("anonymous", (err, user, info) => {
-    if (err) {
-      console.error("Error during anonymous authentication:", err);
-      return res.status(500).send("Internal Server Error");
-    }
-    if (!user) {
-      return res.status(401).json({
-        message: info
-          ? info.message
-          : "Could not authenticate as anonymous user",
-      });
-    }
-    req.login(user, (loginErr) => {
-      if (loginErr) {
-        console.error("Login error for anonymous user:", loginErr);
-        return res.status(500).send("Internal Server Error");
-      }
-      return callback(user);
-    });
-  })(req, res, next);
-
 exports.challenges = (req, res, next) => {
   if (req.isAuthenticated()) {
     User.findById(req.user._id)
@@ -301,24 +256,24 @@ exports.challenges = (req, res, next) => {
         res.status(500).send("Internal Server Error");
       });
   } else {
-    // Authenticate as anonymous if not logged in
-    authAnon((user) => res.json(user.challenges), req, res, next);
+    res.json(req.session.challenges || {});
   }
 };
 
 exports.updateChallenges = async (req, res, next) => {
-  const updateChallenge = async (user) => {
-    let { challenge, time } = req.body;
-    if (!challenge_list.includes(challenge)) {
-      return res.status(400).json({ message: "Invalid challenge" });
-    }
+  let { challenge, time } = req.body;
+  if (!challenge_list.includes(challenge)) {
+    return res.status(400).json({ message: "Invalid challenge" });
+  }
+  if (!time || isNaN(time) || time < 0) {
+    return res.status(400).json({ message: "Invalid time" });
+  }
+
+  const updateChallengeDB = async (user) => {
     // require that if its a hard challenge to have the start time?
     if (user.startTimes.has(challenge)) {
       time = Math.floor(new Date() - user.startTimes.get(challenge));
       user.startTimes.delete(challenge);
-    }
-    if (!time || isNaN(time) || time < 0) {
-      return res.status(400).json({ message: "Invalid time" });
     }
     if (!user.challenges.has(challenge)) {
       user.challenges.set(challenge, time);
@@ -333,15 +288,32 @@ exports.updateChallenges = async (req, res, next) => {
     return res.json(user.challenges);
   };
 
+  // store it in the user's session instead
+  const updateChallengeSession = () => {
+    if (!req.session.challenges) {
+      req.session.challenges = {};
+    }
+    if (!req.session.challenges[challenge]) {
+      req.session.challenges[challenge] = time;
+    } else {
+      req.session.challenges[challenge] = Math.min(
+        req.session.challenges[challenge],
+        time
+      );
+    }
+
+    return res.json(req.session.challenges);
+  };
+
   if (!req.isAuthenticated()) {
-    return authAnon(updateChallenge, req, res, next);
+    return updateChallengeSession();
   } else {
     try {
       const user = await User.findById(req.user._id);
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-      return updateChallenge(user);
+      return updateChallengeDB(user);
     } catch (err) {
       console.error("Error updating challenges:", err);
       return res.status(500).send("Internal Server Error");
@@ -352,7 +324,7 @@ exports.updateChallenges = async (req, res, next) => {
 exports.startHardChallenge = async (req, res, next) => {
   try {
     const { challenge } = req.body;
-    const startChallenge = async (user) => {
+    const startChallengeDB = async (user) => {
       if (user.startTimes.has(challenge)) {
         return res.status(400).json({ message: "Challenge already started" });
       }
@@ -368,15 +340,29 @@ exports.startHardChallenge = async (req, res, next) => {
         .status(200)
         .json({ message: "Challenge started successfully" });
     };
+
+    const startChallengeSession = () => {
+      if (!req.session.startTimes) {
+        req.session.startTimes = {};
+      }
+      if (req.session.startTimes[challenge]) {
+        return res.status(400).json({ message: "Challenge already started" });
+      }
+      req.session.startTimes[challenge] = new Date();
+      return res
+        .status(200)
+        .json({ message: "Challenge started successfully" });
+    };
+
     if (!req.isAuthenticated()) {
-      return authAnon(startChallenge, req, res, next);
+      return startChallengeSession();
     } else {
       const user = await User.findById(req.user._id);
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
 
-      return startChallenge(user);
+      return startChallengeDB(user);
     }
   } catch (err) {
     console.error("Error starting challenge:", err);

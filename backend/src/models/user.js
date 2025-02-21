@@ -11,11 +11,7 @@ const schema = new Schema({
   },
   password: {
     type: String,
-    required: false,
-  },
-  anonymous: {
-    type: Boolean,
-    default: false
+    required: true,
   },
   score: {
     type: Number,
