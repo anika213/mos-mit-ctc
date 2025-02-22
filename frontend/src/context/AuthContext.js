@@ -16,14 +16,12 @@ export const AuthProvider = ({ children }) => {
           });
           if (response.ok) {
             const userData = await response.json();
-            if (!userData.anonymous) {
-              setUser(userData);
-              setIsAuthenticated(true);
-              return;
-            }
+            setUser(userData);
+            setIsAuthenticated(true);
+            return;
           } 
-            setUser(null);
-            setIsAuthenticated(false); 
+          setUser(null);
+          setIsAuthenticated(false); 
         } catch (error) {
           console.error('Error fetching user: ', error);
           setUser(null);

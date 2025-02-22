@@ -8,7 +8,9 @@ const mongoose = require("mongoose");
 const MongoStore = require('connect-mongo'); // Persisting sessions
 
 
-const { BACKEND_PORT, FRONTEND_ADDRESS, SESSION_SECRET, PRODUCTION, DB_URL } = process.env;
+const { BACKEND_PORT, FRONTEND_ADDRESS, SESSION_SECRET, PRODUCTION_STR, DB_URL } = process.env;
+const PRODUCTION = PRODUCTION_STR === 'true';
+console.log(FRONTEND_ADDRESS)
 console.log(process.env)
 
 const app = express();
@@ -45,8 +47,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(routes); 
 
-app.listen(BACKEND_PORT, () => 
-{
+app.listen(BACKEND_PORT, () => {
     console.log(`REST API listening on port ${BACKEND_PORT}`);
 });
 
