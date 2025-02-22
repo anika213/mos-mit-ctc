@@ -10,8 +10,6 @@ const MongoStore = require('connect-mongo'); // Persisting sessions
 
 const { BACKEND_PORT, FRONTEND_ADDRESS, SESSION_SECRET, PRODUCTION_STR, DB_URL } = process.env;
 const PRODUCTION = PRODUCTION_STR === 'true';
-console.log(FRONTEND_ADDRESS)
-console.log(process.env)
 
 const app = express();
 
@@ -36,7 +34,7 @@ app.use(
         httpOnly: true, 
         secure: PRODUCTION, // True in production, false in dev
         sameSite: PRODUCTION ? 'none' : 'Lax', // This allows the cookie to be sent with cross-origin requests. None in production, lax in dev.
-        maxAge: 60000 *60 },
+        maxAge: 60000 * 60 },
         store: MongoStore.create({
             client: mongoose.connection.getClient()
         })
