@@ -6,9 +6,9 @@ const router = express.Router ();
 router.get("/admin", controller.admin);
 
 // Admin routes
-router.get('/users', adminController.getAllUsers);
-router.get('/challenges', adminController.getAllChallenges);
-router.delete('/users/:id', adminController.deleteUserById);
-router.delete('/challenges/:id', adminController.deleteChallengeById);
+router.get('/users', controller.getAllUsers);
+router.get('/challenges', controller.getAllChallenges);
+router.get('/delete/users/:id', controller.deleteUserById);
+router.get('/delete/challenges/:id', controller.deleteChallengeById);
 
 module.exports = router; 

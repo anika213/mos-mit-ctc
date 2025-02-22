@@ -43,8 +43,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(routes); 
 
-// Use admin routes
-app.use('/api/admin', adminRoutes);
 
 app.listen(PORT, () => 
 {

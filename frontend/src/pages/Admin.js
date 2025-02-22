@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Navbar from './Navbar.js';
 import styles from './Admin.module.css';
 
-const ADMIN_PASSWORD = "SuperSecurePassword";
+const ADMIN_PASSWORD = "abc";
 
 const Admin = () => {
     const [selectedView, setSelectedView] = useState('Users');
@@ -14,19 +14,21 @@ const Admin = () => {
 
     const fetchUsers = async () => {
         try {
-            const response = await fetch('/api/admin/users');
-            const data = await response.json();
-            setUsers(data);
+            fetch("http://localhost:8080/admin/users")
+                .then((response) => response.json())
+                .then((data) => setUsers(data))
+                .catch((error) => console.error("Error fetching users:", error));
         } catch (error) {
-            console.error('Error fetching users:', error);
+            console.log('Error fetching users:');
         }
     };
 
     const fetchChallenges = async () => {
         try {
-            const response = await fetch('/api/admin/challenges');
-            const data = await response.json();
-            setChallenges(data);
+            fetch("http://localhost:8080/admin/challenges")
+                .then((response) => response.json())
+                .then((data) => setChallenges(data))
+                .catch((error) => console.error("Error fetching challenges:", error));
         } catch (error) {
             console.error('Error fetching challenges:', error);
         }
@@ -46,7 +48,7 @@ const Admin = () => {
             setIsAuthenticated(true);
         } else {
             alert("Incorrect password!");
-        }
+        } 
     };
 
     const handleLogout = () => {
@@ -75,12 +77,12 @@ const Admin = () => {
 
     const handleDelete = async (id, type) => {
         try {
-            await fetch(`/api/admin/${type}/${id}`, { method: 'DELETE' });
-            if (type === 'users') {
-                setUsers(users.filter(user => user._id !== id));
-            } else {
-                setChallenges(challenges.filter(challenge => challenge._id !== id));
-            }
+            await fetch(`http://localhost:8080/admin/delete/${type}/${id}`);
+            // if (type === 'users') {
+            //     setUsers(users.filter(user => user._id !== id));
+            // } else {
+            //     setChallenges(challenges.filter(challenge => challenge._id !== id));
+            // }
         } catch (error) {
             console.error(`Error deleting ${type}:`, error);
         }
@@ -102,7 +104,7 @@ const Admin = () => {
                         <ul>
                             {users.map(user => (
                                 <li key={user._id}>
-                                    {user.username} - {user.email}
+                                    {user.username}
                                     <button onClick={() => handleDelete(user._id, 'users')}>Delete</button>
                                 </li>
                             ))}

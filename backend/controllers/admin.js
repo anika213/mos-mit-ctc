@@ -4,6 +4,7 @@ const Challenge = require('../models/challenge.js'); // Make sure you have this 
 // Get all users
 exports.getAllUsers = async (req, res) => {
     try {
+        console.log("trying to get all users");
         const users = await User.find();
         return res.json(users);
     } catch (error) {
@@ -26,9 +27,10 @@ exports.getAllChallenges = async (req, res) => {
 // Delete a user by ID
 exports.deleteUserById = async (req, res) => {
     try {
-        const { id } = req.params;
-        await User.findByIdAndDelete(id);
-        return res.json({ message: 'User deleted successfully' });
+        await User.findOneAndDelete({ _id: req.params.id });
+        console.log("deleting user");
+        //return res.json({ message: 'User deleted successfully' });
+        res.redirect('/users');
     } catch (error) {
         console.error('Error deleting user:', error);
         return res.status(500).json({ message: 'Internal Server Error' });
@@ -38,9 +40,10 @@ exports.deleteUserById = async (req, res) => {
 // Delete a challenge by ID
 exports.deleteChallengeById = async (req, res) => {
     try {
-        const { id } = req.params;
-        await Challenge.findByIdAndDelete(id);
-        return res.json({ message: 'Challenge deleted successfully' });
+        await Challenge.findOneAndDelete({ _id: req.params.id });
+        console.log("deleting challenge");
+        res.redirect('/challenges');
+        //return res.json({ message: 'Challenge deleted successfully' });
     } catch (error) {
         console.error('Error deleting challenge:', error);
         return res.status(500).json({ message: 'Internal Server Error' });
@@ -49,7 +52,8 @@ exports.deleteChallengeById = async (req, res) => {
 
 exports.admin = async (req, res) => {
     try {
-        const users = await User.find({})
+        const users = await User.find({});
+        console.log("in backend");
     } catch (err) {
         console.error('Error fetching leaderboard:', err);
         return res.status(500).send('Internal Server Error');
