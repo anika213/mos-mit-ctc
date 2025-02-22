@@ -2,6 +2,8 @@
 import React, { useState, Suspense, useEffect, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ChallengeNavbar from "../components/ChallengesNavbar.js";
+import ChallengeCutScene from "../components/ChallengeCutScene.js";
+
 import Navbar from "./Navbar.js";
 import styles from "./Challenge.module.css";
 
@@ -10,6 +12,16 @@ const challengeData = {
     Easy: {
       title: "RNA Splicing",
       description: "Drag each block of RNA to form a complete protein!",
+      cutScene: [
+        {
+          text: "Welcome to our RNA splicing station! After our cells write a messenger RNA, a.k.a. mRNA, which contains information to make our proteins, we need to select the parts of the mRNA which are called “exons” that will actually be used for coding our protein to help create life-saving new drug treatments! The rest, called “introns,” are spliced, or cut out.",
+          button: "Got it!"
+        },
+        {
+          text: "But not all proteins are functional! For the mRNA to make a functional protein, we need to select the right introns and exons. But, our records of what the introns and exons are in each mRNA got lost during the earthquake. Can you help us choose the right exons to make a protein that works?",
+          button: "Yes!"
+        },
+      ]
     },
     Medium: {
       title: "RNA Splicing",
@@ -153,24 +165,24 @@ function Challenge() {
             <p>For the best experience, rotate your phone to landscape mode.</p>
           </div>
         )}
-        <div className={styles.navbarWrapper}>
+        {/* <div className={styles.navbarWrapper}>
           <ChallengeNavbar
             selectedChallenge={challengeName}
             onChallengeSelect={(newChallenge) =>
               (window.location.href = `/challenge/${newChallenge}`)
             }
           />
-        </div>
+        </div> */}
         <h1 className={styles.heading}>{title}</h1>
         <p className={styles.description}>{description}</p>
-        <div className={styles.levelSelector}>
+        {/* <div className={styles.levelSelector}>
           <label>Select Level:</label>
           <select value={selectedLevel} onChange={handleLevelChange}>
             <option value="Easy">Easy</option>
             <option value="Medium">Medium</option>
             <option value="Hard">Hard</option>
           </select>
-        </div>
+        </div> */}
         <div className={styles.challengeContent}>
           {hasStarted ? (
             <Suspense fallback={<p>Loading challenge...</p>}>
@@ -178,7 +190,13 @@ function Challenge() {
             </Suspense>
           ) : (
             <div className={styles.overlay}>
-              <button
+
+              <ChallengeCutScene cutSceneList={challengeData[challengeName][selectedLevel].cutScene} startChallenge={() => {
+                  onStart();
+                  setHasStarted(true);
+                }} />
+
+              {/* <button
                 className={styles.startButton}
                 onClick={() => {
                   onStart();
@@ -186,7 +204,7 @@ function Challenge() {
                 }}
               >
                 Start
-              </button>
+              </button> */}
             </div>
           )}
         </div>

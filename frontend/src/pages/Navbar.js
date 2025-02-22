@@ -44,7 +44,7 @@ const Navbar = () => {
           <li><Link to="/" className="hover:text-gray-400 duration-500 md:mb-0 mb-7">Home</Link></li>
           <li><Link to="/newchallenge" className="hover:text-gray-400 duration-500 md:mb-0 mb-7" >Suggestions</Link></li>
           <li><Link to="/leaderboard" className="hover:text-gray-400 duration-500 md:mb-0 mb-7" >Leaderboard</Link></li>
-          <div  onClick={() => toggleDropdown(!isDropdownOpen)}
+          {/* <div  onClick={() => toggleDropdown(!isDropdownOpen)}
                 onMouseEnter={() => toggleDropdown(true)}
                 onMouseLeave={() => toggleDropdown(false)}
                 >
@@ -65,7 +65,7 @@ const Navbar = () => {
                 </ul>
               )}
             </li>
-          </div>
+          </div> */}
           {!isAuthenticated ? (
             <li><Link to="/login" className={` duration-500bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600  ${buttonStyles.redButton}`}>Login</Link></li>
           ) : (
