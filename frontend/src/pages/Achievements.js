@@ -102,7 +102,7 @@ function AchievementsModal(props) {
     useEffect(() => {
         changeAchievements();
     }
-        , [])
+        , [changeAchievements])
 
     return (
         props.isOpen ?

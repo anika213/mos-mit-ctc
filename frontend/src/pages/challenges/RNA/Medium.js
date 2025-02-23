@@ -22,7 +22,6 @@ const Medium = ({onComplete}) => {
     const [grid, setGrid] = useState(
         gridLetters.map((row) => row.map(() => false))
     );
-    const [clickedCells, setClickedCells] = useState([]);
 
     const handleCellClick = (rowIndex, colIndex) => {
         playClick();
@@ -80,7 +79,6 @@ const Medium = ({onComplete}) => {
                 if (cell) clicked.push({ row: rowIndex, col: colIndex });
             })
         );
-        setClickedCells(clicked);
 
         // check whether clicked cells are correct
         let correct = true;

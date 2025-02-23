@@ -55,7 +55,7 @@ function Challenge() {
   // const [selectedChallenge, setSelectedChallenge] = useState(challengeName);
   const [startTime, setStartTime] = useState(Date.now());
   const [selectedLevel, setSelectedLevel] = useState("Easy");
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [hasStarted, setHasStarted] = useState(false);
 
   const updateLevelAndStartTime = useCallback((level) => {
@@ -92,7 +92,7 @@ function Challenge() {
   const onStart = () => {
     setStartTime(Date.now());
 
-    if (selectedLevel == "Hard") {
+    if (selectedLevel === "Hard") {
       fetch(process.env.REACT_APP_API_URL + "/users/start", {
         headers: {
           "Content-Type": "application/json",

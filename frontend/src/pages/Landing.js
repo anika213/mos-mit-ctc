@@ -8,7 +8,7 @@ import mit from '../assets/mit.png';
 import mos from '../assets/mos.jpg';
 import dna from '../assets/dna.jpg';
 import AchievementsModal from './Achievements.js'
-import { useNavigate, useDisclosure } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 
