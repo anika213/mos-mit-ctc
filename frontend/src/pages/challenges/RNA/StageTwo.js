@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import buttonStyles from "../../Buttons.module.css"
-import styles from "./Medium.module.css";
+import styles from "./StageTwo.module.css";
 import Popup from "../../../components/Popup";
 import {playClick, victoryClick, incorrectClick} from '../../../components/ChallengesSound';
 
@@ -13,7 +13,7 @@ import {playClick, victoryClick, incorrectClick} from '../../../components/Chall
 const sequence =
   "AUGCGCUAAGGUGGGAGGCAUGGAAUAGGCUAUGGGUAAUAGGGUAUGGUCAAAAGCAUGGGCUAAGUCGAAUACAGCUAUGA";
 
-const Medium = ({onComplete}) => {
+const RNASplicingMedium = ({onComplete}) => {
     const gridSize = 12; // Adjust grid size (12x7 for this sequence)
     const gridLetters = Array.from({ length: Math.ceil(sequence.length / gridSize) }, (_, rowIndex) =>
         sequence.slice(rowIndex * gridSize, (rowIndex + 1) * gridSize).split("")
@@ -147,5 +147,5 @@ const Medium = ({onComplete}) => {
     );
 };
 
-export default Medium;
+export default RNASplicingMedium;
 

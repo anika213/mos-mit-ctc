@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import styles from "./Hard.module.css";
+import styles from "./Wireless.module.css";
 
-const Hard = () => {
+const Wireless = ({onComplete}) => {
     const [inputValue, setInputValue] = useState("");
 
     const handleInputChange = (event) => {
@@ -10,6 +10,8 @@ const Hard = () => {
 
     const handleDone = () => {
         console.log("Input value:", inputValue);
+
+        onComplete();
     };
 
     return (
@@ -28,4 +30,4 @@ const Hard = () => {
     );
 };
 
-export default Hard;
+export default Wireless;

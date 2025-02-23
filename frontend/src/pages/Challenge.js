@@ -1,78 +1,81 @@
 // Challenge.js
 import React, { useState, Suspense, useEffect, useCallback } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import ChallengeNavbar from "../components/ChallengesNavbar.js";
+import { useParams } from "react-router-dom";
 import Navbar from "./Navbar.js";
 import styles from "./Challenge.module.css";
 
+// Challenge metadata
 const challengeData = {
   RNA: {
-    Easy: {
+    StageOne: {
       title: "RNA Splicing",
       description: "Drag each block of RNA to form a complete protein!",
     },
-    Medium: {
+    StageTwo: {
       title: "RNA Splicing",
       description: "Select all the introns in the given RNA sequence.",
     },
-    Hard: {
-      title: "RNA Splicing",
-      description: "Hard description",
-    },
   },
-  Molecules: {
-    Easy: {
+  MolecularDocking: {
+    StageOne: {
       title: "Molular docking",
       description: "Connect each molecule to its corresponding binding site",
     },
-    Medium: {
+    StageTwo: {
       title: "Molular docking",
       description: "Connect each molecule to its corresponding binding site",
     },
-    Hard: {
-      title: "Molecular Docking",
-      description: "Hard Description.",
-    },
   },
-  Wireless: {
-    Easy: {
+  WirelessDetection: {
+    StageOne: {
       title: "Wireless Detection",
       description: "Classify each breathing pattern as regular or irregular.",
     },
-    Medium: {
+    StageTwo: {
       title: "Wireless Detection",
       description: "Classify each breathing pattern",
     },
-    Hard: {
-      title: "Wireless Detection",
-      description: "Hard Description.",
-    },
   },
+  Expert: {
+    RNA: {
+      title: "RNA Splicing",
+      description: "Pending",
+    },
+    MolecularDocking: {
+      title: "Molecular Docking",
+      description: "Pending",
+    },
+    WirelessDetection: {
+      title: "Wireless Detection",
+      description: "Pending",
+    },
+  }
 };
 
 function Challenge() {
-  let { challengeName } = useParams();
-  // const [selectedChallenge, setSelectedChallenge] = useState(challengeName);
+  let { challengeName, stage } = useParams();
+
   const [startTime, setStartTime] = useState(Date.now());
   const [selectedLevel, setSelectedLevel] = useState("Easy");
-  // const navigate = useNavigate();
   const [hasStarted, setHasStarted] = useState(false);
+
+  const DynamicChallengeComponent = React.lazy(() =>
+    import(`./challenges/${challengeName}/${stage}.js`).catch(() =>
+      import("../components/ChallengeFallback.js")
+    )
+  );
 
   const updateLevelAndStartTime = useCallback((level) => {
     setSelectedLevel(level);
     setHasStarted(false);
   }, []);
 
-  const handleLevelChange = (event) => {
-    updateLevelAndStartTime(event.target.value);
-  };
-
   useEffect(() => {
     // Reset to Easy level whenever the challenge changes
     updateLevelAndStartTime("Easy");
   }, [challengeName, updateLevelAndStartTime]);
 
-  const { title, description } = challengeData[challengeName][selectedLevel];
+  const { title, description } = challengeData[challengeName][stage];
 
   const [showPopup, setShowPopup] = useState(false);
 
@@ -136,12 +139,6 @@ function Challenge() {
       });
   }, [challengeName, selectedLevel, startTime]);
 
-  const DynamicChallengeComponent = React.lazy(() =>
-    import(`./challenges/${challengeName}/${selectedLevel}.js`).catch(() =>
-      import("../components/ChallengeFallback.js")
-    )
-  );
-
   return (
     <div>
       <Navbar />
@@ -153,24 +150,8 @@ function Challenge() {
             <p>For the best experience, rotate your phone to landscape mode.</p>
           </div>
         )}
-        <div className={styles.navbarWrapper}>
-          <ChallengeNavbar
-            selectedChallenge={challengeName}
-            onChallengeSelect={(newChallenge) =>
-              (window.location.href = `/challenge/${newChallenge}`)
-            }
-          />
-        </div>
         <h1 className={styles.heading}>{title}</h1>
         <p className={styles.description}>{description}</p>
-        <div className={styles.levelSelector}>
-          <label>Select Level:</label>
-          <select value={selectedLevel} onChange={handleLevelChange}>
-            <option value="Easy">Easy</option>
-            <option value="Medium">Medium</option>
-            <option value="Hard">Hard</option>
-          </select>
-        </div>
         <div className={styles.challengeContent}>
           {hasStarted ? (
             <Suspense fallback={<p>Loading challenge...</p>}>

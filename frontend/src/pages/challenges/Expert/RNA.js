@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import styles from "./Hard.module.css";
+import styles from "./RNA.module.css";
 
-const Hard = () => {
+const RNA = () => {
     const [inputValue, setInputValue] = useState("");
 
     const handleInputChange = (event) => {
@@ -28,4 +28,4 @@ const Hard = () => {
     );
 };
 
-export default Hard;
+export default RNA;
