@@ -2,6 +2,7 @@ const passport = require("../utils/passportConfig.js");
 const hashPassword = require("../utils/bcryptHash.js");
 
 const User = require("../models/user.js");
+const Report = require('../models/report.js');
 const { validationResult } = require("express-validator");
 
 exports.registerUser = async (req, res) => {
@@ -191,6 +192,34 @@ exports.deleteUser = async (req, res) => {
     return res.status(500).json({ message: "Error deleting user" });
   }
 };
+
+// Create a user report
+exports.createReport = async (req, res) => {
+  const validationErrors = validationResult(req);
+
+  if (!validationErrors.isEmpty()) {
+      return res.status(400).json({ errors: validationErrors.array() });
+  }
+
+  const { reportee, reason } = req.body;
+
+  try {
+      const report = new Report({
+          reporter: req.user._id,
+          reportee,
+          reason,
+      });
+
+      await report.save();
+      
+      return res.status(201).json({ message: 'Report submitted successfully!' });
+
+  } catch (err) {
+      console.log(err);
+      return res.status(500).json({ message: 'Error submitting report' });
+  }
+};
+
 
 // CHALLENGES STUFF
 

@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const { Schema, model, Types } = mongoose;
+const { Schema } = mongoose;
 
 
 const schema = new Schema({
