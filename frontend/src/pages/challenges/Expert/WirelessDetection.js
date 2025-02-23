@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import styles from "./Wireless.module.css";
+import styles from "./WirelessDetection.module.css";
 
 const Wireless = ({onComplete}) => {
     const [inputValue, setInputValue] = useState("");

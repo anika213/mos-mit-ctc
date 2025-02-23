@@ -6,6 +6,7 @@ import Leaderboard from './pages/Leaderboard'
 import Register from './pages/Register';
 import Challenge from './pages/Challenge';
 import AddChallenges from './pages/AddChallenges';
+import Laboratory from './pages/Laboratory';
 // import Easy from './pages/challenges/Wireless/Easy';
 // import Medium from './pages/challenges/Wireless/Medium';
 
@@ -18,6 +19,7 @@ function App() {
         <Route path="/leaderboard" element={<Leaderboard />}/>
         <Route path="/register" element={<Register />} />
         <Route path='/newchallenge' element={<AddChallenges/>}/>
+        <Route path='/laboratory' element={<Laboratory/>}/>
         <Route path="/challenge/:challengeName/:stage" element={<Challenge />}>
          
           {/* <Route path='rna' element={<RNAChallenge/>}/>

@@ -7,7 +7,6 @@ import { AuthContext } from '../context/AuthContext';
 
 const Navbar = () => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isDropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
   const { isAuthenticated, logout } = useContext(AuthContext);
 
@@ -19,17 +18,6 @@ const Navbar = () => {
     logout(); // Calls the logout function from AuthContext
     navigate('/');
   };
-
-  const toggleDropdown = (state) => {
-    setDropdownOpen(state);
-  };
-
-  const handleChallengeClick = (link) => {
-    navigate(link);
-    setDropdownOpen(false);
-    setMobileMenuOpen(false);
-
-  }
 
   return (
     <nav className="bg-black text-white z-10">
@@ -44,28 +32,7 @@ const Navbar = () => {
           <li><Link to="/" className="hover:text-gray-400 duration-500 md:mb-0 mb-7">Home</Link></li>
           <li><Link to="/newchallenge" className="hover:text-gray-400 duration-500 md:mb-0 mb-7" >Suggestions</Link></li>
           <li><Link to="/leaderboard" className="hover:text-gray-400 duration-500 md:mb-0 mb-7" >Leaderboard</Link></li>
-          <div  onClick={() => toggleDropdown(!isDropdownOpen)}
-                onMouseEnter={() => toggleDropdown(true)}
-                onMouseLeave={() => toggleDropdown(false)}
-                >
-            <li className="relative group duration-500 md:list-item flex flex-col items-center" >
-                <span 
-                className="cursor-pointer hover:text-gray-400 duration-500 pb-2" 
-               
-                >
-                  Challenges ▼
-                </span>
-                {isDropdownOpen && (
-                <ul className="md:absolute static left-0 md:p-4 p-0 bg-black text-white shadow-lg rounded-md w-48 "
-                
-                >
-                  <li className="p-2 hover:bg-gray-700 duration-300 rounded-md"><button className="md:block w-full inline md:w-auto" onClick={() => handleChallengeClick('/challenge/RNA')}>RNA Challenge</button></li>
-                  <li className="p-2 hover:bg-gray-700 duration-300 rounded-md"><button className="block w-full md:inline md:w-auto" onClick={() => handleChallengeClick('/challenge/Molecules')}>Molecular Docking</button></li>
-                  <li className="p-2 hover:bg-gray-700 duration-300 rounded-md"><button className="block w-full md:inline md:w-auto" onClick={() => handleChallengeClick('/challenge/Wireless')}>Wireless Detection</button></li>
-                </ul>
-              )}
-            </li>
-          </div>
+          <li><Link to="/laboratory" className="hover:text-gray-400 duration-500 md:mb-0 mb-7" >Laboratory</Link></li>
           {!isAuthenticated ? (
             <li><Link to="/login" className={` duration-500bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600  ${buttonStyles.redButton}`}>Login</Link></li>
           ) : (

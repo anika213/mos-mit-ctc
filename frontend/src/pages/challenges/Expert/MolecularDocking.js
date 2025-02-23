@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import styles from "./Molecules.module.css";
+import styles from "./MolecularDocking.module.css";
 
 const Molecules = () => {
     const [inputValue, setInputValue] = useState("");
