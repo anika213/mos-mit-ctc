@@ -29,40 +29,8 @@ passport.use(
   })
 );
 
-async function createAnonymousUser(req, done) {
-  try {
-    const anonUser = new User({
-      anonymous: true,
-      username: `Guest_${Date.now()}`,
-      score: 0,
-      challenges: {},
-    });
-    await anonUser.save();
-    // Store anonymous user id in session
-    req.session.anonymousUserId = anonUser._id;
-    return done(null, anonUser);
-  } catch (err) {
-    return done(err);
-  }
-}
-
-passport.use('anonymous',
-  new CustomStrategy(function (req, done) {
-    if (req.session.anonymousUserId) {
-      User.findById(req.session.anonymousUserId, (err, user) => {
-        if (err) return done(err);
-        if (user) return done(null, user);
-        return createAnonymousUser(req, done);
-      });
-    } else {
-      return createAnonymousUser(req, done);
-    }
-  })
-);
-
 // Stores the authenticated user in the session. Not the entire object since that has privacy concerns.
 passport.serializeUser((user, done) => {
-  console.log(`Serializing: ${user}`);
   done(null, user.id);
 });
 
@@ -70,10 +38,8 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser(async (id, done) => {
   // Search for user in database.
   try {
-    console.log(`Deserializing user with id: ${id}`);
     const user = await User.findById(id);
     if (!user) throw new Error("User not found");
-    console.log(`Deserialized user: ${user}`);
     done(null, user); // Reattach the full user object to req.user
   } catch (err) {
     done(err, null);

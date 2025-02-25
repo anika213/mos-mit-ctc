@@ -65,7 +65,7 @@ function getPlots() {
   return duplicatedPlots;
 }
 
-function Medium({ onComplete }) {
+function WirelessDetectionMed ({ onComplete }) {
   const [currentPlot, setCurrentImage] = useState(0);
   const [alertShowing, setAlertShowing] = useState(false);
   const [alertText, setAlertText] = useState("");
@@ -177,4 +177,4 @@ function Medium({ onComplete }) {
   );
 }
 
-export default Medium;
+export default WirelessDetectionMed;

@@ -32,7 +32,7 @@ function getPlots() {
   return plots;
 }
 
-function Easy({ onComplete }) {
+function WirelessDetectionEasy ({ onComplete }) {
   const [currentPlot, setCurrentImage] = useState(0);
   const [alertShowing, setAlertShowing] = useState(false);
   const [alertText, setAlertText] = useState("");
@@ -95,4 +95,4 @@ function Easy({ onComplete }) {
   );
 }
 
-export default Easy;
+export default WirelessDetectionEasy;

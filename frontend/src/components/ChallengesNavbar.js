@@ -6,6 +6,7 @@ function ChallengeNavbar({ selectedChallenge, onChallengeSelect }) {
     RNA: "RNA Splicing",
     Molecules: "Molecular Docking",
     Wireless: "Wireless Detection",
+    Expert: "Expert",
   };
 
   return (

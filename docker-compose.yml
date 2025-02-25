@@ -55,7 +55,7 @@ services:
             - ./backend:/srv/mos-mit-ctc/backend:ro
 
         working_dir: /srv/mos-mit-ctc/backend
-        command: yarn start
+        command: yarn start-dev
         environment:
             DB_URL: mongodb://mos-mit-ctc:local_dev@db
 

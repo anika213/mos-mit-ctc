@@ -10,20 +10,18 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
       const fetchUser = async () => {
         try {
-          const response = await fetch('http://localhost:8080/users/status', {
+          const response = await fetch(process.env.REACT_APP_API_URL + '/users/status', {
             method: 'GET',
             credentials: 'include',
           });
           if (response.ok) {
             const userData = await response.json();
-            if (!userData.anonymous) {
-              setUser(userData);
-              setIsAuthenticated(true);
-              return;
-            }
+            setUser(userData);
+            setIsAuthenticated(true);
+            return;
           } 
-            setUser(null);
-            setIsAuthenticated(false); 
+          setUser(null);
+          setIsAuthenticated(false); 
         } catch (error) {
           console.error('Error fetching user: ', error);
           setUser(null);
@@ -43,7 +41,7 @@ export const AuthProvider = ({ children }) => {
     // Logout function to clear the user and authentication state
     const logout = async () => {
       try {
-        await fetch('http://localhost:8080/users/logout', {
+        await fetch(process.env.REACT_APP_API_URL + '/users/logout', {
           method: 'POST',
           credentials: 'include',
         });

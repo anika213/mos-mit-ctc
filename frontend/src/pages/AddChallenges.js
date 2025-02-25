@@ -16,7 +16,7 @@ function AddChallenges() {
 
     const handleDone = () => {
         console.log("Input value:", inputValue);
-        fetch('http://localhost:8080/challenges/add', {
+        fetch(process.env.REACT_APP_API_URL + '/challenges/add', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

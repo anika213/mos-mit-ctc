@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {dingClick, victoryClick, incorrectClick} from '../../../components/ChallengesSound';
 import Konva from "konva";
 import protein1 from "../../../assets/protein1.png";

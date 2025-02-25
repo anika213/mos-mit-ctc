@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import styles from "./Hard.module.css";
+import styles from "./RNA.module.css";
 
-const Hard = ({onComplete}) => {
+const RNA = () => {
     const [inputValue, setInputValue] = useState("");
 
     const handleInputChange = (event) => {
@@ -10,8 +10,6 @@ const Hard = ({onComplete}) => {
 
     const handleDone = () => {
         console.log("Input value:", inputValue);
-
-        onComplete();
     };
 
     return (
@@ -30,4 +28,4 @@ const Hard = ({onComplete}) => {
     );
 };
 
-export default Hard;
+export default RNA;
