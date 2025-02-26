@@ -1,7 +1,7 @@
 
 // Register user
 // Should probably run a schema validator before continuing the registration process
-const Challenge = require('../models/challenge.js');
+const Challenge = require('../../models/challenge.js');
 exports.addChallenge = async (req, res) => {
     const { body } = req
     // save the body of the request to the database mongoDB, the collection "suggestedChallenges" // TODO: double check this bit

@@ -1,9 +1,11 @@
 // User-specific routes such as registration and login
 const express = require ("express"); 
-const controller = require ("../../controllers/users"); 
+const controller = require ("../../controllers/users/users"); 
+const userChallenges = require("./challenges");
 const router = express.Router (); 
 const userValidationSchema = require ("../../validators/userValidation"); 
 const reportValidationSchema = require('../../validators/reportValidation');
+
 
 // Registration route
 router.post('/register', userValidationSchema, controller.registerUser);
@@ -17,10 +19,6 @@ router.post('/logout', controller.logoutUser);
 // // Protected dashboard route for testing
 router.get('/status', controller.status);
 
-// Leaderboard route
-router.get('/leaderboard', controller.leaderboard);
-
-router.get('/leaderboard/:challenge', controller.challenge_leaderboard);
 
 // Change username or password
 router.put('/change-username', userValidationSchema, controller.changeUsername);
@@ -32,12 +30,6 @@ router.post('/report', reportValidationSchema, controller.createReport);
 // Delete user
 router.delete('/delete-user', controller.deleteUser);
 
-// Challenges route
-router.get('/challenges', controller.challenges);
-
-// Update challenges route
-router.post('/challenges', controller.updateChallenges);
-
-router.post('/start', controller.startHardChallenge);
+router.use('/challenges', userChallenges);
 
 module.exports = router; 

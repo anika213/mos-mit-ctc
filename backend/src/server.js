@@ -48,5 +48,3 @@ app.use(routes);
 app.listen(BACKEND_PORT, () => {
     console.log(`REST API listening on port ${BACKEND_PORT}`);
 });
-
-// console.log(require('crypto').randomBytes(64).toString('hex'))

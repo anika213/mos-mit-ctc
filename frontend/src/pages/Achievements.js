@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { fetchAPI } from '../utils/utils';
 import buttonStyles from './Buttons.module.css'
 import rnaComplete from '../assets/badges/rna-complete.png';
 import rnaExpert from '../assets/badges/rna-expert.png';
@@ -35,7 +36,7 @@ function AchievementsModal(props) {
     })
 
     const changeAchievements = async () => {
-        const response = await fetch(process.env.REACT_APP_API_URL + '/users/challenges', {
+        const response = await fetchAPI('/users/challenges', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'

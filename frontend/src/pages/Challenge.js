@@ -3,6 +3,7 @@ import React, { useState, Suspense, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import Navbar from "./Navbar.js";
 import styles from "./Challenge.module.css";
+import { fetchAPI } from "../utils/utils.js";
 
 // Challenge metadata
 const challengeData = {
@@ -96,15 +97,11 @@ function Challenge() {
     setStartTime(Date.now());
 
     if (selectedLevel === "Hard") {
-      fetch(process.env.REACT_APP_API_URL + "/users/start", {
-        headers: {
-          "Content-Type": "application/json",
-        },
+      fetchAPI('/users/challenges/start', {
         method: "POST",
-        credentials: "include",
-        body: JSON.stringify({
+        body: {
           challenge: `${challengeName}-${selectedLevel}`,
-        }),
+        },
       })
         .then((res) => res.json())
         .then((data) => {
@@ -119,23 +116,23 @@ function Challenge() {
   const onComplete = useCallback(() => {
     // mark challenge as complete in the backend
     const endTime = Date.now();
-    fetch(process.env.REACT_APP_API_URL + "/users/challenges", {
-      headers: {
-        "Content-Type": "application/json",
-      },
+    fetchAPI("/users/challenges", {
       method: "POST",
+      headers: {
+      "Content-Type": "application/json",
+      },
       credentials: "include",
-      body: JSON.stringify({
-        challenge: `${challengeName}-${selectedLevel}`,
-        time: endTime - startTime,
-      }),
+      body: {
+      challenge: `${challengeName}-${selectedLevel}`,
+      time: endTime - startTime,
+      },
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+      console.log(data);
       })
       .catch((error) => {
-        console.error("Error updating challenges:", error);
+      console.error("Error updating challenges:", error);
       });
   }, [challengeName, selectedLevel, startTime]);
 

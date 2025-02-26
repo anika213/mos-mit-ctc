@@ -33,3 +33,7 @@ export function toAlphabetBase26(i) {
 export function getRandom(min, max) {
   return Math.random() * (max - min) + min;
 }
+
+export function fetchAPI(path, options) {
+  return fetch(process.env.REACT_APP_API_URL + path, options);
+}
