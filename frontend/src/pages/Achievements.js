@@ -9,29 +9,36 @@ import moleculesTime from '../assets/badges/molecules-time.png';
 import wirelessComplete from '../assets/badges/wireless-complete.png';
 import wirelessExpert from '../assets/badges/wireless-expert.png';
 import wirelessTime from '../assets/badges/wireless-time.png';
-import unavailableBadge from '../assets/badges/badge-unavailable.png';
+import allTime from '../assets/badges/all-time.png';
+import allComplete from '../assets/badges/all-complete.png';
+import allExpert from '../assets/badges/all-expert.png';
+import allBadges from '../assets/badges/all-badges.png';
+import allDefault from '../assets/badges/all-default.png';
+import unavailableBadgeDefault from '../assets/badges/unavailable-default.png';
+import unavailableBadgeExpert from '../assets/badges/unavailable-expert.png';
+import unavailableBadgeTime from '../assets/badges/unavailable-time.png';
 
 
 function AchievementsModal(props) {
 
     const [achievementsDict, setAchievementsDict] = useState({
-        'RNA-Complete': [false, rnaComplete],
-        'Molecules-Complete': [false, moleculesComplete],
-        'Wireless-Complete': [false, wirelessComplete],
+        'RNA-Complete': [false, rnaComplete, unavailableBadgeDefault],
+        'Molecules-Complete': [false, moleculesComplete, unavailableBadgeDefault],
+        'Wireless-Complete': [false, wirelessComplete, unavailableBadgeDefault],
 
-        'RNA-Expert': [false, rnaExpert],
-        'Molecules-Expert': [false, moleculesExpert],
-        'Wireless-Expert': [false, wirelessExpert],
+        'RNA-Expert': [false, rnaExpert, unavailableBadgeExpert],
+        'Molecules-Expert': [false, moleculesExpert, unavailableBadgeExpert],
+        'Wireless-Expert': [false, wirelessExpert, unavailableBadgeExpert],
 
-        'RNA-Time': [false, rnaTime],
-        'Molecules-Time': [false, moleculesTime],
-        'Wireless-Time': [false, wirelessTime],
+        'RNA-Time': [false, rnaTime, unavailableBadgeTime],
+        'Molecules-Time': [false, moleculesTime, unavailableBadgeTime],
+        'Wireless-Time': [false, wirelessTime, unavailableBadgeTime],
 
-        'All-Complete': [false, 'imgsrc'],
-        'All-Time': [false, 'imgsrc'],
-        'All-Expert': [false, 'imgsrc'],
-        'All-Complete-Expert': [false, 'imgsrc'],
-        'All-Achievements': [false, 'imgsrc'],
+        'All-Complete': [false, allDefault, unavailableBadgeDefault],
+        'All-Time': [false, allTime, unavailableBadgeTime],
+        'All-Expert': [false, allExpert, unavailableBadgeExpert],
+        'All-Complete-Expert': [false, allComplete, unavailableBadgeExpert],
+        'All-Achievements': [false, allBadges, unavailableBadgeExpert],
     })
 
     const changeAchievements = async () => {
@@ -113,7 +120,7 @@ function AchievementsModal(props) {
                         <div className='flex flex-wrap justify-between items-center w-full my-8'>
                             {Object.keys(achievementsDict).map((key) => {
                                 return (
-                                    <img key={key} className='w-[14%] h-auto p-2' src={achievementsDict[key][0] ? achievementsDict[key][1] : unavailableBadge} alt={key} />
+                                    <img key={key} className='w-[14%] h-auto p-2' src={achievementsDict[key][0] ? achievementsDict[key][1] : achievementsDict[key][2]} alt={key} />
                                 )
                             }
                             )}
