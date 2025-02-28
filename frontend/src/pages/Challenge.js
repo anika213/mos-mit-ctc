@@ -17,7 +17,7 @@ const challengeData = {
       description: "Select all the introns in the given RNA sequence.",
     },
   },
-  MolecularDocking: {
+  Molecules: {
     StageOne: {
       title: "Molular docking",
       description: "Connect each molecule to its corresponding binding site",
@@ -27,7 +27,7 @@ const challengeData = {
       description: "Connect each molecule to its corresponding binding site",
     },
   },
-  WirelessDetection: {
+  Wireless: {
     StageOne: {
       title: "Wireless Detection",
       description: "Classify each breathing pattern as regular or irregular.",
