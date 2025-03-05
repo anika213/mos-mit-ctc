@@ -16,38 +16,49 @@ const challengeData = {
       cutScene: [
         {
           text: "Welcome to our RNA splicing station! After our cells write a messenger RNA, a.k.a. mRNA, which contains information to make our proteins, we need to select the parts of the mRNA which are called “exons” that will actually be used for coding our protein to help create life-saving new drug treatments! The rest, called “introns,” are spliced, or cut out.",
-          button: "Got it!"
+          button: "Got it!",
         },
         {
           text: "But not all proteins are functional! For the mRNA to make a functional protein, we need to select the right introns and exons. But, our records of what the introns and exons are in each mRNA got lost during the earthquake. Can you help us choose the right exons to make a protein that works?",
-          button: "Yes!"
+          button: "Yes!",
         },
+      ],
+      hints: [
+        "Hint 1",
+        "Hint 2"
       ]
     },
-    
+
     StageTwo: {
       title: "RNA Splicing",
       description: "Select all the introns in the given RNA sequence.",
+      hints: [
+
+      ]
     },
   },
   Molecules: {
     StageOne: {
       title: "Molular docking",
       description: "Connect each molecule to its corresponding binding site",
+      hints: []
     },
     StageTwo: {
       title: "Molular docking",
       description: "Connect each molecule to its corresponding binding site",
+      hints: []
     },
   },
   Wireless: {
     StageOne: {
       title: "Wireless Detection",
       description: "Classify each breathing pattern as regular or irregular.",
+      hints: []
     },
     StageTwo: {
       title: "Wireless Detection",
       description: "Classify each breathing pattern",
+      hints: []
     },
   },
   Expert: {
@@ -63,8 +74,9 @@ const challengeData = {
       title: "Wireless Detection",
       description: "Pending",
     },
-  }
+  },
 };
+
 
 function Challenge() {
   let { challengeName, stage } = useParams();
@@ -72,12 +84,15 @@ function Challenge() {
   const [startTime, setStartTime] = useState(Date.now());
   const [selectedLevel, setSelectedLevel] = useState("Easy");
   const [hasStarted, setHasStarted] = useState(false);
-
-  const DynamicChallengeComponent = React.lazy(() =>
+  const [showHint, setShowHint] = useState(false);
+  const [currentHint, setCurrentHint] = useState("");
+  const [hintIndex, setHintIndex] = useState(0);
+  
+  const DynamicChallengeComponent = React.useMemo(() => React.lazy(() =>
     import(`./challenges/${challengeName}/${stage}.js`).catch(() =>
       import("../components/ChallengeFallback.js")
     )
-  );
+  ), [challengeName, stage]);
 
   const updateLevelAndStartTime = useCallback((level) => {
     setSelectedLevel(level);
@@ -89,7 +104,7 @@ function Challenge() {
     updateLevelAndStartTime("Easy");
   }, [challengeName, updateLevelAndStartTime]);
 
-  const { title, description } = challengeData[challengeName][stage];
+  const { title, description, hints } = challengeData[challengeName][stage];
 
   const [showPopup, setShowPopup] = useState(false);
 
@@ -110,11 +125,11 @@ function Challenge() {
     setStartTime(Date.now());
 
     if (selectedLevel === "Hard") {
-      fetchAPI('/users/challenges/start', {
+      fetchAPI("/users/challenges/start", {
         method: "POST",
-        body: {
+        body: JSON.stringify({
           challenge: `${challengeName}-${selectedLevel}`,
-        },
+        }),
       })
         .then((res) => res.json())
         .then((data) => {
@@ -132,22 +147,36 @@ function Challenge() {
     fetchAPI("/users/challenges", {
       method: "POST",
       headers: {
-      "Content-Type": "application/json",
+        "Content-Type": "application/json",
       },
       credentials: "include",
-      body: {
-      challenge: `${challengeName}-${selectedLevel}`,
-      time: endTime - startTime,
-      },
+      body: JSON.stringify({
+        challenge: `${challengeName}-${selectedLevel}`,
+        time: endTime - startTime,
+      }),
     })
       .then((res) => res.json())
       .then((data) => {
-      console.log(data);
+        console.log(data);
       })
       .catch((error) => {
-      console.error("Error updating challenges:", error);
+        console.error("Error updating challenges:", error);
       });
   }, [challengeName, selectedLevel, startTime]);
+
+  const getHint = () => {
+    const newIndex = (hintIndex + 1) % hints.length;
+    setCurrentHint(hints[newIndex]);
+    setHintIndex(newIndex);
+    setShowHint(true);
+  };
+
+  // Reset hint state when challenge changes
+  useEffect(() => {
+    setShowHint(false);
+    setCurrentHint("");
+    setHintIndex(-1);
+  }, [challengeName, stage]);
 
   return (
     <div>
@@ -164,32 +193,52 @@ function Challenge() {
         <p className={styles.description}>{description}</p>
         <div className={styles.challengeContent}>
           {hasStarted ? (
-            <Suspense fallback={<p>Loading challenge...</p>}>
-              <DynamicChallengeComponent onComplete={onComplete} />
-            </Suspense>
+            <>
+              <Suspense fallback={<p>Loading challenge...</p>}>
+                <DynamicChallengeComponent onComplete={onComplete} />
+              </Suspense>
+              <div className={styles.hintContainer}>
+                <button 
+                  className={styles.hintButton} 
+                  onClick={getHint}
+                >
+                  Get Hint
+                </button>
+              </div>
+              {showHint && (
+                <div className={styles.hintBox}>
+                  <h2>Hint {hintIndex + 1} / {hints.length}</h2>
+                  <p>{currentHint}</p>
+                  <button 
+                    className={styles.closeHintButton}
+                    onClick={() => setShowHint(false)}
+                  >
+                    Close
+                  </button>
+                </div>
+              )}
+            </>
           ) : (
             <div className={styles.overlay}>
-
-              {challengeData[challengeName][stage].cutScene ? 
-                <ChallengeCutScene cutSceneList={challengeData[challengeName][stage].cutScene} startChallenge={() => {
-                onStart();
-                setHasStarted(true);
-              }} /> : 
-
-              <button
-                className={styles.startButton}
-                onClick={() => {
-                  onStart();
-                  setHasStarted(true);
-                }}
-              >
-                Start
-              </button>
-            }
-              
-
-
-              
+              {challengeData[challengeName][stage].cutScene ? (
+                <ChallengeCutScene
+                  cutSceneList={challengeData[challengeName][stage].cutScene}
+                  startChallenge={() => {
+                    onStart();
+                    setHasStarted(true);
+                  }}
+                />
+              ) : (
+                <button
+                  className={styles.startButton}
+                  onClick={() => {
+                    onStart();
+                    setHasStarted(true);
+                  }}
+                >
+                  Start
+                </button>
+              )}
             </div>
           )}
         </div>

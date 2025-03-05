@@ -4,10 +4,10 @@ const controller = require ("../../controllers/users/userChallenges");
 const router = express.Router (); 
 
 // Challenges route
-router.get('/challenges', controller.challenges);
+router.get('/', controller.challenges);
 
 // Update challenges route
-router.post('/challenges', controller.updateChallenges);
+router.post('/', controller.updateChallenges);
 
 // start challenges route
 router.post('/start', controller.startHardChallenge);
