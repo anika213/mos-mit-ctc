@@ -4,6 +4,7 @@ import dna from '../assets/dna.jpg';
 import Navbar from './Navbar.js'
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { fetchAPI } from '../utils/utils';
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext.js';
 import { InputAdornment, IconButton, Input } from '@mui/material';
@@ -26,7 +27,7 @@ function Login() {
     e.preventDefault();
 
     try {
-      const response = await fetch(process.env.REACT_APP_API_URL + '/users/login', {
+      const response = await fetchAPI('/users/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

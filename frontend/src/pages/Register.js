@@ -3,6 +3,7 @@ import styles from './Register.module.css';
 import dna from '../assets/dna.jpg';
 import Navbar from './Navbar.js'
 import { useState } from 'react';
+import { fetchAPI } from '../utils/utils';
 import { useNavigate } from 'react-router-dom';
 import { InputAdornment, IconButton, Input } from '@mui/material';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
@@ -28,7 +29,7 @@ function Register() {
     }
 
     try {
-        const response = await fetch(process.env.REACT_APP_API_URL + '/users/register', {
+        const response = await fetchAPI('/users/register', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { fetchAPI } from '../utils/utils';
 import styles from "./AddChallenges.module.css";
 import Navbar from "./Navbar";
 
@@ -16,7 +17,7 @@ function AddChallenges() {
 
     const handleDone = () => {
         console.log("Input value:", inputValue);
-        fetch(process.env.REACT_APP_API_URL + '/challenges/add', {
+        fetchAPI('/challenges/add', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

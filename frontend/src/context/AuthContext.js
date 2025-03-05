@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
+import { fetchAPI } from '../utils/utils';
 
 export const AuthContext = createContext();
 
@@ -10,7 +11,7 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
       const fetchUser = async () => {
         try {
-          const response = await fetch(process.env.REACT_APP_API_URL + '/users/status', {
+          const response = await fetchAPI('/users/status', {
             method: 'GET',
             credentials: 'include',
           });
@@ -41,7 +42,7 @@ export const AuthProvider = ({ children }) => {
     // Logout function to clear the user and authentication state
     const logout = async () => {
       try {
-        await fetch(process.env.REACT_APP_API_URL + '/users/logout', {
+        fetchAPI('/users/logout', {
           method: 'POST',
           credentials: 'include',
         });

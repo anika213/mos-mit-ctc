@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { fetchAPI } from '../utils/utils';
 import styles from "./Leaderboard.module.css";
 import Navbar from "./Navbar.js";
 import hmc from "../assets/hmc.png";
@@ -14,14 +15,14 @@ const Leaderboard = () => {
 
   useEffect(() => {
     if (selectedLeaderboard === "Overall") {
-      fetch(process.env.REACT_APP_API_URL + "/users/leaderboard")
+      fetchAPI("/users/challenges/leaderboard")
         .then((response) => response.json())
         .then((data) => setUsers(data))
         .catch((error) => console.error("Error fetching leaderboard:", error));
     } else {
       const full_leaderboard = `${selectedLeaderboard}-${selectedLevel}`;
-      fetch(
-        `process.env.REACT_APP_API_URL/users/leaderboard/${full_leaderboard}`
+      fetchAPI(
+        `/users/challenges/leaderboard/${full_leaderboard}`
       )
         .then((response) => response.json())
         .then((data) => setUsers(data))
