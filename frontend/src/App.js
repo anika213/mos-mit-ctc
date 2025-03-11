@@ -8,8 +8,6 @@ import Challenge from './pages/Challenge';
 import AddChallenges from './pages/AddChallenges';
 import Laboratory from './pages/Laboratory';
 import Admin from './pages/Admin';
-// import Easy from './pages/challenges/Wireless/Easy';
-// import Medium from './pages/challenges/Wireless/Medium';
 
 function App() {
   return (
@@ -22,10 +20,6 @@ function App() {
         <Route path='/newchallenge' element={<AddChallenges/>}/>
         <Route path='/laboratory' element={<Laboratory/>}/>
         <Route path="/challenge/:challengeName/:stage" element={<Challenge />}>
-         
-          {/* <Route path='rna' element={<RNAChallenge/>}/>
-          <Route path='wirelesseasy' element={<Easy/>}/>
-          <Route path='wirelessmedium' element={<Medium/>}/> */}
         </Route>
         <Route path='/admin' element={<Admin />}></Route>
       </Routes>
