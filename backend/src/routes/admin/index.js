@@ -1,5 +1,5 @@
 const express = require ("express"); 
-const controller = require ("../../controllers/admin"); 
+const controller = require ("../../controllers/admin//admin.js"); 
 const router = express.Router (); 
 
 // Admin page route

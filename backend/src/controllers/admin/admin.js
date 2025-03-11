@@ -1,5 +1,5 @@
-const User = require('../models/user.js');
-const Challenge = require('../models/challenge.js'); // Make sure you have this model
+const User = require('../../models/user.js');
+const Challenge = require('../../models/challenge.js'); // Make sure you have this model
 
 // Get all users
 exports.getAllUsers = async (req, res) => {
