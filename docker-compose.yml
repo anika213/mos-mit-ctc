@@ -6,7 +6,7 @@ services:
             dockerfile: base.dockerfile
         volumes:
             - node_modules:/srv/mos-mit-ctc/node_modules
-            - ./yarn.lock:/srv/hyperschedule/yarn.lock:ro
+            - ./yarn.lock:/srv/mos-mit-ctc/yarn.lock
             - ./package.json:/srv/mos-mit-ctc/package.json:ro
             - ./frontend/package.json:/srv/mos-mit-ctc/frontend/package.json:ro
             - ./backend/package.json:/srv/mos-mit-ctc/backend/package.json:ro
