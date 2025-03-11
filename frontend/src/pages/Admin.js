@@ -19,7 +19,13 @@ const Admin = () => {
             setUsers(data);
         } catch (error) {
             console.error('Error fetching users:', error);
-        }
+            // fetch("http://localhost:8080/admin/users")
+            //     .then((response) => response.json())
+        //     //     .then((data) => setUsers(data))
+        //     //     .catch((error) => console.error("Error fetching users:", error));
+        // } catch (error) {
+        //     console.log('Error fetching users:');
+        // }
     };
 
     const fetchChallenges = async () => {
@@ -27,6 +33,10 @@ const Admin = () => {
             const response = await fetch('/api/admin/challenges');
             const data = await response.json();
             setChallenges(data);
+            // fetch("http://localhost:8080/admin/challenges")
+            //     .then((response) => response.json())
+            //     .then((data) => setChallenges(data))
+            //     .catch((error) => console.error("Error fetching challenges:", error));
         } catch (error) {
             console.error('Error fetching challenges:', error);
         }
@@ -81,6 +91,12 @@ const Admin = () => {
             } else {
                 setChallenges(challenges.filter(challenge => challenge._id !== id));
             }
+            // await fetch(`http://localhost:8080/admin/delete/${type}/${id}`);
+            // // if (type === 'users') {
+            // //     setUsers(users.filter(user => user._id !== id));
+            // // } else {
+            // //     setChallenges(challenges.filter(challenge => challenge._id !== id));
+            // // }
         } catch (error) {
             console.error(`Error deleting ${type}:`, error);
         }
