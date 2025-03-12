@@ -60,10 +60,6 @@ function Landing() {
           <img src={WirelessUnsolved} />
         </button>
 
-        <button onClick={() => handleChallengeClick("/challenge/Wireless/StageOne")} className={styles.wirelessComputer}>
-          <img src={WirelessUnsolved} />
-        </button>
-
         <button onClick={() => handleChallengeClick("/challenge/Molecules/StageOne")} className={styles.molecules}>
           <img src={MolecularIncomplete} />
         </button>

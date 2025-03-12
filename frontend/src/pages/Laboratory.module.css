@@ -24,6 +24,10 @@
     cursor: pointer;
     width:20%;
 }
+.expertComputer:hover {
+    width:21%;
+    top: 21%; 
+}
 .expertComputer img {
     width:100%;
     height:auto;
@@ -37,6 +41,10 @@
     border: none;
     cursor: pointer;
     width: 22%;
+}
+.wirelessComputer:hover {
+    width:23%;
+    top: 22%; 
 }
 .wirelessComputer img {
     width:100%;
@@ -52,6 +60,11 @@
     cursor: pointer;
     width: 22%;
 }
+.molecules:hover {
+    width:23%;
+    top: 63%; 
+    right:4%;
+}
 .molecules img {
     width:100%;
     height:auto;
@@ -65,6 +78,9 @@
     border: none;
     cursor: pointer;
     width: 40%;
+}
+.RNA:hover {
+    width:41%;
 }
 .RNA img {
     width:100%;
@@ -80,7 +96,11 @@
     cursor: pointer;
     width: 32%;
 }
-.RNA img {
+.achievements:hover {
+    width:33%;
+    top:2%;
+}
+.achievements img {
     width:100%;
     height:auto;
 }
