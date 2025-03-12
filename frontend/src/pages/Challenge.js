@@ -184,9 +184,9 @@ function Challenge() {
             </>
           ) : (
             <div className={styles.overlay}>
-              {challengeData[challengeName][stage].cutScene ? (
+              {challengeData[challengeName].stages[stage].cutScene ? (
                 <ChallengeCutScene
-                  cutSceneList={getFullSlides(challengeData[challengeName][stage].cutScene, challengeData[challengeName][stage].description, challengeData[challengeName][stage].hints)}
+                  cutSceneList={getFullSlides(challengeData[challengeName].stages[stage].cutScene, challengeData[challengeName].stages[stage].description, challengeData[challengeName].stages[stage].hints)}
                   startChallenge={() => {
                     onStart();
                     setHasStarted(true);

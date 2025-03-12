@@ -1,7 +1,7 @@
 import { useMemo, useEffect, useState } from "react";
 import UplotReact from "uplot-react";
 import "uplot/dist/uPlot.min.css";
-import buttonStyles from "../../Buttons.module.css"
+import buttonStyles from "../pages/Buttons.module.css"
 
 // Creates a 1:2 plot that takes up 60% of the width of the window
 export function getPlotSize(windowWidth) {
