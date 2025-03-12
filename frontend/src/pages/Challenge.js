@@ -7,6 +7,26 @@ import Navbar from "./Navbar.js";
 import styles from "./Challenge.module.css";
 import { fetchAPI } from "../utils/utils.js";
 
+function getFullSlides(cutScene, description, hints) {
+  let ans = []
+
+  if (cutScene) {
+    ans = ans.concat(cutScene)
+  }
+
+  if (description) {
+    ans.push({ text: description, button: "Got it!" })
+  }
+
+  if (hints) {
+    ans = ans.concat(hints.map((hint, index) => {
+      return { text: hint, button: `Sounds good!` }
+    }))
+  }
+
+  return ans;
+}
+
 // Challenge metadata
 const challengeData = {
   RNA: {
@@ -33,7 +53,7 @@ const challengeData = {
       title: "RNA Splicing",
       description: "Select all the introns in the given RNA sequence.",
       hints: [
-
+        "sadf"
       ]
     },
   },
@@ -222,7 +242,7 @@ function Challenge() {
             <div className={styles.overlay}>
               {challengeData[challengeName][stage].cutScene ? (
                 <ChallengeCutScene
-                  cutSceneList={challengeData[challengeName][stage].cutScene}
+                  cutSceneList={getFullSlides(challengeData[challengeName][stage].cutScene, challengeData[challengeName][stage].description, challengeData[challengeName][stage].hints)}
                   startChallenge={() => {
                     onStart();
                     setHasStarted(true);
