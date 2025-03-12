@@ -26,6 +26,7 @@ const Admin = () => {
         // } catch (error) {
         //     console.log('Error fetching users:');
         // }
+        }
     };
 
     const fetchChallenges = async () => {
