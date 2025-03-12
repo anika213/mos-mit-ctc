@@ -6,6 +6,7 @@ import ChallengeCutScene from "../components/ChallengeCutScene.js";
 import Navbar from "./Navbar.js";
 import styles from "./Challenge.module.css";
 import { fetchAPI } from "../utils/utils.js";
+<<<<<<< Updated upstream
 
 // Challenge metadata
 const challengeData = {
@@ -76,11 +77,17 @@ const challengeData = {
     },
   },
 };
+=======
+import challengeData from "../utils/challengeData.js";
+>>>>>>> Stashed changes
 
 
 function Challenge() {
   let { challengeName, stage } = useParams();
+  const challenge = challengeData[challengeName];
+  const stageData = challenge?.stages?.[stage];
 
+  const [showPopup, setShowPopup] = useState(false);
   const [startTime, setStartTime] = useState(Date.now());
   const [selectedLevel, setSelectedLevel] = useState("Easy");
   const [hasStarted, setHasStarted] = useState(false);
@@ -99,15 +106,19 @@ function Challenge() {
     setHasStarted(false);
   }, []);
 
+  // TODO double check this stuff and if it makes sense for new structure
   useEffect(() => {
     // Reset to Easy level whenever the challenge changes
     updateLevelAndStartTime("Easy");
   }, [challengeName, updateLevelAndStartTime]);
 
+<<<<<<< Updated upstream
   const { title, description, hints } = challengeData[challengeName][stage];
 
   const [showPopup, setShowPopup] = useState(false);
 
+=======
+>>>>>>> Stashed changes
   const handleOrientationChange = () => {
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
     setShowPopup(isPortrait);
@@ -164,6 +175,7 @@ function Challenge() {
       });
   }, [challengeName, selectedLevel, startTime]);
 
+<<<<<<< Updated upstream
   const getHint = () => {
     const newIndex = (hintIndex + 1) % hints.length;
     setCurrentHint(hints[newIndex]);
@@ -177,20 +189,35 @@ function Challenge() {
     setCurrentHint("");
     setHintIndex(-1);
   }, [challengeName, stage]);
+=======
+  if (!challenge || !stageData) {
+    return (
+      <div>
+        <Navbar />
+        <h1>Challenge not found.</h1>
+      </div>
+    );
+  }
+
+  const { title, description, hints } = stageData;
+>>>>>>> Stashed changes
 
   return (
     <div>
       <Navbar />
 
-      <div className={styles.challengeBox} key={challengeName}>
+      <div className={styles.challengeBox}>
         {showPopup && (
           <div className={styles.rotateWarning}>
             <h1>Please rotate your mobile device</h1>
             <p>For the best experience, rotate your phone to landscape mode.</p>
           </div>
         )}
+
         <h1 className={styles.heading}>{title}</h1>
         <p className={styles.description}>{description}</p>
+        <p className={styles.hints}>{hints}</p>
+
         <div className={styles.challengeContent}>
           {hasStarted ? (
             <>
