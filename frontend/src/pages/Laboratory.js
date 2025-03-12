@@ -1,15 +1,25 @@
 import React, { useState } from 'react';
-import styles from './Landing.module.css';
+import styles from './Laboratory.module.css';
 import buttonStyles from './Buttons.module.css'
 import Navbar from './Navbar.js';
 import AchievementsModal from './Achievements.js'
+import LabBackground from '../assets/background/lab-background.png';
+import ExpertComputer from '../assets/background/expert-computer.png';
+import WirelessUnsolved from '../assets/background/wireless-computer-bad.png';
+import WirelessSolved from '../assets/background/wireless-computer-good.png';
+import RNAComplete from '../assets/background/RNA-bckground-complete.png';
+import RNAIncomplete from '../assets/background/RNA-incomplete.png';
+import Achievements from '../assets/background/achievements-bckground.png';
+import MolecularComplete from '../assets/background/molecular-bckground-complete.png';
+import MolecularIncomplete from '../assets/background/molecular-bckground-incomplete.png';
+
 import { useNavigate } from 'react-router-dom';
 
-const challenges = [
-    { id: 1, title: "RNA Splicing", description: "Description for Challenge #1", link: "/challenge/RNA" },
-    { id: 2, title: "Molecular Docking", description: "Description for Challenge #2", link: "/challenge/Molecules" },
-    { id: 3, title: "Wireless Detecting", description: "Description for Challenge #3", link: "/challenge/Wireless" },
-];
+// const challenges = [
+//     { id: 1, title: "RNA Splicing", description: "Description for Challenge #1", link: "/challenge/RNA" },
+//     { id: 2, title: "Molecular Docking", description: "Description for Challenge #2", link: "/challenge/Molecules" },
+//     { id: 3, title: "Wireless Detecting", description: "Description for Challenge #3", link: "/challenge/Wireless" },
+// ];
 
 // TODO: fix the button sizing, kinda weird when changing screen size rn
 // TODO: add the challenges at the bottom as drop down (FAQ style)
@@ -31,37 +41,42 @@ function Landing() {
   };
 
   return (
+  <>
+    
     <div className={styles.mainContainer}>
-      <Navbar />
-      <button className={`${styles.button} ${buttonStyles.redButton}`} onClick={() => toggleAchievements()}>Achievements</button>
-      <div className={styles.challengescontainer}>
-        <h1 style={{ textAlign: "right" }}>Explore Challenges</h1>
-        {challenges.map((challenge) => (
-          <div key={challenge.id} style={{ marginBottom: "10px" }}>
-            <div
-              className={styles.closedchallenge}
-              onClick={() => toggleChallenge(challenge.id)}
-            >
-              <span><h2>{challenge.title}</h2></span>
-              <span>{activeChallenge === challenge.id ? "▲" : "▼"}</span>
-            </div>
-            {activeChallenge === challenge.id && (
-              <div className={styles.openchallenge}>
-                <p>{challenge.description}</p>
-                <br/>
-                <button onClick={() => handleChallengeClick(challenge.link)} className={`${styles.challengeButton} ${buttonStyles.redButton}`}>
-                  Try it out!
-                </button>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
+    <Navbar />
+      <div className={styles.imageContainer}>
+        <img src={LabBackground} className={styles.mainImage} />
 
+        <button onClick={() => toggleAchievements()} className={styles.achievements}>
+          <img src={Achievements} />
+        </button>
+
+        <button className={styles.expertComputer}>
+          <img src={ExpertComputer} />
+        </button>
+
+        <button onClick={() => handleChallengeClick("/challenge/Wireless/StageOne")} className={styles.wirelessComputer}>
+          <img src={WirelessUnsolved} />
+        </button>
+
+        <button onClick={() => handleChallengeClick("/challenge/Wireless/StageOne")} className={styles.wirelessComputer}>
+          <img src={WirelessUnsolved} />
+        </button>
+
+        <button onClick={() => handleChallengeClick("/challenge/Molecules/StageOne")} className={styles.molecules}>
+          <img src={MolecularIncomplete} />
+        </button>
+
+        <button onClick={() => handleChallengeClick("/challenge/RNA/StageOne")} className={styles.RNA}>
+          <img src={RNAIncomplete} />
+        </button>
+      </div>
       <AchievementsModal isOpen={achievmentsIsOpen} onClose={() => toggleAchievements()} />
+
     </div>
 
-        
+  </>  
   );
 }
 

@@ -1,0 +1,86 @@
+.mainContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.imageContainer {
+    position: relative;   
+    margin:2em;
+    width:95%
+}
+.mainImage {
+    border: 4px solid #ddd;
+    width: 100%; 
+    height: auto;
+}
+
+.expertComputer {
+    position: absolute;
+    top: 22%; 
+    left: 0px; 
+    background: none;
+    border: none;
+    cursor: pointer;
+    width:20%;
+}
+.expertComputer img {
+    width:100%;
+    height:auto;
+}
+
+.wirelessComputer {
+    position: absolute;
+    top: 23%;
+    left: 20%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 22%;
+}
+.wirelessComputer img {
+    width:100%;
+    height:auto;
+}
+
+.molecules {
+    position: absolute;
+    top: 64%;
+    right: 5%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 22%;
+}
+.molecules img {
+    width:100%;
+    height:auto;
+}
+
+.RNA {
+    position: absolute;
+    top: 58%;
+    left: 5%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 40%;
+}
+.RNA img {
+    width:100%;
+    height:auto;
+}
+
+.achievements {
+    position: absolute;
+    top: 3%;
+    right: 0%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 32%;
+}
+.RNA img {
+    width:100%;
+    height:auto;
+}
