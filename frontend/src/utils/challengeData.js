@@ -2,31 +2,30 @@ const challengeData = {
     RNA: {
         title: "RNA Splicing",
         storyDescription: "A horrific explosion destroyed the RNA station. Fix it lil bro.",
-        iconURL: "",
         stages: {
             StageOne: { 
-                title: "RNA Splicing",
+                title: "Stage One",
                 description: "Drag each block of RNA to form a complete protein!",
                 hints: { },
                 },
             StageTwo: {
-                title: "RNA Splicing",
+                title: "Stage Two",
                 description: "Select all the introns in the given RNA sequence.",
                 hints: { },
             },
         },
     },
     Molecules: {
+        title: "Molecular Docking",
         StoryDescription: "",
-        IconURL: "",
         Stages: {
             StageOne: {
-                title: "Molular docking",
+                title: "Stage One",
                 description: "Connect each molecule to its corresponding binding site",
                 hints: { },
               },
               StageTwo: {
-                title: "Molular docking",
+                title: "Stage Two",
                 description: "Connect each molecule to its corresponding binding site",
                 hints: { },
               },
@@ -35,15 +34,14 @@ const challengeData = {
     Wireless: {
         title: "Wireless Detection",
         storyDescription: "",
-        iconURL: "",
         stages: {
             StageOne: {
-                title: "Wireless Detection",
+                title: "Stage One",
                 description: "Classify each breathing pattern as regular or irregular.",
                 hints: { },
               },
               StageTwo: {
-                title: "Wireless Detection",
+                title: "Stage Two",
                 description: "Classify each breathing pattern",
                 hints: { },
               },
@@ -52,7 +50,6 @@ const challengeData = {
     Expert: {
         title: "Expert Level Challenges",
         storyDescription: "Uber hard fr",
-        iconURL: "",
         stages: {
             RNA: {
                 title: "RNA Splicing",

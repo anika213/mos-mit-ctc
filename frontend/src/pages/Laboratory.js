@@ -17,12 +17,6 @@ import MolecularIncomplete from '../assets/background/molecular-bckground-incomp
 
 import { useNavigate } from 'react-router-dom';
 
-// const challenges = [
-//     { id: 1, title: "RNA Splicing", description: "Description for Challenge #1", link: "/challenge/RNA" },
-//     { id: 2, title: "Molecular Docking", description: "Description for Challenge #2", link: "/challenge/Molecules" },
-//     { id: 3, title: "Wireless Detecting", description: "Description for Challenge #3", link: "/challenge/Wireless" },
-// ];
-
 // TODO: fix the button sizing, kinda weird when changing screen size rn
 function Laboratory() {
   const [achievmentsIsOpen, setAchievementsIsOpen] = useState(false);
@@ -39,8 +33,6 @@ function Laboratory() {
   const handleClosePopup = () => {
     setActiveChallenge(null);
   };
-
-  const challengeKeys = Object.keys(challengeData); 
   
   return (
   <>
@@ -55,32 +47,24 @@ function Laboratory() {
           <img src={Achievements} />
         </button>
 
-        {challengeKeys.map((key) => (
-          <button
-            key = {key}
-            onClick = {() => handleOpenPopup(key)}
-            className={`${styles.challengeButton} ${buttonStyles.redButton}`}>
-              {challengeData[key].title}
-          </button>
-        ))}
-
-        <button className={styles.expertComputer}>
+        <button className={styles.expertComputer} onClick={() => handleOpenPopup("Expert")}>
           <img src={ExpertComputer} />
         </button>
 
-        <button onClick={() => handleChallengeClick("/challenge/Wireless/StageOne")} className={styles.wirelessComputer}>
+        <button onClick={() => handleOpenPopup("Wireless")} className={styles.wirelessComputer}>
           <img src={WirelessUnsolved} />
         </button>
 
-        <button onClick={() => handleChallengeClick("/challenge/Molecules/StageOne")} className={styles.molecules}>
+        <button onClick={() => handleOpenPopup("Molecules")} className={styles.molecules}>
           <img src={MolecularIncomplete} />
         </button>
 
-        <button onClick={() => handleChallengeClick("/challenge/RNA/StageOne")} className={styles.RNA}>
+        <button onClick={() => handleOpenPopup("RNA")} className={styles.RNA}>
           <img src={RNAIncomplete} />
         </button>
       </div>
       <AchievementsModal isOpen={achievmentsIsOpen} onClose={() => toggleAchievements()} />
+
       {activeChallenge && (
         <ChallengePopup
           challengeKey={activeChallenge}

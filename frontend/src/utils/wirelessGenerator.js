@@ -1,4 +1,4 @@
-import { getRandom } from "../../../utils/utils";
+import { getRandom } from "./utils";
 
 // Fluctuation is given as a decimal
 function generateCycle(startValue, targetAmplitude, fluctuation) {

@@ -11,8 +11,8 @@ import {
   generateHypopnea,
   generateCentralSleepApnea,
   generateCheyneStokes,
-} from "./generator";
-import { WirelessDetectionPlot, WirelessDetectionButton } from "./common";
+} from "../../../utils/wirelessGenerator";
+import { WirelessDetectionPlot, WirelessDetectionButton } from "../../../utils/wirelessCommon";
 
 // Creates plots for each sleeping pattern
 // Should probably be in a random order right?

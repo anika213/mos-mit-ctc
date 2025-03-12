@@ -6,80 +6,7 @@ import ChallengeCutScene from "../components/ChallengeCutScene.js";
 import Navbar from "./Navbar.js";
 import styles from "./Challenge.module.css";
 import { fetchAPI } from "../utils/utils.js";
-<<<<<<< Updated upstream
-
-// Challenge metadata
-const challengeData = {
-  RNA: {
-    StageOne: {
-      title: "RNA Splicing",
-      description: "Drag each block of RNA to form a complete protein!",
-      cutScene: [
-        {
-          text: "Welcome to our RNA splicing station! After our cells write a messenger RNA, a.k.a. mRNA, which contains information to make our proteins, we need to select the parts of the mRNA which are called “exons” that will actually be used for coding our protein to help create life-saving new drug treatments! The rest, called “introns,” are spliced, or cut out.",
-          button: "Got it!",
-        },
-        {
-          text: "But not all proteins are functional! For the mRNA to make a functional protein, we need to select the right introns and exons. But, our records of what the introns and exons are in each mRNA got lost during the earthquake. Can you help us choose the right exons to make a protein that works?",
-          button: "Yes!",
-        },
-      ],
-      hints: [
-        "Hint 1",
-        "Hint 2"
-      ]
-    },
-
-    StageTwo: {
-      title: "RNA Splicing",
-      description: "Select all the introns in the given RNA sequence.",
-      hints: [
-
-      ]
-    },
-  },
-  Molecules: {
-    StageOne: {
-      title: "Molular docking",
-      description: "Connect each molecule to its corresponding binding site",
-      hints: []
-    },
-    StageTwo: {
-      title: "Molular docking",
-      description: "Connect each molecule to its corresponding binding site",
-      hints: []
-    },
-  },
-  Wireless: {
-    StageOne: {
-      title: "Wireless Detection",
-      description: "Classify each breathing pattern as regular or irregular.",
-      hints: []
-    },
-    StageTwo: {
-      title: "Wireless Detection",
-      description: "Classify each breathing pattern",
-      hints: []
-    },
-  },
-  Expert: {
-    RNA: {
-      title: "RNA Splicing",
-      description: "Pending",
-    },
-    MolecularDocking: {
-      title: "Molecular Docking",
-      description: "Pending",
-    },
-    WirelessDetection: {
-      title: "Wireless Detection",
-      description: "Pending",
-    },
-  },
-};
-=======
 import challengeData from "../utils/challengeData.js";
->>>>>>> Stashed changes
 
 
 function Challenge() {
@@ -112,13 +39,6 @@ function Challenge() {
     updateLevelAndStartTime("Easy");
   }, [challengeName, updateLevelAndStartTime]);
 
-<<<<<<< Updated upstream
-  const { title, description, hints } = challengeData[challengeName][stage];
-
-  const [showPopup, setShowPopup] = useState(false);
-
-=======
->>>>>>> Stashed changes
   const handleOrientationChange = () => {
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
     setShowPopup(isPortrait);
@@ -175,7 +95,6 @@ function Challenge() {
       });
   }, [challengeName, selectedLevel, startTime]);
 
-<<<<<<< Updated upstream
   const getHint = () => {
     const newIndex = (hintIndex + 1) % hints.length;
     setCurrentHint(hints[newIndex]);
@@ -189,7 +108,7 @@ function Challenge() {
     setCurrentHint("");
     setHintIndex(-1);
   }, [challengeName, stage]);
-=======
+  
   if (!challenge || !stageData) {
     return (
       <div>
@@ -200,7 +119,6 @@ function Challenge() {
   }
 
   const { title, description, hints } = stageData;
->>>>>>> Stashed changes
 
   return (
     <div>

@@ -14,10 +14,6 @@ import { useNavigate } from 'react-router-dom';
 function Landing() {
   const navigate = useNavigate();
 
-  const handleChallengeClick = (link) => {
-    navigate(link); 
-  };
-
   return (
     <div className={styles.mainContainer}>
       <Navbar />
@@ -26,7 +22,7 @@ function Landing() {
           <p className={styles.subheading}>An interactive exhibit</p>
           <p className={styles.heading}>Exploring Clinical AI</p>
           <br></br>
-          <button className={`${styles.button} ${buttonStyles.redButton}`} onClick={() => handleChallengeClick("/challenge/RNA/StageOne")}>Get Started</button>
+          <button className={`${styles.button} ${buttonStyles.redButton}`} onClick={() => navigate("/challenge/RNA/StageOne")}>Get Started</button>
           <br></br>
           <div className={styles.imageContainer}>
             <img src={mos} alt="MOS" className={styles.logos} />

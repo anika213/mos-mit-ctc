@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import Popup from "../../../components/Popup";
-import { generateLightSleep, generateDeepSleep, generateObstructiveSleepApnea, generateCentralSleepApnea } from "./generator";
-import { WirelessDetectionPlot, WirelessDetectionButton } from "./common";
+import { generateLightSleep, generateDeepSleep, generateObstructiveSleepApnea, generateCentralSleepApnea } from "../../../utils/wirelessGenerator";
+import { WirelessDetectionPlot, WirelessDetectionButton } from "../../../utils/wirelessCommon";
 import {dingClick, victoryClick, incorrectClick} from '../../../components/ChallengesSound';
 
 function getPlots() {
