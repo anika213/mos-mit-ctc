@@ -20,7 +20,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-black text-white z-10">
+    <nav className="bg-black text-white z-10 w-[100%]">
       <div className="flex items-center justify-between px-10 py-4">
         <div className="text-xl font-bold"><Link to="/">Clinical AI</Link></div>
         <div className="md:hidden" onClick={toggleMobileMenu}>
