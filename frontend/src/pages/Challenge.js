@@ -8,6 +8,25 @@ import styles from "./Challenge.module.css";
 import { fetchAPI } from "../utils/utils.js";
 import challengeData from "../utils/challengeData.js";
 
+function getFullSlides(cutScene, description, hints) {
+  let ans = []
+
+  if (cutScene) {
+    ans = ans.concat(cutScene)
+  }
+
+  if (description) {
+    ans.push({ text: description, button: "Got it!" })
+  }
+
+  if (hints) {
+    ans = ans.concat(hints.map((hint, index) => {
+      return { text: hint, button: `Sounds good!` }
+    }))
+  }
+
+  return ans;
+} 
 
 function Challenge() {
   let { challengeName, stage } = useParams();
@@ -167,7 +186,7 @@ function Challenge() {
             <div className={styles.overlay}>
               {challengeData[challengeName][stage].cutScene ? (
                 <ChallengeCutScene
-                  cutSceneList={challengeData[challengeName][stage].cutScene}
+                  cutSceneList={getFullSlides(challengeData[challengeName][stage].cutScene, challengeData[challengeName][stage].description, challengeData[challengeName][stage].hints)}
                   startChallenge={() => {
                     onStart();
                     setHasStarted(true);
