@@ -3,7 +3,7 @@ import styles from "./Laboratory.module.css";
 import buttonStyles from "./Buttons.module.css";
 import Navbar from "./Navbar.js";
 import AchievementsModal from "./Achievements.js";
-import challengeData from "../utils/challengeData.js";
+import challengeData, { labCutscenes } from "../utils/challengeData.js";
 import ChallengePopup from "../components/ChallengePopup.js";
 import LabBackground from "../assets/background/lab-background.png";
 import ExpertComputer from "../assets/background/expert-computer.png";
@@ -15,14 +15,21 @@ import Achievements from "../assets/background/achievements-bckground.png";
 import MolecularComplete from "../assets/background/molecular-bckground-complete.png";
 import MolecularIncomplete from "../assets/background/molecular-bckground-incomplete.png";
 
-import { fetchAPI } from "../utils/utils.js";
 import { ChallengesContext } from "../context/ChallengesContext.js";
+import { useSearchParams } from "react-router-dom";
+import ChallengeCutScene from "../components/ChallengeCutScene.js";
 
 // TODO: fix the button sizing, kinda weird when changing screen size rn
 function Laboratory() {
-  const [achievmentsIsOpen, setAchievementsIsOpen] = useState(false);
+  const [searchParam, setSearchParam] = useSearchParams();
+
+  const [showCutscene, setShowCutScene] = useState(
+    searchParam.get("firstVisit") !== null
+  );
+
+  const [achievementsIsOpen, setAchievementsIsOpen] = useState(false);
   const toggleAchievements = () => {
-    setAchievementsIsOpen(!achievmentsIsOpen);
+    setAchievementsIsOpen(!achievementsIsOpen);
   };
 
   const [activeChallenge, setActiveChallenge] = useState(null);
@@ -50,46 +57,66 @@ function Laboratory() {
         <Navbar />
 
         <div className={styles.imageContainer}>
-          <img src={LabBackground} className={styles.mainImage} />
-
-          <button
-            onClick={() => toggleAchievements()}
-            className={styles.achievements}
-          >
-            <img src={Achievements} />
-          </button>
-
-          <button
-            className={styles.expertComputer}
-            onClick={() => handleOpenPopup("Expert")}
-          >
-            <img src={ExpertComputer} />
-          </button>
-
-          <button
-            onClick={() => handleOpenPopup("Wireless")}
-            className={styles.wirelessComputer}
-          >
-            <img src={isDone("Wireless") ? WirelessSolved : WirelessUnsolved} />
-          </button>
-
-          <button
-            onClick={() => handleOpenPopup("Molecules")}
-            className={styles.molecules}
-          >
-            <img
-              src={
-                isDone("Molecules") ? MolecularComplete : MolecularIncomplete
-              }
+          {showCutscene ? (
+            <ChallengeCutScene
+              cutSceneList={labCutscenes}
+              startChallenge={() => {
+                setShowCutScene(false);
+                searchParam.delete("firstVisit");
+                setSearchParam(searchParam);
+              }}
             />
-          </button>
+          ) : (
+            <div>
+              <img src={LabBackground} className={styles.mainImage} />
 
-          <button onClick={() => handleOpenPopup("RNA")} className={styles.RNA}>
-            <img src={isDone("RNA") ? RNAComplete : RNAIncomplete} />
-          </button>
+              <button
+                onClick={() => toggleAchievements()}
+                className={styles.achievements}
+              >
+                <img src={Achievements} />
+              </button>
+
+              <button
+                className={styles.expertComputer}
+                onClick={() => handleOpenPopup("Expert")}
+              >
+                <img src={ExpertComputer} />
+              </button>
+
+              <button
+                onClick={() => handleOpenPopup("Wireless")}
+                className={styles.wirelessComputer}
+              >
+                <img
+                  src={isDone("Wireless") ? WirelessSolved : WirelessUnsolved}
+                />
+              </button>
+
+              <button
+                onClick={() => handleOpenPopup("Molecules")}
+                className={styles.molecules}
+              >
+                <img
+                  src={
+                    isDone("Molecules")
+                      ? MolecularComplete
+                      : MolecularIncomplete
+                  }
+                />
+              </button>
+
+              <button
+                onClick={() => handleOpenPopup("RNA")}
+                className={styles.RNA}
+              >
+                <img src={isDone("RNA") ? RNAComplete : RNAIncomplete} />
+              </button>
+            </div>
+          )}
         </div>
         <AchievementsModal
-          isOpen={achievmentsIsOpen}
+          isOpen={achievementsIsOpen}
           onClose={() => toggleAchievements()}
         />
 

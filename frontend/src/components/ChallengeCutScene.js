@@ -15,7 +15,6 @@ function ChallengeCutScene({ cutSceneList, startChallenge}) {
             setSlide(slide + 1);
             setTextAnimationComplete(false);
         }
-        console.log(slide);
     }
 
     const splitString = (text) => {
@@ -29,7 +28,6 @@ function ChallengeCutScene({ cutSceneList, startChallenge}) {
     }
 
     const splitText = splitString(cutSceneList[slide].text);
-    console.log(splitText);
     
     const charVariants = {
         hidden: { opacity: 0 },

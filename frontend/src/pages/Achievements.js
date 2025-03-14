@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import { fetchAPI } from "../utils/utils";
 import buttonStyles from "./Buttons.module.css";
 import rnaComplete from "../assets/badges/rna-complete.png";
@@ -43,7 +43,7 @@ function AchievementsModal(props) {
     "All-Achievements": [false, allBadges, unavailableBadgeExpert],
   });
 
-  const changeAchievements = async () => {
+  const changeAchievements = useCallback(async () => {
     let tempAchievementsDict = achievementsDict;
 
     if ("RNA-StageOne" in challengeData && "RNA-StageTwo" in challengeData) {
@@ -121,13 +121,12 @@ function AchievementsModal(props) {
     }
 
     setAchievementsDict(tempAchievementsDict);
-    console.log(achievementsDict);
     return challengeData;
-  };
+  }, [achievementsDict, challengeData]);
 
   useEffect(() => {
     changeAchievements();
-  }, [challengeData]);
+  }, [challengeData, changeAchievements]);
 
   return props.isOpen ? (
     <>

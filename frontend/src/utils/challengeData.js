@@ -1,3 +1,14 @@
+export const labCutscenes = [
+  {
+    text: "Cutscene stuff will go here",
+    button: "Got it!",
+  },
+  {
+    text: "Yay!",
+    button: "Let's go"
+  }
+]
+
 const challengeData = {
   RNA: {
     title: "RNA Splicing",

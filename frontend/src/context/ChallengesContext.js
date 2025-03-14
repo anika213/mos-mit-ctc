@@ -18,7 +18,6 @@ export const ChallengesProvider = ({ children }) => {
 
       const data = await response.json();
       setChallengeData(data);
-      console.log('Fetched challenges:', data);
     } catch (error) {
       console.error('Error fetching challenges:', error);
     }
