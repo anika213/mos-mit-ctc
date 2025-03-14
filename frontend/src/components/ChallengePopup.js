@@ -5,11 +5,12 @@ import challengeData from "../utils/challengeData";
 function ChallengePopup({ challengeKey, onClose }) {
     const challenge = challengeData[challengeKey];
     if (!challenge) return null;
+    console.log(challenge)
     const stageKeys = Object.keys(challenge.stages);
 
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col justify-center items-center border-2 border-red-600 w-80">
+            {/* <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col justify-center items-center border-2 border-red-600 w-80"> */}
                 <div
                     className="absolute inset-0 bg-black opacity-50"
                     onClick={onClose}
@@ -33,7 +34,7 @@ function ChallengePopup({ challengeKey, onClose }) {
                     })}
                 </div>
             </div>
-        </div>
+        // </div>
     );
 }
 

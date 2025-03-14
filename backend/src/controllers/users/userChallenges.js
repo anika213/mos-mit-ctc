@@ -38,14 +38,14 @@ exports.challenge_leaderboard = async (req, res) => {
 };
 
 const challenge_list = [
-  "RNA-Easy",
-  "RNA-Medium",
+  "RNA-StageOne",
+  "RNA-StageTwo",
   "RNA-Hard",
-  "Molecules-Easy",
-  "Molecules-Medium",
+  "Molecules-StageOne",
+  "Molecules-StageTwo",
   "Molecules-Hard",
-  "Wireless-Easy",
-  "Wireless-Medium",
+  "Wireless-StageOne",
+  "Wireless-StageTwo",
   "Wireless-Hard",
 ];
 

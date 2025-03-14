@@ -35,7 +35,6 @@ function Challenge() {
 
   const [showPopup, setShowPopup] = useState(false);
   const [startTime, setStartTime] = useState(Date.now());
-  const [selectedLevel, setSelectedLevel] = useState("Easy");
   const [hasStarted, setHasStarted] = useState(false);
   const [showHint, setShowHint] = useState(false);
   const [currentHint, setCurrentHint] = useState("");
@@ -46,17 +45,6 @@ function Challenge() {
       import("../components/ChallengeFallback.js")
     )
   ), [challengeName, stage]);
-
-  const updateLevelAndStartTime = useCallback((level) => {
-    setSelectedLevel(level);
-    setHasStarted(false);
-  }, []);
-
-  // TODO double check this stuff and if it makes sense for new structure
-  useEffect(() => {
-    // Reset to Easy level whenever the challenge changes
-    updateLevelAndStartTime("Easy");
-  }, [challengeName, updateLevelAndStartTime]);
 
   const handleOrientationChange = () => {
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
@@ -74,11 +62,11 @@ function Challenge() {
   const onStart = () => {
     setStartTime(Date.now());
 
-    if (selectedLevel === "Hard") {
+    if (stage === "Hard") {
       fetchAPI("/users/challenges/start", {
         method: "POST",
         body: JSON.stringify({
-          challenge: `${challengeName}-${selectedLevel}`,
+          challenge: `${challengeName}-${stage}`,
         }),
       })
         .then((res) => res.json())
@@ -101,7 +89,7 @@ function Challenge() {
       },
       credentials: "include",
       body: JSON.stringify({
-        challenge: `${challengeName}-${selectedLevel}`,
+        challenge: `${challengeName}-${stage}`,
         time: endTime - startTime,
       }),
     })
@@ -112,7 +100,7 @@ function Challenge() {
       .catch((error) => {
         console.error("Error updating challenges:", error);
       });
-  }, [challengeName, selectedLevel, startTime]);
+  }, [challengeName, stage, startTime]);
 
   const getHint = () => {
     const newIndex = (hintIndex + 1) % hints.length;
