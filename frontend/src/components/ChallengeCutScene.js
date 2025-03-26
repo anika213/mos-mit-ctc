@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import buttonStyles from '../pages/Buttons.module.css'
 import scientistImg from '../assets/scientist.png'
 import styles from './ChallengeCutScene.module.css'
-import { motion, Variants, steps } from 'framer-motion'
+import { motion, steps } from 'framer-motion'
 
 
 function ChallengeCutScene({ cutSceneList, startChallenge}) {

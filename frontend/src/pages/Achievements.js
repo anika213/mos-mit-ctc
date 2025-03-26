@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext, useCallback } from "react";
-import { fetchAPI } from "../utils/utils";
 import buttonStyles from "./Buttons.module.css";
 import rnaComplete from "../assets/badges/rna-complete.png";
 import rnaExpert from "../assets/badges/rna-expert.png";

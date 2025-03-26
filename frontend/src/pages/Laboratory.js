@@ -1,9 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import styles from "./Laboratory.module.css";
-import buttonStyles from "./Buttons.module.css";
 import Navbar from "./Navbar.js";
 import AchievementsModal from "./Achievements.js";
-import challengeData, { labCutscenes } from "../utils/challengeData.js";
+import { labCutscenes } from "../utils/challengeData.js";
 import ChallengePopup from "../components/ChallengePopup.js";
 import LabBackground from "../assets/background/lab-background.png";
 import ExpertComputer from "../assets/background/expert-computer.png";
@@ -68,20 +67,20 @@ function Laboratory() {
             />
           ) : (
             <div>
-              <img src={LabBackground} className={styles.mainImage} />
+              <img src={LabBackground} className={styles.mainImage} alt="LabBackground" />
 
               <button
                 onClick={() => toggleAchievements()}
                 className={styles.achievements}
               >
-                <img src={Achievements} />
+                <img src={Achievements} alt="Achievements" />
               </button>
 
               <button
                 className={styles.expertComputer}
                 onClick={() => handleOpenPopup("Expert")}
               >
-                <img src={ExpertComputer} />
+                <img src={ExpertComputer} alt="ExpertComputer" />
               </button>
 
               <button
@@ -90,6 +89,7 @@ function Laboratory() {
               >
                 <img
                   src={isDone("Wireless") ? WirelessSolved : WirelessUnsolved}
+                  alt="Wireless"
                 />
               </button>
 
@@ -103,6 +103,7 @@ function Laboratory() {
                       ? MolecularComplete
                       : MolecularIncomplete
                   }
+                  alt="Molecules"
                 />
               </button>
 
@@ -110,7 +111,7 @@ function Laboratory() {
                 onClick={() => handleOpenPopup("RNA")}
                 className={styles.RNA}
               >
-                <img src={isDone("RNA") ? RNAComplete : RNAIncomplete} />
+                <img src={isDone("RNA") ? RNAComplete : RNAIncomplete} alt="RNA" />
               </button>
             </div>
           )}
