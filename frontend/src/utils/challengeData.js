@@ -1,3 +1,17 @@
+import { useContext, useCallback } from "react";
+import { ChallengesContext } from "../context/ChallengesContext.js";
+
+export function useIsUnlocked() {
+  const userChallengeData = useContext(ChallengesContext);
+  return useCallback((challengeKey, stageKey) => {
+    const prerequisites = challengeData[challengeKey].stages?.[stageKey]?.prerequisites || [];
+    console.log(prerequisites)
+    return prerequisites.every(
+      (prerequisite) => userChallengeData[`${challengeKey}-${prerequisite}`] !== undefined
+    );
+  }, [userChallengeData]);
+}
+
 export const labCutscenes = [
   {
     text: "Cutscene stuff will go here",
@@ -29,11 +43,13 @@ const challengeData = {
           },
         ],
         hints: ["Hint 1", "Hint 2"],
+        prerequisites: [],
       },
       StageTwo: {
         title: "Stage Two",
         description: "Select all the introns in the given RNA sequence.",
         hints: [],
+        prerequisites: ["StageOne"],
       },
     },
   },
@@ -46,12 +62,14 @@ const challengeData = {
         description: "Connect each molecule to its corresponding binding site",
         hints: [],
         cutScene: [],
+        prerequisites: [],
       },
       StageTwo: {
         title: "Stage Two",
         description: "Connect each molecule to its corresponding binding site",
         hints: [],
         cutScene: [],
+        prerequisites: ["StageOne"],
       },
     },
   },
@@ -64,12 +82,14 @@ const challengeData = {
         description: "Classify each breathing pattern as regular or irregular.",
         hints: [],
         cutScene: [],
+        prerequisites: [],
       },
       StageTwo: {
         title: "Stage Two",
         description: "Classify each breathing pattern",
         hints: [],
         cutScene: [],
+        prerequisites: ["StageOne"],
       },
     },
   },

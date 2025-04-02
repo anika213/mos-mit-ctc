@@ -1,12 +1,12 @@
 // Challenge.js
 import React, { useState, Suspense, useEffect, useCallback } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ChallengeCutScene from "../components/ChallengeCutScene.js";
 
 import Navbar from "./Navbar.js";
 import styles from "./Challenge.module.css";
 import { fetchAPI } from "../utils/utils.js";
-import challengeData from "../utils/challengeData.js";
+import challengeData, { useIsUnlocked } from "../utils/challengeData.js";
 
 function getFullSlides(cutScene, description, hints) {
   let ans = []
@@ -33,6 +33,9 @@ function Challenge() {
   const challenge = challengeData[challengeName];
   const stageData = challenge?.stages?.[stage];
 
+  const isUnlockedCB = useIsUnlocked();
+
+  const navigate = useNavigate();
   const [showPopup, setShowPopup] = useState(false);
   const [startTime, setStartTime] = useState(Date.now());
   const [hasStarted, setHasStarted] = useState(false);
@@ -123,6 +126,11 @@ function Challenge() {
         <h1>Challenge not found.</h1>
       </div>
     );
+  }
+
+  if ( !challenge || !stageData || !isUnlockedCB(challengeName, stage)) {
+    navigate("/laboratory", { replace: true });
+    return null;
   }
 
   const { title, description, hints } = stageData;
