@@ -87,7 +87,7 @@
   
   /* Button styling */
   .button {
-    background-color: #f41010;
+    background-color: #ff4343;
     border: none;
     color: white;
     text-align: center;
@@ -101,8 +101,13 @@
     margin-bottom: 10px;
     font-weight: bold;
     font-family: 'Roboto', sans-serif;
+    border-radius: 0.25rem;
   }
-
+  .button:hover {
+    background-color: #dc2625;
+    transition: 0.3s;
+    font-family: 'Roboto', sans-serif;
+}
   .challengeButton {
     background-color: #f41010;
     border: none;

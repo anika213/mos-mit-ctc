@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import challengeData, { useIsUnlocked } from "../utils/challengeData";
+import buttonStyles from "../pages/Buttons.module.css";
 
 function ChallengePopup({ challengeKey, onClose }) {
   const challenge = challengeData[challengeKey];

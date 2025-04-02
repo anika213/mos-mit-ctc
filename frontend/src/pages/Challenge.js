@@ -149,7 +149,6 @@ function Challenge() {
 
         <h1 className={styles.heading}>{title}</h1>
         <p className={styles.description}>{description}</p>
-        <p className={styles.hints}>{hints}</p>
 
         <div className={styles.challengeContent}>
           {hasStarted ? (

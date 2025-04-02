@@ -14,12 +14,16 @@ export function useIsUnlocked() {
 
 export const labCutscenes = [
   {
-    text: "Cutscene stuff will go here",
-    button: "Got it!",
+    text: "Oh, thank goodness you made it! Welcome to our lab! I’m Dr. Bob. A recent earthquake disrupted three of our research stations. Boy, are we super glad you’re here because we need your help to fix these stations so we can get our lab back on track with.",
+    button: "Let’s get started!",
   },
   {
-    text: "Yay!",
-    button: "Let's go"
+    text: "We need you to complete these tasks so we can upload your work to the database, which will help us with patient monitoring, protein analysis, and drug discovery. Are you up for the challenge?",
+    button: "100% yes!"
+  },
+  {
+    text: "Fantastic! Not to rush you, but we need to get started soon or we’ll fall behind our deadlines! Pick a station and I’ll let you know what we need. Oh! Also—If you’re an elite coder looking for an extra challenge, we’ve got a main computer terminal where you can write code and solve our expert-level problems.",
+    button: "Let’s Go!"
   }
 ]
 
@@ -42,7 +46,8 @@ const challengeData = {
             button: "Yes!",
           },
         ],
-        hints: ["Hint 1", "Hint 2"],
+        hints: ["Since we take the original mRNA and cut out the introns, the exons can’t be rearranged in their order. Make sure they’re in the right order!", 
+                "We can make multiple proteins from one strand of mRNA! This is called alternative splicing, where we choose different exons to form different proteins."],
         prerequisites: [],
       },
       StageTwo: {
