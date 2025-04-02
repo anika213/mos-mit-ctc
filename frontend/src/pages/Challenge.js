@@ -42,11 +42,6 @@ function Challenge() {
   const currentIndex = stages.indexOf(stage);
   const nextStage = currentIndex < stages.length - 1 ? stages[currentIndex + 1] : null;
   const [challengeCompleted, setChallengeCompleted] = useState(false);
-  console.log("Stages:", stages);
-  console.log("Current Stage:", stage);
-  console.log("Current Index:", currentIndex);
-  console.log("Next Stage:", nextStage);
-  console.log("Is Unlocked:", isUnlockedCB(challengeName, stage));
 
   const [showPopup, setShowPopup] = useState(false);
   const [startTime, setStartTime] = useState(Date.now());
@@ -91,6 +86,8 @@ function Challenge() {
     }
   };
 
+  const { fetchChallenges } = useContext(ChallengesContext);
+
   const onComplete = useCallback(() => {
     // mark challenge as complete in the backend
     const endTime = Date.now();
@@ -106,13 +103,14 @@ function Challenge() {
       }),
     })
       .then((res) => res.json())
-      .then(
-        setChallengeCompleted(true)
-      )
+      .then(() => {
+        setChallengeCompleted(true);
+        fetchChallenges();
+      })
       .catch((error) => {
         console.error("Error updating challenges:", error);
       });
-  }, [challengeName, stage, startTime]);
+  }, [challengeName, stage, startTime, fetchChallenges]);
 
   const getHint = () => {
     const newIndex = (hintIndex + 1) % hints.length;
@@ -202,8 +200,7 @@ function Challenge() {
                     <button 
                     className={styles.closeHintButton}
                     onClick={() => {
-                      console.log(`Navigating to next stage: ${nextStage} in ${challengeName}`);
-                      navigate(`/challenge/${challengeName}/${nextStage}`);
+\                      navigate(`/challenge/${challengeName}/${nextStage}`);
                     }}
                   >
                     Next Stage
