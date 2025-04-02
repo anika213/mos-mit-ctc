@@ -1,3 +1,4 @@
+const user = require("../../models/user.js");
 const User = require("../../models/user.js");
 // Leaderboard
 exports.leaderboard = async (req, res) => {
@@ -56,6 +57,7 @@ exports.challenges = (req, res, next) => {
     User.findById(req.user._id)
       .select("challenges")
       .then((user) => res.json(user.challenges))
+      .then(console.log(user.challenges))
       .catch((err) => {
         console.error("Error fetching challenges:", err);
         res.status(500).send("Internal Server Error");
