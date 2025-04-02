@@ -196,18 +196,14 @@ function Challenge() {
                   >
                     Return to Lab
                   </button>
-                  {nextStage ? (
-                    <button 
+                  <button 
                     className={styles.closeHintButton}
                     onClick={() => {
-\                      navigate(`/challenge/${challengeName}/${nextStage}`);
+                      navigate(`/challenge/${challengeName}/${nextStage}`);
                     }}
                   >
                     Next Stage
                   </button>
-                  ) : (
-                    <p>Congratulations! You've completed all stages in {challengeName}.</p>
-                  )}
                 </div>
               )}
             </>
