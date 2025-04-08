@@ -1,15 +1,6 @@
 import { useContext, useCallback } from "react";
 import { ChallengesContext } from "../context/ChallengesContext.js";
-
-export function useIsUnlocked() {
-  const { challengeData: userChallengeData } = useContext(ChallengesContext);
-  return useCallback((challengeKey, stageKey) => {
-    const prerequisites = challengeData[challengeKey].stages?.[stageKey]?.prerequisites || [];
-    return prerequisites.every(
-      (prerequisite) => userChallengeData[`${challengeKey}-${prerequisite}`] !== undefined
-    );
-  }, [userChallengeData]);
-}
+import { AuthContext } from "../context/AuthContext.js";
 
 export const labCutscenes = [
   {
@@ -18,9 +9,9 @@ export const labCutscenes = [
   },
   {
     text: "Yay!",
-    button: "Let's go"
-  }
-]
+    button: "Let's go",
+  },
+];
 
 const challengeData = {
   RNA: {

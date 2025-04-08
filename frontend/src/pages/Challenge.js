@@ -6,7 +6,7 @@ import ChallengeCutScene from "../components/ChallengeCutScene.js";
 import Navbar from "./Navbar.js";
 import styles from "./Challenge.module.css";
 import { fetchAPI } from "../utils/utils.js";
-import challengeData, { useIsUnlocked } from "../utils/challengeData.js";
+import challengeData from "../utils/challengeData.js";
 import { ChallengesContext } from "../context/ChallengesContext.js";
 
 function getFullSlides(cutScene, description, hints) {
@@ -34,8 +34,7 @@ function Challenge() {
   let { challengeName, stage } = useParams();
   const challenge = challengeData[challengeName];
   const stageData = challenge?.stages?.[stage];
-  const isUnlockedCB = useIsUnlocked();
-  const { challengeData: userChallengeData } = useContext(ChallengesContext);
+  const { challengeData: userChallengeData, isUnlocked } = useContext(ChallengesContext);
   const isReady = Object.keys(userChallengeData).length > 0;
 
   const stages = Object.keys(challengeData[challengeName].stages);
@@ -130,10 +129,10 @@ function Challenge() {
   useEffect(() => {
     if (!isReady) return
 
-    if (!challenge || !stageData || !isUnlockedCB(challengeName, stage)) {
+    if (!challenge || !stageData || !isUnlocked(challengeName, stage)) {
       navigate("/laboratory", { replace: true });
     }
-  }, [challenge, stageData, isUnlockedCB, challengeName, isReady, navigate, stage]);
+  }, [challenge, stageData, challengeName, isReady, navigate, stage, isUnlocked]);
   
   if (!challenge || !stageData) {
     return (
