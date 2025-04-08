@@ -1,0 +1,54 @@
+.navbar {
+  display: flex;
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+  justify-content: space-around; /* Even spacing between buttons */
+  background-color: #333;
+  color: #fff;
+  padding: 10px 20px;
+  width: 100%; /* Take up full width of the wrapper */
+  max-width: 600px; /* Limit maximum width */
+  box-sizing: border-box;
+  border-radius: 10px; /* Rounded corners for better aesthetics */
+}
+
+.navButton {
+  padding: 1.5% 3%;
+  font-size: 1rem;
+  text-align: center;
+  line-height: 1.2;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s;
+  flex: 1; /* Buttons share equal space */
+  text-align: center; /* Center the text */
+  max-width: 150px; /* Prevent buttons from growing too large */
+}
+
+.navButton:hover {
+  background-color: #555;
+}
+
+.active {
+  background-color: #ff4343;
+  border-radius: 3px;
+}
+
+/* Responsive styles */
+@media (max-width: 480px) {
+  .navbar {
+    flex-direction: column; /* Stack buttons vertically */
+    padding: 10px; /* Reduce padding */
+  }
+
+  .navButton {
+    font-size: 0.9rem; /* Smaller font size for smaller screens */
+    max-width: 100%; /* Allow buttons to grow to full width */
+    margin-bottom: 10px; /* Add spacing between buttons */
+  }
+
+  .navButton:last-child {
+    margin-bottom: 0; /* Remove spacing after the last button */
+  }
+}

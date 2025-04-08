@@ -1,0 +1,151 @@
+  /* Main container for the page */
+  .mainContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+
+  }
+  
+  /* Main content container */
+  .content {
+    display: flex;
+    flex-direction: column;
+    padding: 20px 10%;
+  }
+  
+  /* Heading styling */
+  .heading {
+    text-align: left;
+    font-size: 2rem; /* Adjust font size for better readability */
+    font-weight: bold;
+    margin: 10px 0;
+    color: #333;
+  }
+  
+  /* Subheading styling */
+  .subheading {
+    text-align: left;
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 20px;
+  }
+  
+  /* Table styling */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 1rem;
+    position: relative; /* Ensure proper positioning of the header */
+  }
+  
+  th, td {
+    text-align: left;
+    padding: 12px;
+  }
+  
+  th {
+    background-color: #f4f4f4; /* Light gray background for header */
+    color: #7E7D7D;
+    font-weight: bold;
+    text-align: left;
+  }
+
+  thead th {
+    position: sticky;
+    top: 0; /* Fix header at the top of the scrollable container */
+    background-color: #f4f4f4; /* Match the header background color */
+    z-index: 1; /* Ensure the header is above the table rows */
+  }
+  
+  td {
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+    font-weight: bold;
+  }
+  
+  tr:last-child td {
+    border-bottom: none;
+  }
+  
+  tr:hover {
+    background-color: #f9f9f9; /* Subtle hover effect */
+  }
+  /* Image container for logos */
+.imageContainer {
+  display: flex;
+  justify-content: center;
+  gap: 20px; /* Add space between logos */
+  margin-top: 20px;
+}
+
+/* Logo images styling */
+.logos {
+  height: 70px; /* Set a fixed height for the square */
+  width: 60px; /* Set the same width to make it a square */
+  object-fit: contain; /* Ensures the image fits inside without being cut off */
+  margin: 5px;
+}
+
+
+  .tableContainer {
+    max-height: 500px; /* Set the height of the scrollable area */
+    overflow-y: auto; /* Enable vertical scrolling */
+  }
+
+  ::-webkit-scrollbar {
+    display: none; /* Removes scrollbar from leaderboard */
+  }
+
+  
+  /* Responsive design for smaller screens */
+  @media (max-width: 768px) {
+    .content {
+        flex-direction: column; /* Stack content vertically */
+        
+        /* align-items: center; Center align for better mobile experience */
+    }
+  
+    .heading {
+      font-size: 1.5rem;
+    }
+  
+    .subheading {
+      font-size: 0.9rem;
+    }
+  
+    table {
+      font-size: 0.9rem;
+    }
+
+    .imageContainer {
+      display: flex;
+      justify-content: center;
+      gap: 10px; /* Add space between logos */
+      margin-top: 20px;
+    }
+
+    .logos {
+      max-height: 3vh;
+      width: auto;
+    }
+  }
+
+    
+  .levelSelector {
+    margin-bottom: 20px;
+    text-align: center; /* Align the level selector to the center */
+  }
+  
+  .levelSelector label {
+    font-size: 1rem;
+    margin-right: 10px;
+  }
+  
+  .levelSelector select {
+    padding: 5px 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  

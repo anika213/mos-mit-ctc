@@ -6,7 +6,7 @@ services:
             dockerfile: base.dockerfile
         volumes:
             - node_modules:/srv/mos-mit-ctc/node_modules
-            - ./yarn.lock:/srv/hyperschedule/yarn.lock:ro
+            - ./yarn.lock:/srv/mos-mit-ctc/yarn.lock
             - ./package.json:/srv/mos-mit-ctc/package.json:ro
             - ./frontend/package.json:/srv/mos-mit-ctc/frontend/package.json:ro
             - ./backend/package.json:/srv/mos-mit-ctc/backend/package.json:ro
@@ -17,12 +17,11 @@ services:
         image: mongo:7
         networks:
             - backend
-        expose:
-            - 27017
+        ports:
+            - 27017:27017
         environment:
             MONGO_INITDB_ROOT_USERNAME: mos-mit-ctc
-            MONGO_INITDB_ROOT_PASSWORD:
-                local_dev
+            MONGO_INITDB_ROOT_PASSWORD: local_dev
 
     frontend:
         image: mos-mit-ctc-dev-base
@@ -56,7 +55,7 @@ services:
             - ./backend:/srv/mos-mit-ctc/backend:ro
 
         working_dir: /srv/mos-mit-ctc/backend
-        command: yarn start
+        command: yarn start-dev
         environment:
             DB_URL: mongodb://mos-mit-ctc:local_dev@db
 

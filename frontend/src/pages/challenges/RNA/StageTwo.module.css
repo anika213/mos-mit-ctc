@@ -1,0 +1,62 @@
+.container {
+    text-align: center;
+  }
+  
+  .grid {
+    display: inline-block;
+    border: 1px solid #ccc;
+    margin: 10px;
+  }
+  
+  .row {
+    display: flex;
+  }
+  
+  .cell {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .cell:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .selected {
+    background-color: #f31d1d;
+    color: white;
+  }
+  
+  .doneButton {
+    margin: 0px 0.5rem;
+    margin-top: 20px;
+    padding: 0.5rem 1.75rem;
+    font-size: 16px;
+    background-color: #ff4343;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .doneButton:hover {
+    background-color: #dc2625;
+    transition: 0.3s;
+  }
+  
+  .results {
+    margin-top: 20px;
+    text-align: left;
+  }
+  
+  .results ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  

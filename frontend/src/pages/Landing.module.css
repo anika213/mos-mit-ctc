@@ -1,0 +1,239 @@
+  /* Main container for the page */
+  .mainContainer {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Content section containing text and logos */
+  .content {
+    display: flex;
+    flex-direction: row; /* Default row layout */
+    justify-content: space-between; /* Space between content and side image */
+    align-items: center;
+    padding: 20px;
+    gap: 20px;
+  }
+  
+  /* Main content styling */
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 6.5vw;
+    padding: 20px;
+    flex: 1; /* Take up the remaining space */
+  }
+  
+  /* Subheading styling */
+  .subheading {
+    text-align: left;
+    font-size: 2.5vh;
+    margin: 0;
+  }
+  
+  /* Heading styling */
+  .heading {
+    text-align: left;
+    font-size: 6.7vw;
+    margin: 0;
+    font-weight: bold;
+    line-height: 1.25;
+  }
+  
+  /* Image container for logos */
+  /* .imageContainer {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  } */
+
+  .mobileImageContainer {
+    visibility: hidden;
+    max-height: 0;
+  }
+  
+  .imageContainer {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Add space between logos */
+    margin-top: 20px;
+  }
+  
+  /* Logo images styling */
+  .logos {
+    height: 70px; /* Set a fixed height for the square */
+    width: 60px; /* Set the same width to make it a square */
+    object-fit: contain; /* Ensures the image fits inside without being cut off */
+    margin: 5px;
+  }
+  
+  
+  
+  /* Side image container */
+  .sideImageContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1; /* Take up half the screen width */
+  }
+  
+  /* Side image styling */
+  .sideImage {
+    width: 100%; /* Fill the container width */
+    height: 87vh; /* Full viewport height */
+    object-fit: cover; /* Ensure the image covers the container */
+  }
+  
+  /* Button styling */
+  .button {
+    background-color: #ff4343;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1vw;
+    cursor: pointer;
+    width: 25%;
+    padding: 1vw 2vw;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-family: 'Roboto', sans-serif;
+    border-radius: 0.25rem;
+  }
+  .button:hover {
+    background-color: #dc2625;
+    transition: 0.3s;
+    font-family: 'Roboto', sans-serif;
+}
+  .challengeButton {
+    background-color: #f41010;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1vw;
+    cursor: pointer;
+    width: 10%;
+    padding: 1vw 2vw;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-family: 'Roboto', sans-serif;
+  }
+
+  .challengescontainer {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 20px;
+  } 
+
+  h1 {
+    font-size: 2.5vw;
+    font-weight: bold;
+    margin: 0;
+  }
+
+  h2 {
+    /* font-size: 2vh; */
+    font-weight: bold;
+    margin: 0;
+  }
+
+  .closedchallenge {
+    background-color: #e0e0e0;
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .openchallenge {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+  }
+  
+  /* Responsive design for smaller screens */
+  @media (max-width: 768px) {
+    .content {
+      flex-direction: column; /* Stack content vertically */
+      align-items: center; /* Center align for better mobile experience */
+      height: 50vh;
+      position: relative;
+    }
+    
+    .heading {
+      font-size: 3.3rem;
+    }
+    .subheading {
+      font-size: 1.2rem;
+    }
+
+    .sideImageContainer {
+      margin-left: 0;
+      margin-bottom: 20px; /* Add spacing between image and content */
+      flex: none; /* Disable flex behavior for smaller screens */
+      position: absolute;
+      z-index: 1;
+      top: 0;
+      width:100%;
+    }
+  
+    .sideImage {
+      width: 100%; /* Full width for mobile screens */
+      height: auto; /* Maintain aspect ratio */
+      max-height: 45vh;
+    }
+  
+    .container {
+      margin-left: 0; /* Remove left margin for better centering */
+      padding: 2vw;
+      color: white;
+      position: relative;
+      z-index: 2;
+      
+    }
+
+    .imageContainer {
+      visibility: hidden;
+      max-height: 0;
+    }
+
+    .mobileImageContainer {
+      visibility: visible;
+      max-height: 20vh;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+
+    }
+
+    .logos {
+      height: 5vh;
+      width: auto;
+      padding: 0.5% 10px;
+    }
+
+    h1 {
+      font-size: 2.5vh;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .challengeButton {
+      width: 50%; /* Adjust button width for mobile */
+      font-size: 4vw;
+      padding: 2vw;
+    }
+    .button {
+      font-size:2vw;
+      width:25%;
+      margin: 0px;
+      margin-top: 1vw;
+    }
+  }
+  
