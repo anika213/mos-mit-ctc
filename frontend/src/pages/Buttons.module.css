@@ -2,8 +2,6 @@
     background-color: #ff4343;
     color: white;
     font-family: 'Roboto', sans-serif;
-    padding: 0.5rem 1rem;
-    border-radius: 0.25rem;
 }
 .redButton:hover {
     background-color: #dc2625;

@@ -34,7 +34,7 @@ function ChallengePopup({ challengeKey, onClose }) {
               onClick={(e) => !unlocked && e.preventDefault()}
             >
               <button 
-                className={`px-4 py-2 rounded my-1 ${unlocked ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`} 
+                className={`px-4 py-2 rounded my-1 ${unlocked ? `${buttonStyles.redButton}` : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`} 
                 title={ unlocked ? `Start ${title}` : "Unlock this stage by completing previous stages" }
               >
                 {title}

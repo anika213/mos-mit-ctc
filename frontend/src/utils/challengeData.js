@@ -2,10 +2,9 @@ import { useContext, useCallback } from "react";
 import { ChallengesContext } from "../context/ChallengesContext.js";
 
 export function useIsUnlocked() {
-  const userChallengeData = useContext(ChallengesContext);
+  const { challengeData: userChallengeData } = useContext(ChallengesContext);
   return useCallback((challengeKey, stageKey) => {
     const prerequisites = challengeData[challengeKey].stages?.[stageKey]?.prerequisites || [];
-    console.log(prerequisites)
     return prerequisites.every(
       (prerequisite) => userChallengeData[`${challengeKey}-${prerequisite}`] !== undefined
     );

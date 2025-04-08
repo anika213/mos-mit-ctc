@@ -1,5 +1,5 @@
 // Challenge.js
-import React, { useState, Suspense, useEffect, useCallback } from "react";
+import React, { useState, Suspense, useEffect, useCallback, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ChallengeCutScene from "../components/ChallengeCutScene.js";
 
@@ -7,6 +7,7 @@ import Navbar from "./Navbar.js";
 import styles from "./Challenge.module.css";
 import { fetchAPI } from "../utils/utils.js";
 import challengeData, { useIsUnlocked } from "../utils/challengeData.js";
+import { ChallengesContext } from "../context/ChallengesContext.js";
 
 function getFullSlides(cutScene, description, hints) {
   let ans = []
@@ -29,13 +30,19 @@ function getFullSlides(cutScene, description, hints) {
 } 
 
 function Challenge() {
+  const navigate = useNavigate();
   let { challengeName, stage } = useParams();
   const challenge = challengeData[challengeName];
   const stageData = challenge?.stages?.[stage];
-
   const isUnlockedCB = useIsUnlocked();
+  const { challengeData: userChallengeData } = useContext(ChallengesContext);
+  const isReady = Object.keys(userChallengeData).length > 0;
 
-  const navigate = useNavigate();
+  const stages = Object.keys(challengeData[challengeName].stages);
+  const currentIndex = stages.indexOf(stage);
+  const nextStage = currentIndex < stages.length - 1 ? stages[currentIndex + 1] : null;
+  const [challengeCompleted, setChallengeCompleted] = useState(false);
+
   const [showPopup, setShowPopup] = useState(false);
   const [startTime, setStartTime] = useState(Date.now());
   const [hasStarted, setHasStarted] = useState(false);
@@ -73,14 +80,13 @@ function Challenge() {
         }),
       })
         .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
-        })
         .catch((error) => {
           console.error("Error starting challenge:", error);
         });
     }
   };
+
+  const { fetchChallenges } = useContext(ChallengesContext);
 
   const onComplete = useCallback(() => {
     // mark challenge as complete in the backend
@@ -97,13 +103,14 @@ function Challenge() {
       }),
     })
       .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
+      .then(() => {
+        setChallengeCompleted(true);
+        fetchChallenges();
       })
       .catch((error) => {
         console.error("Error updating challenges:", error);
       });
-  }, [challengeName, stage, startTime]);
+  }, [challengeName, stage, startTime, fetchChallenges]);
 
   const getHint = () => {
     const newIndex = (hintIndex + 1) % hints.length;
@@ -117,7 +124,16 @@ function Challenge() {
     setShowHint(false);
     setCurrentHint("");
     setHintIndex(-1);
+    setChallengeCompleted(false);
   }, [challengeName, stage]);
+
+  useEffect(() => {
+    if (!isReady) return
+
+    if (!challenge || !stageData || !isUnlockedCB(challengeName, stage)) {
+      navigate("/laboratory", { replace: true });
+    }
+  }, [challenge, stageData, isUnlockedCB, challengeName, isReady, navigate, stage]);
   
   if (!challenge || !stageData) {
     return (
@@ -128,15 +144,10 @@ function Challenge() {
     );
   }
 
-  if ( !challenge || !stageData || !isUnlockedCB(challengeName, stage)) {
-    navigate("/laboratory", { replace: true });
-    return null;
-  }
-
   const { title, description, hints } = stageData;
 
   return (
-    <div>
+    <div key={stage}>
       <Navbar />
 
       <div className={styles.challengeBox}>
@@ -149,12 +160,13 @@ function Challenge() {
 
         <h1 className={styles.heading}>{title}</h1>
         <p className={styles.description}>{description}</p>
+        <p className={styles.hints}>{hints}</p>
 
         <div className={styles.challengeContent}>
           {hasStarted ? (
             <>
               <Suspense fallback={<p>Loading challenge...</p>}>
-                <DynamicChallengeComponent onComplete={onComplete} />
+                <DynamicChallengeComponent key={`${challengeName}-${stage}`} onComplete={onComplete} />
               </Suspense>
               <div className={styles.hintContainer}>
                 <button 
@@ -173,6 +185,24 @@ function Challenge() {
                     onClick={() => setShowHint(false)}
                   >
                     Close
+                  </button>
+                </div>
+              )}
+              {challengeCompleted && (
+                <div className={styles.completionButtons}>
+                  <button 
+                    className={styles.closeHintButton}
+                    onClick={() => navigate("/laboratory")}
+                  >
+                    Return to Lab
+                  </button>
+                  <button 
+                    className={styles.closeHintButton}
+                    onClick={() => {
+                      navigate(`/challenge/${challengeName}/${nextStage}`);
+                    }}
+                  >
+                    Next Stage
                   </button>
                 </div>
               )}

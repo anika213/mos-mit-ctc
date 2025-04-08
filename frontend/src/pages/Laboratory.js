@@ -17,10 +17,13 @@ import MolecularIncomplete from "../assets/background/molecular-bckground-incomp
 import { ChallengesContext } from "../context/ChallengesContext.js";
 import { useSearchParams } from "react-router-dom";
 import ChallengeCutScene from "../components/ChallengeCutScene.js";
+import { useEffect } from "react";
 
 // TODO: fix the button sizing, kinda weird when changing screen size rn
 function Laboratory() {
   const [searchParam, setSearchParam] = useSearchParams();
+  const [showPopup, setShowPopup] = useState(false);
+  
 
   const [showCutscene, setShowCutScene] = useState(
     searchParam.get("firstVisit") !== null
@@ -49,6 +52,19 @@ function Laboratory() {
   const handleClosePopup = () => {
     setActiveChallenge(null);
   };
+
+  const handleOrientationChange = () => {
+      const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+      setShowPopup(isPortrait);
+    };
+    window.addEventListener("resize", handleOrientationChange);
+  
+    useEffect(() => {
+      window.addEventListener("resize", handleOrientationChange);
+      // Initial check in case the page loads in landscape mode
+      handleOrientationChange();
+      return () => window.removeEventListener("resize", handleOrientationChange);
+    }, []);
 
   return (
     <>
@@ -126,6 +142,12 @@ function Laboratory() {
             challengeKey={activeChallenge}
             onClose={handleClosePopup}
           />
+        )}
+        {showPopup && (
+                  <div className='fixed top-0 left-0 w-full h-full flex flex-col text-center items-center justify-center bg-black bg-opacity-80 z-50 text-white font-lg'>
+                    <h1>Please rotate your mobile device</h1>
+                    <p>For the best experience, rotate your phone to landscape mode.</p>
+                  </div>
         )}
       </div>
     </>

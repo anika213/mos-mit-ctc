@@ -149,7 +149,7 @@ function AchievementsModal(props) {
             })}
           </div>
           <button
-            className={`${buttonStyles.redButton} px-4 py-2`}
+            className={`${buttonStyles.redButton} px-4 py-2 rounded-sm`}
             onClick={props.onClose}
           >
             Done
