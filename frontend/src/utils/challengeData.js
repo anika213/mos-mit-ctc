@@ -1,16 +1,3 @@
-import { useContext, useCallback } from "react";
-import { ChallengesContext } from "../context/ChallengesContext.js";
-
-export function useIsUnlocked() {
-  const { challengeData: userChallengeData } = useContext(ChallengesContext);
-  return useCallback((challengeKey, stageKey) => {
-    const prerequisites = challengeData[challengeKey].stages?.[stageKey]?.prerequisites || [];
-    return prerequisites.every(
-      (prerequisite) => userChallengeData[`${challengeKey}-${prerequisite}`] !== undefined
-    );
-  }, [userChallengeData]);
-}
-
 export const labCutscenes = [
   {
     text: "Oh, thank goodness you made it! Welcome to our lab! I’m Dr. Bob. A recent earthquake disrupted three of our research stations. Boy, are we super glad you’re here because we need your help to fix these stations so we can get our lab back on track with.",
@@ -22,9 +9,9 @@ export const labCutscenes = [
   },
   {
     text: "Fantastic! Not to rush you, but we need to get started soon or we’ll fall behind our deadlines! Pick a station and I’ll let you know what we need. Oh! Also—If you’re an elite coder looking for an extra challenge, we’ve got a main computer terminal where you can write code and solve our expert-level problems.",
-    button: "Let’s Go!"
-  }
-]
+    button: "Let’s Go!",
+  },
+];
 
 const challengeData = {
   RNA: {
@@ -109,12 +96,6 @@ const challengeData = {
       },
       MolecularDocking: {
         title: "Molecular Docking",
-        description: "Pending",
-        hints: [],
-        cutScene: [],
-      },
-      WirelessDetection: {
-        title: "Wireless Detection",
         description: "Pending",
         hints: [],
         cutScene: [],

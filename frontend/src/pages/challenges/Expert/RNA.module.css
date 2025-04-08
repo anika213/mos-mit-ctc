@@ -39,6 +39,16 @@
     background-color: rgb(190, 24, 24); /* Add a darker red shade on hover */
 }
 
+
+.googleColabButton {
+    background-color: #4285F4; /* Google Colab blue */
+    color: white;
+    font-size: 16px;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+}
+
 /* Responsive styles for phones */
 @media (max-width: 480px) {
     .container {

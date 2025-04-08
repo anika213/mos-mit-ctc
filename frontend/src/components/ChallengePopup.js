@@ -1,13 +1,23 @@
-import React from "react";
+import React, {useContext, useEffect, useState} from "react";
 import { Link } from "react-router-dom";
-import challengeData, { useIsUnlocked } from "../utils/challengeData";
+import { ChallengesContext } from "../context/ChallengesContext.js";
+import challengeData from "../utils/challengeData.js";
 import buttonStyles from "../pages/Buttons.module.css";
 
 function ChallengePopup({ challengeKey, onClose }) {
   const challenge = challengeData[challengeKey];
-  const stageKeys = Object.keys(challenge.stages);
 
-  const isUnlocked = useIsUnlocked();
+  const {isUnlocked } = useContext(ChallengesContext);
+
+  const [unlockedStages, setUnlockedStages] = useState([]);
+
+  useEffect(() => {
+    const stageKeys = Object.keys(challenge.stages);
+    const unlockedStages = stageKeys.filter((stageKey) =>
+      isUnlocked(challengeKey, stageKey)
+    );
+    setUnlockedStages(unlockedStages);
+  }, [challengeKey, challenge, isUnlocked]);
 
   if (!challenge) return <></>;
   return (
@@ -24,9 +34,9 @@ function ChallengePopup({ challengeKey, onClose }) {
         </h2>
         <p className="mb-4 text-center">{challenge.storyDescription}</p>
 
-        {stageKeys.map((stageKey) => {
+        {Object.keys(challenge.stages).map((stageKey) => {
           const { title } = challenge.stages[stageKey];
-          const unlocked = isUnlocked(challengeKey, stageKey);
+          const unlocked = unlockedStages.includes(stageKey);
           return (
             <Link 
               to={unlocked ? `/challenge/${challengeKey}/${stageKey}` : "#"} 
