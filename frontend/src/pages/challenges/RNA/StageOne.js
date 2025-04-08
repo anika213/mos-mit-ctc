@@ -269,6 +269,7 @@ class RNAGame {
         sprite: element.sprite,
         i: element.i,
         isExon: element.isExon,
+        identifier: element.identifier,
       };
     });
     allGroupsByXPos.sort(
@@ -316,14 +317,15 @@ class RNAGame {
       return false;
     }
 
-    console.log(allGroupsByXPos, this.createdRNA)
-    if (this.createdRNA.includes(allGroupsByXPos)) {
+    const identifiers = allGroupsByXPos.map((element) => element.identifier).join('-');
+    console.log(identifiers, this.createdRNA)
+    if (this.createdRNA.includes(identifiers)) {
       this.showAlert("You've already created this protein before! Please try again.");
       return false;
     }
 
     if (this.createdRNA.length < 2) {
-      this.createdRNA.push(allGroupsByXPos);
+      this.createdRNA.push(identifiers);
       this.showAlert("This protein looks great! Try to create " + (3- this.createdRNA.length) +  " more!" );
       return false;
     }
