@@ -58,7 +58,7 @@ function ChallengeCutScene({ cutSceneList, startChallenge}) {
             <div className='relative flex-col items-center py-2 md:py-20 w-3/4'>
                 <motion.p 
                     key={slide}
-                    className='text-xl m-8'
+                    className='text-xl m-8 text-center'
                     initial='hidden' 
                     whileInView="reveal"
                     transition={{staggerChildren: 0.02}}

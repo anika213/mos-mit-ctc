@@ -232,7 +232,7 @@ function MolecularDockingEasy({ onComplete }) {
           <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col justify-center items-center border-2 border-red-600 w-80">
             <p className="mb-4 whitespace-pre-line text-center">{alertText}</p>
             <button 
-                className="bg-red-600 text-white px-4 py-2"
+                className="bg-[#ff4343] text-white px-4 py-2 rounded-[5px]"
                 onClick={() => setAlertShowing(false)}
             >
                 Close

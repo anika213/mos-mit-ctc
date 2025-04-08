@@ -21,9 +21,7 @@ function Landing() {
         <div className={styles.container}>
           <p className={styles.subheading}>An interactive exhibit</p>
           <p className={styles.heading}>Exploring Clinical AI</p>
-          <br></br>
           <button className={`${styles.button}`} onClick={() => navigate("/laboratory?firstVisit")}>Get Started</button>
-          <br></br>
           <div className={styles.imageContainer}>
             <img src={mos} alt="MOS" className={styles.logos} />
             <img src={mit} alt="MIT" className={styles.logos} />
@@ -35,7 +33,7 @@ function Landing() {
           <img src={dna} alt="Side" className={styles.sideImage} />
         </div>
       </div>
-      <div>
+      <div className='md:hidden'>
         <div className={styles.mobileImageContainer}>
           <img src={mos} alt="MOS" className={styles.logos} />
           <img src={mit} alt="MIT" className={styles.logos} />

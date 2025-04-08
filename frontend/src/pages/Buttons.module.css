@@ -2,6 +2,7 @@
     background-color: #ff4343;
     color: white;
     font-family: 'Roboto', sans-serif;
+    border-radius: 5px;
 }
 .redButton:hover {
     background-color: #dc2625;
@@ -11,6 +12,8 @@
 
 .blackButton {
     background-color: #333;
+    border-radius: 5px;
+
 }
 .blackButton:hover {
     background-color: #101010;

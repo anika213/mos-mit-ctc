@@ -151,6 +151,14 @@ function Challenge() {
       <Navbar />
 
       <div className={styles.challengeBox}>
+      { hasStarted &&
+      <button 
+          className={`${styles.hintButton}`} 
+          onClick={getHint}
+        >
+          Hints
+        </button>
+        }
         {showPopup && (
           <div className={styles.rotateWarning}>
             <h1>Please rotate your mobile device</h1>
@@ -160,7 +168,6 @@ function Challenge() {
 
         <h1 className={styles.heading}>{title}</h1>
         <p className={styles.description}>{description}</p>
-        <p className={styles.hints}>{hints}</p>
 
         <div className={styles.challengeContent}>
           {hasStarted ? (
@@ -168,20 +175,18 @@ function Challenge() {
               <Suspense fallback={<p>Loading challenge...</p>}>
                 <DynamicChallengeComponent key={`${challengeName}-${stage}`} onComplete={onComplete} />
               </Suspense>
-              <div className={styles.hintContainer}>
-                <button 
-                  className={styles.hintButton} 
-                  onClick={getHint}
-                >
-                  Get Hint
-                </button>
-              </div>
+              
+                
+              
               {showHint && (
-                <div className={styles.hintBox}>
-                  <h2>Hint {hintIndex + 1} / {hints.length}</h2>
-                  <p>{currentHint}</p>
+                <div className={`${styles.hintBox} flex flex-col`}>
+                  <h2 className='text-l'>Hint {hintIndex + 1} / {hints.length}</h2>
+                  <div className='flex flex-row'>
+                    <p className='text-[1rem] mb-2'>{currentHint}</p>
+                  </div>
+                  
                   <button 
-                    className={styles.closeHintButton}
+                    className='bg-[#ff4343] text-white px-4 py-2 rounded-[5px] mx-auto '
                     onClick={() => setShowHint(false)}
                   >
                     Close

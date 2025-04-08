@@ -9,7 +9,7 @@
     display: flex;
     flex-direction: row; /* Default row layout */
     justify-content: space-between; /* Space between content and side image */
-    align-items: flex-start;
+    align-items: center;
     padding: 20px;
     gap: 20px;
   }
@@ -138,7 +138,7 @@
   }
 
   h2 {
-    font-size: 2vh;
+    /* font-size: 2vh; */
     font-weight: bold;
     margin: 0;
   }
@@ -167,7 +167,10 @@
     }
     
     .heading {
-      font-size: 6.8vh;
+      font-size: 3.3rem;
+    }
+    .subheading {
+      font-size: 1.2rem;
     }
 
     .sideImageContainer {
@@ -177,6 +180,7 @@
       position: absolute;
       z-index: 1;
       top: 0;
+      width:100%;
     }
   
     .sideImage {
@@ -187,16 +191,11 @@
   
     .container {
       margin-left: 0; /* Remove left margin for better centering */
-      padding: 20px;
+      padding: 2vw;
       color: white;
       position: relative;
       z-index: 2;
-    }
-  
-    .button {
-      width: 50%; /* Adjust button width for mobile */
-      font-size: 4vw;
-      padding: 2vw;
+      
     }
 
     .imageContainer {
@@ -210,6 +209,7 @@
       display: flex;
       flex-direction: row;
       justify-content: center;
+
     }
 
     .logos {
@@ -228,6 +228,12 @@
       width: 50%; /* Adjust button width for mobile */
       font-size: 4vw;
       padding: 2vw;
+    }
+    .button {
+      font-size:2vw;
+      width:25%;
+      margin: 0px;
+      margin-top: 1vw;
     }
   }
   

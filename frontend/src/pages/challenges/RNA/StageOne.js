@@ -153,6 +153,8 @@ class RNAGame {
 
   children = [];
 
+  createdRNA = [];
+
   showAlert;
 
   static generateRNA(length) {
@@ -278,6 +280,11 @@ class RNAGame {
       return false;
     }
 
+    if (allGroupsByXPos.length === 1) {
+      this.showAlert("While this may be correct, proteins are usually more complex. Try dragging more than one exon!");
+      return false;
+    }
+
     let errors = new Set();
     let lastGroupI = -1;
     for (let i = 0; i < allGroupsByXPos.length; i++) {
@@ -308,6 +315,19 @@ class RNAGame {
       this.showAlert("There are errors in your protein: \n" + output);
       return false;
     }
+
+    console.log(allGroupsByXPos, this.createdRNA)
+    if (this.createdRNA.includes(allGroupsByXPos)) {
+      this.showAlert("You've already created this protein before! Please try again.");
+      return false;
+    }
+
+    if (this.createdRNA.length < 2) {
+      this.createdRNA.push(allGroupsByXPos);
+      this.showAlert("This protein looks great! Try to create " + (3- this.createdRNA.length) +  " more!" );
+      return false;
+    }
+
       victoryClick();
       this.showAlert("Congratulations! The challenge is completed :)");
     return true;
@@ -372,7 +392,7 @@ function Easy({ onComplete }) {
           <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col justify-center items-center border-2 border-red-600 w-80">
             <p className="mb-4 whitespace-pre-line text-center">{alertText}</p>
             <button
-              className="bg-red-600 text-white px-4 py-2"
+              className="bg-[#ff4343] text-white px-4 py-2 rounded-[5px]"
               onClick={() => setAlertShowing(false)}
             >
               Close
