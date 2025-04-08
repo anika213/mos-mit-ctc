@@ -1,7 +1,3 @@
-import { useContext, useCallback } from "react";
-import { ChallengesContext } from "../context/ChallengesContext.js";
-import { AuthContext } from "../context/AuthContext.js";
-
 export const labCutscenes = [
   {
     text: "Cutscene stuff will go here",
@@ -95,12 +91,6 @@ const challengeData = {
       },
       MolecularDocking: {
         title: "Molecular Docking",
-        description: "Pending",
-        hints: [],
-        cutScene: [],
-      },
-      WirelessDetection: {
-        title: "Wireless Detection",
         description: "Pending",
         hints: [],
         cutScene: [],

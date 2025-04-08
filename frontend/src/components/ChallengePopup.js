@@ -5,18 +5,18 @@ import challengeData from "../utils/challengeData.js";
 
 function ChallengePopup({ challengeKey, onClose }) {
   const challenge = challengeData[challengeKey];
-  const stageKeys = Object.keys(challenge.stages);
 
   const {isUnlocked } = useContext(ChallengesContext);
 
   const [unlockedStages, setUnlockedStages] = useState([]);
 
   useEffect(() => {
+    const stageKeys = Object.keys(challenge.stages);
     const unlockedStages = stageKeys.filter((stageKey) =>
       isUnlocked(challengeKey, stageKey)
     );
     setUnlockedStages(unlockedStages);
-  }, [challengeKey, stageKeys, isUnlocked]);
+  }, [challengeKey, challenge, isUnlocked]);
 
   if (!challenge) return <></>;
   return (
@@ -33,7 +33,7 @@ function ChallengePopup({ challengeKey, onClose }) {
         </h2>
         <p className="mb-4 text-center">{challenge.storyDescription}</p>
 
-        {stageKeys.map((stageKey) => {
+        {Object.keys(challenge.stages).map((stageKey) => {
           const { title } = challenge.stages[stageKey];
           const unlocked = unlockedStages.includes(stageKey);
           return (
