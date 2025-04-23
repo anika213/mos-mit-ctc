@@ -1,6 +1,5 @@
 import React from 'react';
 import styles from './Landing.module.css';
-import buttonStyles from './Buttons.module.css'
 import Navbar from './Navbar.js';
 import hmc from '../assets/hmc.png';
 import jameel from '../assets/jameel.jpg';
